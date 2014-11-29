@@ -1,0 +1,500 @@
+body
+	//script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js' )
+	//script(type='text/javascript', src='public/js/easyui/jquery.easyui.min.js' )
+	//script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js' )
+	//script(type='text/javascript', src='public/js/easyui/jquery.easyui.min.js' )
+	//link(rel='stylesheet', href='public/js/easyui/themes/default/easyui.css')
+	//link(rel='stylesheet', href='public/js/easyui/themes/default/icon.css')
+
+
+	//- style.
+	//- 		.magicCirc{
+	//- 			padding:4px;
+	//- 			display:inline-block;
+	//- 			cursor:pointer;
+	//- 			font:12px/14px Arial, Helvetica, sans-serif;
+	//- 			color:#666;
+	//- 			border:1px solid #999;
+	//- 			background-color:#eee;
+	//- 			-moz-border-radius:10px;
+	//- 			-webkit-border-radius: 150px;
+	//- 			-moz-box-shadow:#999 2px 0px 3px;
+	//- 			-webkit-box-shadow:#999 2px 0px 3px;
+	//- 			margin-bottom:4px;
+	//- 		}
+
+	#cookieTest
+	button(onclick="widgetContactsCollectionScript.postTest();") postTest
+
+
+
+	div(id="widgetContactsCollectionDiv" class="easyui-window" title="Window Layout" data-options="iconCls:'icon-save'" style="width:80%;height:80%;padding:5px;")
+		div(id="widgetContactsCollection_layout_0" class="easyui-layout" data-options="fit:true")
+			div(data-options="region:'east',split:true" style="width:50%")
+
+
+				div(id="widgetContactsCollection_tabs_0" class="easyui-tabs" data-options="fit:true, tabWidth:100,tabHeight:60" style="width:700px;height:250px")
+					div(title="<span class='tt-inner'><img style='float: left; height:40px;' src='public/images/ui/sms32x.png'/>Sms</span>" style="padding:10px")
+						
+
+						div(id="widgetContactsCollection_layout_1" class="easyui-layout" data-options="fit:true")
+							div(data-options="region:'north', border:false" style="height:30%")
+								img(id="smsSelectedImage" class='magicCirc' style='float:left; height:50px;' src = '')
+								div(id="" style="vertical-align: middle;display: inline-block;")
+										p(id="smsSelectedNameAndNumber" style="font:16px/18px Arial, Helvetica, sans-serif;") &nbsp;&nbsp;Ben Hopper &nbsp;&nbsp;&nbsp; 1 256 353 8951
+
+
+							div(data-options="region:'center', border:false" style="height:50%")
+								input(id="widgetContactsCollection_msMessageToSend" class="easyui-textbox" name="message" data-options="multiline:true," style="height:80%; width:100%")
+							div(data-options="region:'south', border:false" style="height:20%")
+								a(id="widgetContactsCollection_buttonSendSms" class="easyui-linkbutton" data-options="iconCls:'icon-send'" href="javascript:void(0)" onclick="" style="width:80px") Send
+
+
+
+					div(title="<span class='tt-inner'><img style='float: left; height:40px; ' src='public/images/ui/androidPhoneImg.png'/>Phone</span>" style="padding:10px")
+						p In computing, an image scanner—often abbreviated to just scanner—is a device that optically scans images, printed text, handwriting, or an object, and converts it to a digital image.
+
+					div(title="<span class='tt-inner'><img style='float: left; height:40px' src='public/images/ui/email.png'/>Email</span>" style="padding:10px")
+						p A personal digital assistant (PDA), also known as a palmtop computer, or personal data assistant, is a mobile device that functions as a personal information manager. PDAs are largely considered obsolete with the widespread adoption of smartphones.
+
+					div(title="<span class='tt-inner'><img style='float: left;' src='public/images/ui/tablet.png'/>Nothing</span>" style="padding:10px")
+						p A tablet computer, or simply tablet, is a one-piece mobile computer. Devices typically have a touchscreen, with finger or stylus gestures replacing the conventional computer mouse.
+
+
+
+
+			div(data-options="region:'center'" style="padding:0px;")
+
+
+				table(id="widgetContactsCollectionDataGrid" class="easyui-datagrid" title="" style="width:700px;height:250px" data-options="fit:true,singleSelect:true,collapsible:true")
+					thead
+						tr
+							//- th(data-options="field:'itemid',resizable:false" width="15%") Item ID(15%)
+							//- th(data-options="field:'productid',resizable:false" width="15%") Product(15%)
+							//- th(data-options="field:'listprice',align:'right',resizable:false" width="15%") List Price(15%)
+							//- th(data-options="field:'unitcost',align:'right',resizable:false" width="15%") Unit Cost(15%)
+							//- th(data-options="field:'attr1',resizable:false" width="25%") Attribute(25%)
+							//- th(data-options="field:'status',align:'center',resizable:false" width="15%") Status(15%)
+
+
+
+			div(data-options="region:'south',border:false" style="text-align:right;padding:5px 0 0; height:40px")
+				a(id="widgetContactsCollection_buttonOk" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" href="javascript:void(0)" onclick="javascript:alert('ok')" style="width:80px") Ok
+				a(id="widgetContactsCollection_buttonCancel" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" href="javascript:void(0)" onclick="javascript:alert('cancel')" style="width:80px") Cancel
+
+
+
+
+
+
+
+
+	script.
+		var widgetContactsCollectionScript = new function(){
+			var _this = this;
+
+			//######################################################
+			//--- > L O A D  <--------------------------------------
+			//######################################################
+			this.load = function(){ //$(document).ready(function(){
+				$('#widgetContactsCollectionDiv').window({
+					title:'  Contacts Window',
+					closed:true,
+					width:'986px',
+					height:'468px',
+					modal:false,
+					minimizable:false,
+					maximizable:false,
+					onBeforeClose: function(){}
+				});
+
+				$('#widgetContactsCollection_layout_0').layout(
+					{
+						fit:true
+					}
+				);
+
+				$('#widgetContactsCollection_layout_1').layout(
+					{
+						fit:true
+					}
+				);
+
+				$('#widgetContactsCollection_tabs_0').tabs(
+					{
+						fit:true,
+						tabWidth:100,
+						tabHeight:60,
+						width:'700px',
+						height:'250px',
+						onSelect:function(title){
+							console.log(title + ' is selected');
+						}
+					}
+				);
+
+				$('#widgetContactsCollection_msMessageToSend').textbox(
+					{
+						multiline:true,
+						width:'100%',
+						height:'80%'
+					}
+				);
+
+				$('#widgetContactsCollection_buttonSendSms').linkbutton(
+					{
+						text:'Send Sms',
+						iconCls:'icon-send',
+						iconAlign:'left',
+						width:80
+					}
+				);
+
+				$('#widgetContactsCollection_buttonOk').linkbutton(
+					{
+						text:'Ok',
+						//iconCls:'icon-send',
+						//iconAlign:'left',
+						width:80
+					}
+				);
+
+				$('#widgetContactsCollection_buttonCancel').linkbutton(
+					{
+						text:'Cancel',
+						//iconCls:'icon-send',
+						//iconAlign:'left',
+						width:80
+					}
+				);
+
+
+
+
+
+				$('#widgetContactsCollectionDataGrid').datagrid({
+					fitColumns:true,
+					columns:
+						[
+							[
+								{
+									field:'imagePath',
+									title:'imagePath',
+									width:'18%',
+									formatter: function(value,row,index){
+										console.log('output tester:');
+										console.dir(value);
+										console.dir(row);
+										console.dir(index);
+										return "<img class='magicCirc' style='height:50px;' src = '" + row.imagePath + "'></img>"; //value + "9";
+									}
+
+								},
+
+								{
+									field:'contactName',
+									title:'contactName',
+									width:'33%'
+								},
+
+								{
+									field:'contactNumber',
+									title:'contactNumber',
+									width:'49%',
+									align:'left'
+								}
+							]
+						],
+					onSelect:function(index,row){
+						$('#smsSelectedImage').attr("src",row.imagePath);
+						$('#smsSelectedNameAndNumber').html("&nbsp;&nbsp;" + row.contactName + "&nbsp;&nbsp;&nbsp;" + row.contactNumber);
+					},
+					toolbar: 
+					[
+						{
+							text:'Add Contact',
+							iconCls:'icon-add',
+							handler:function(){
+								if(!($('#addContactForm').length)){
+									$.get( "/widget_contactsform", function(data){
+										$('body').append("<div id='addContactDiv'></div>");
+										$('#addContactDiv').html(data);
+										Widget_contactsFormScript.setDataGridId('widgetContactsCollectionDataGrid');
+										Widget_contactsFormScript.open(
+											{
+												add:true
+											}
+										);
+									});
+								}else{
+									Widget_contactsFormScript.open(
+										{
+											add:true
+										}
+									);
+								}
+							}
+						},{
+							text:'Edit Contact',
+							iconCls:'icon-cut',
+							handler:function(){
+								if(!($('#addContactForm').length)){
+									//must have selected--
+									if(_this.getSelectedRowIndexFromGrid() == -1){console.log('nothing selected!!'); return false;};
+									$.get( "/widget_contactsform", function(data){
+										$('body').append("<div id='addContactDiv'></div>");
+										$('#addContactDiv').html(data);
+										Widget_contactsFormScript.setDataGridId('widgetContactsCollectionDataGrid');
+										Widget_contactsFormScript.open(
+											{
+												edit:true
+											}
+										);
+									});
+								}else{
+									console.log('addContactForm already loaded!!!');
+									Widget_contactsFormScript.open(
+										{
+											edit:true
+										}
+									);
+								}
+							}
+						},
+						'-',
+						{
+							text:'Delete Contact',
+							iconCls:'icon-clear',
+							handler:function(){
+								if(_this.getSelectedRowIndexFromGrid() == -1){console.log('nothing selected!!'); return false;};
+								$.messager.confirm('About to delete', 'Are you sure you want to delete contact?', function(result){
+									if (result){
+										$postAjax(
+											{
+												url:'database/deleteContact',
+												send:
+													{
+														id:$('#widgetContactsCollectionDataGrid').datagrid('getSelected').id
+													},
+												onAjaxSuccess:function(inResponseText){
+													inResponseText = JSON.parse(inResponseText);
+													console.dir(inResponseText);
+													_this.gridDeleteRow(_this.getSelectedRowIndexFromGrid());
+													_this.gridSelectFirstRow();
+												}
+											}
+										);
+									}
+								});
+							}
+						}
+					]
+
+				});
+
+
+				_this.loadAllContactsFromService(function(err){
+					_this.gridSelectFirstRow();
+				});
+
+
+
+				//event od send sms---
+				$('#widgetContactsCollection_buttonSendSms').click(function(){
+					console.log('send sms!!!!!!!:' + $('#widgetContactsCollection_msMessageToSend').val());
+					//smsSendSmsMessage
+					console.log('xxT:' + $('#widgetContactsCollectionDataGrid').datagrid('getSelected').contactNumber);
+					//-send sms to device---
+					if($('#widgetContactsCollectionDataGrid').datagrid('getSelected').contactNumber){
+						commManager.transactionToDeviceToken(
+							{
+								routing:
+									{
+										command:'smsSendSmsMessage'
+									},
+								data:
+									{
+										phoneNumber:$('#widgetContactsCollectionDataGrid').datagrid('getSelected').contactNumber,
+										smsMessage:$('#widgetContactsCollection_msMessageToSend').val()
+									},
+
+								onComplete:function(inDataLayer, inTransportLayer){
+									console.log('onComplete transactionToDeviceToken call back entered');
+								}
+							}
+						);//-end comm
+					}
+				});//----end click
+
+				//- $('#widgetContactsCollectionDataGrid').datagrid('load', {
+				//- 	name: 'easyui',
+				//- 	address: 'ho'
+				//- });
+			} //);//---LOAD END---
+
+
+
+
+
+
+
+
+
+
+
+
+
+			this.clearGrid = function(){
+				//$('#widgetContactsCollectionDataGrid').datagrid('reload');
+				$('#widgetContactsCollectionDataGrid').datagrid(
+					{
+						data: [{}]
+					}
+				);
+			}
+
+			//this.loadWindow = function(){}
+
+			this.show = function(){
+				$('#widgetContactsCollectionDiv').window('open');
+			}
+			this.hide = function(){
+				$('#widgetContactsCollectionDiv').window('close');
+			}
+
+			this.getSelectedRowIndexFromGrid = function(){
+				if(!($('#widgetContactsCollectionDataGrid').datagrid('getSelected'))){return -1;}
+				return $('#widgetContactsCollectionDataGrid').datagrid('getRowIndex',$('#widgetContactsCollectionDataGrid').datagrid('getSelected'));
+			}
+
+			this.updateGridDataForRowIndex = function(inIndex, inRowData){
+				$('#widgetContactsCollectionDataGrid').datagrid('updateRow',{
+					index: inIndex,
+					row: inRowData
+				});
+			}
+
+			this.gridDataAppendRow = function(inRowData){
+				$('#widgetContactsCollectionDataGrid').datagrid('appendRow',inRowData);
+			}
+
+			this.gridDeleteRow = function(inIndex){
+				$('#widgetContactsCollectionDataGrid').datagrid('deleteRow', inIndex);
+			}
+
+			this.gridSelectRow = function(inIndex){
+				$('#widgetContactsCollectionDataGrid').datagrid('selectRow', inIndex);
+			}
+
+			this.gridSelectLastRow = function(){
+				$('#widgetContactsCollectionDataGrid').datagrid('selectRow', $('#widgetContactsCollectionDataGrid').datagrid('getRows').length -1);
+			}
+
+			this.gridSelectFirstRow = function(){
+				$('#widgetContactsCollectionDataGrid').datagrid('selectRow', 0);
+			}
+
+			this.loadAllContactsFromService = function(inPostFunction){
+				$postAjax(
+					{
+						url:'database/getContacts',
+						send:
+							{
+								//- companyName:$('#widget_contactsForm_name').val(),
+								//- department:$('#widget_contactsForm_department').val(),
+								//- companyName:$('#widget_contactsForm_company').val(),
+								//- emailAddress:$('#widget_contactsForm_email').val(),
+								//- imageUrl:$('#widget_contactsForm_image').attr('src'),
+								//- name:$('#widget_contactsForm_name').val(),
+								//- phoneNumber:$('#widget_contactsForm_phone').val(),
+								//- refNumber:'',
+								//- title:$('#widget_contactsForm_title').val()
+							},
+						onAjaxSuccess:function(inResponseText){
+							inResponseText = JSON.parse(inResponseText);
+							console.log('ajax callback------------------------');
+							console.dir(inResponseText);
+							if(inResponseText.hadError == false){
+								console.log('inResponseText.hadError == false');
+								if(inResponseText.rows){
+									console.dir('rows yes');
+									for(rowIndex in inResponseText.rows){
+										console.log('row:' + rowIndex);
+										$('#widgetContactsCollectionDataGrid').datagrid('appendRow',
+											{
+												id 				:inResponseText.rows[rowIndex].id,
+												imagePath		:inResponseText.rows[rowIndex].imageUrl,
+												contactName 	:inResponseText.rows[rowIndex].name,
+												contactNumber 	:inResponseText.rows[rowIndex].phoneNumber,
+												emailAddress 	:inResponseText.rows[rowIndex].emailAddress,
+												companyName 	:inResponseText.rows[rowIndex].companyName,
+												department 		:inResponseText.rows[rowIndex].department,
+												title 			:inResponseText.rows[rowIndex].title,
+												refNumber 		:inResponseText.rows[rowIndex].refNumber
+											}
+										);
+									}
+								}
+							}
+							if(inPostFunction){inPostFunction(inResponseText.hadError);}
+						}
+					}
+
+				);
+			}//--end loadAllContactsFromService--------------------
+
+
+			//- 	commManager.transactionToDeviceToken(
+			//- 		{
+			//- 			routing:
+			//- 				{
+			//- 					command:'getContactInformation'
+			//- 				},
+
+			//- 			onComplete:function(inDataLayer, inTransportLayer){
+			//- 				//---inDataLayer.contactInformation
+			//- 				console.log('------------loadAllContactsFromDevice----------------');
+			//- 				//console.dir(inDataLayer.contactInformation);
+			//- 				for(index in inDataLayer.contactInformation){
+			//- 					console.log('----------------------------------------------------------' + inDataLayer.contactInformation[index].contactName);
+			//- 					$('#widgetContactsCollectionDataGrid').datagrid('appendRow',{
+			//- 						imagePath:"public/images/characters/face1.jpg",
+			//- 						//id:inDataLayer.contactInformation[index].contactId,
+			//- 						contactName:inDataLayer.contactInformation[index].contactName,
+			//- 						contactNumber:inDataLayer.contactInformation[index].contactNumber,
+			//- 						emailAddress:inDataLayer.contactInformation[index].contactEmailAddress
+			//- 					});
+			//- 				}
+			//- 			}
+			//- 		}
+			//- 	);
+			//- }//--end loadAllContactsFromDevice--------------------
+		//img(id="testxx" class="memberImage magicCirc" src="public/images/characters/face1.jpg" style="height:50px;" )
+			this.postTest = function(){
+				var row = $('#widgetContactsCollectionDataGrid').datagrid('getSelected');
+				console.log('dataLeaving:');
+				console.dir(row);
+				$postAjax(
+					{
+						url:'database/addContact',
+						send:
+							{
+								companyName:'MyCompany',
+								department:'myDepartment',
+								emailAddress:'myEnailAddr',
+								//imageUrl:configData.contacts.defaultImageUrl,
+								name:'benHoHard   eex name ',
+								phoneNumber:'1(256) 353-8952',
+								refNumber:'',
+								title:''
+							},
+						onAjaxSuccess:function(inResponseText){
+							//alert(inResponseText);
+						}
+					}
+				);
+
+			}
+
+		}();
+

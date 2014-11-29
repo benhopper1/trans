@@ -1,0 +1,188 @@
+script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
+script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
+script(type='text/javascript', src='/js/qrcode/qrcode.js')
+
+script(type='text/javascript', src='/js/commmanager/commmanager.js')
+script(type='text/javascript', src='/js/clientutil/clientutil.js')
+
+
+script(type='text/javascript', src='public/js/easyui/jquery.easyui.min.js')
+link(rel='stylesheet', href='public/js/easyui/themes/default/easyui.css')
+link(rel='stylesheet', href='public/js/easyui/themes/default/icon.css')
+
+script(type='text/javascript', src='public/js/welcome/treehelper.js')
+
+script.
+	var getUserId =function(){return '#{userId}';}
+	var getDeviceId = function(){return '#{deviceId}';}
+	var getURL = function(){return '#{URL}';}
+
+
+//script(type='text/javascript', src='/js/angular/angular.js')
+doctype html
+html(lang="en")
+	head
+
+	body
+		script(type='text/javascript', src='public/js/angular/angular.js')
+		script(type='text/javascript', src='public/js/angular/uuid.js')
+		script(type='text/javascript', src='/cs_controllers/firstcontroller.js')
+		script(type='text/javascript', src='/cs_models/firstmodel.js')
+
+		script(type='text/javascript', src='public/js/easyui/jquery.easyui.min.js')
+		link(rel='stylesheet', href='public/js/easyui/themes/default/easyui.css')
+		link(rel='stylesheet', href='public/js/easyui/themes/default/icon.css')
+
+
+		h1 testDiv
+			button(onclick="sendTest()") sendTest
+
+script.
+	jQuery(document).ready(function($) {
+
+				commManager = commManagerNameSpace.getCommManagerInstance(
+			{
+				webSocketClient:{address:"192.168.0.16",port:30300,connectString:"hkjhkjh"},
+				connectToDeviceTypes:
+					[
+						'androidApp'
+					],
+
+				login:
+					{
+						userName:'ben',
+						password:'4747'
+					},
+				onReady:function(){
+					console.log('onReady');
+				},
+				onLoginSuccess:function(inTransportLayer_string, inFamilyCredentialArray, filteredCredentialsArray){
+					console.log('onLoginSuccess');
+					console.dir(inTransportLayer_string);
+					console.log('-----------------------inFamilyCredentialArray--------:');
+					console.dir(inFamilyCredentialArray);
+					console.log('-----------------------filteredCredentialsArray--------:');
+					console.dir(filteredCredentialsArray);
+
+
+					//createFilters();
+
+
+					//- $.get( "/widget_contactscollection", function(data){
+					//- 	$("#contactsWindow").append(data);
+					//- });
+					
+
+					
+					//- commManager.TransactionResponseObject.add(
+					//- 	{
+					//- 		command:'test1',
+					//- 		onMatch:function(inTransportLayer, returnTransactionFunction){
+					//- 			console.log('test tr 55:');
+					//- 			console.dir(inTransportLayer.toString());
+					//- 			returnTransactionFunction(
+					//- 				{
+					//- 					testDataKey77:'testDataValue77'
+					//- 				}
+					//- 			);
+					//- 		}
+					//- 	}
+					//- );
+
+					//createTree();
+				},
+				//#############################################################################################################
+				//--------When one of your family devices dis/connect ---------------------------------------------------------
+				//#############################################################################################################
+
+				onFamilyDeviceConnect:function(inMsg, inLocal, inData, inRefObj){
+				},
+
+				onFamilyDeviceDisconnect:function(inMsg, inLocal, inData, inRefObj){
+				}
+			}
+		);
+	//});
+
+
+
+
+
+
+
+
+
+
+	});
+
+	
+	//#############################################################################
+	//Chunk contacts process--------------------------
+	//#############################################################################
+	var chunkArray;
+	var sendTest = function(){
+		commManager.sendTransactionSeries(
+			{
+				command:'GetAllSmsByNumber',
+				data:
+					{
+						phoneNumber:"256-606-6202"
+
+					},
+				onFirst:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+					console.log("CALBACK onFirst");
+					chunkArray = [];
+				},
+
+				onLast:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+					console.log("CALBACK onLast");
+					console.dir(chunkArray);
+				},
+
+				onAll:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+					console.log("CALBACK onAll");
+
+					if(inDataLayer_json.dataArray){
+						for(index in inDataLayer_json.dataArray){
+							chunkArray.push(inDataLayer_json.dataArray[index]);
+						}
+					}
+
+					next();
+				},
+				onComplete:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+					console.log("CALBACK onComplete");
+					console.dir(chunkArray);
+				}
+
+			}
+		);
+
+
+		//- var transportLayer = new TransportLayer();
+		//- transportLayer
+		//- 	.userId('')
+		//- 	.deviceId('')
+		//- 	.securityToken('$ecurity4')
+		//- 	.transactionId(false)
+		//- ;
+		//- transportLayer.routingLayer()
+		//- 	.type('transactionSeriesToToken')
+		//- 	.add('stage', 'firstSourceOut')
+		//- 	.add('targetTokenId',commManager.getConnectedDeviceTokenId())
+		//- 	.add('frame', '-1')
+		//- 	.add('command', 'waitForQr')
+		//- ;
+		//- transportLayer.dataLayer()
+		//- 	.add('userName', 'na')
+		//- ;
+		//- commManager.sendString(transportLayer.toString());
+
+		//- _this.sendTransaction(transportLayer, function(inTransportLayer){
+		//- 	if(inData.onScan){
+		//- 		inData.onScan(inTransportLayer.toJson().dataLayer, inTransportLayer);
+		//- 	}
+		//- });
+		
+
+	}

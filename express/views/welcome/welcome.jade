@@ -1,0 +1,634 @@
+head 
+
+
+body()
+	script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
+	script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
+	script(type='text/javascript', src='/js/qrcode/qrcode.js')
+
+	script(type='text/javascript', src='/js/commmanager/commmanager.js')
+	script(type='text/javascript', src='/js/clientutil/clientutil.js')
+
+
+	script(type='text/javascript', src='public/js/easyui/jquery.easyui.min.js')
+	link(rel='stylesheet', href='public/js/easyui/themes/default/easyui.css')
+	link(rel='stylesheet', href='public/js/easyui/themes/default/icon.css')
+
+	//script(type='text/javascript', src='public/js/welcome/treehelper.js')
+
+	script.
+		var getUserId =function(){return '#{userId}';}
+		var getDeviceId = function(){return '#{deviceId}';}
+		var getURL = function(){return '#{URL}';}
+	style.
+		.imgAndData{
+			font-size: 13px;
+			font-style: normal;
+			font-weight: normal;
+			padding-left: 5px;
+			LINE-HEIGHT:15px;
+			background-color: #eee;
+
+		}
+
+		.magicCirc{
+			padding:4px;
+			display:inline-block;
+			cursor:pointer;
+			font:12px/14px Arial, Helvetica, sans-serif;
+			color:#666;
+			border:1px solid #999;
+			background-color:#eee;
+			-moz-border-radius:10px;
+			-webkit-border-radius: 150px;
+			-moz-box-shadow:#999 2px 0px 3px;
+			-webkit-box-shadow:#999 2px 0px 3px;
+			margin-bottom:4px;
+		}
+
+
+
+
+	//background-image: url('public/images/ui/cracked_bkg.png');
+	//body(style="background-color: #ffffff;")
+	//body(style"background-image: url('public/images/ui/background_crack.jpg')")
+	div(id="main_layout_0" class="easyui-layout" data-options="fit:true" style"")
+		div(data-options="region:'north',split:true" style="height:50px; background-image: url('public/images/ui/background_crack.jpg')")
+		div(data-options="region:'south',split:true" style="height:50px")
+		div(data-options="region:'west',split:true" style="width:150px; background-image: url('public/images/ui/background_crack.jpg')")
+		div(data-options="region:'center',split:true,title:'East',collapsible:false" style="background-image: url('public/images/ui/background_crack.jpg')")
+
+
+
+
+
+			img(src="public/temp/12566066202.jpg")
+			br
+			button(onclick="loadSmsWindow();") loadSmsWindow
+			br
+			button(onclick="loadContactsWindow();") loadContactsWindow
+			br
+			button(onclick="getAllSmsByNumber();") getAllSmsByNumber
+			br
+
+			#smsWindowDiv
+			#contactsWindow
+			center
+				#phoneContactDiv
+				a(id="downloadLinkApp" href="public/download/androidapp/QrReader.apk" download) download app
+				#qrAccord(class="easyui-accordion" style="width:220px;")
+					#lay1(title="Scan to login" data-options="iconCls:'icon-search',collapsed:false,collapsible:true" style="padding:10px;")
+						center
+							#qrCodeDiv(style="background-color: #ffffff;")
+					#lay2(title="Who" data-options="" style="padding:10px;")
+						center
+							#ffffff
+								h1 hello man
+				//#addContactDiv
+				button(onclick="doClick();") click
+				button(onclick="doClick2();") click2
+				button(onclick="doClick3();") click3
+				img(id="imgView")
+
+				table(style="width:70%")
+					tr
+						td
+							#treeBase(style="width:200px;height:500px; overflow: scroll; border:1px solid #ccc;")
+								ul(id="tree" class="easyui-tree" )
+
+						td
+							#displayDiv
+							a(id="downloadLink" href="" download)
+
+
+
+
+
+
+
+	script.
+		var commManager;
+		var deviceTokenId;
+		var contactsObject;
+		var storageObject;
+
+		var widgetSmsMessageWindowScript;
+
+		var deviceQuerySync;
+
+
+		jQuery.fn.center = function () {
+			this.css("position","absolute");
+			this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + 
+			$(window).scrollTop()) + "px");
+			this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + 
+			$(window).scrollLeft()) + "px");
+			return this;
+		}
+		$( document ).ready(function(){
+			var waitingDeviceTokenId;
+
+			$('#qrAccord').accordion(
+				{
+					animate:true,
+					selected:0
+				}
+			);
+
+			commManager = commManagerNameSpace.getCommManagerInstance(
+				{
+					webSocketClient:!{JSON.stringify(webSocketClient)},
+					connectToDeviceTypes:
+						[
+							'androidApp'
+						],
+
+					loginByScan:
+						{
+							onScan:function(inData){
+								waitingDeviceTokenId = inData.cd;
+								deviceTokenId = inData.cd; //maybe delete this one
+								jQuery('#qrCodeDiv').qrcode({
+									render	: "table",
+									text	: JSON.stringify(inData)
+								});
+							}
+						},
+					onReady:function(){
+						console.log('onReady');
+					},
+					onLoginSuccess:function(inTransportLayer_string, inFamilyCredentialArray, filteredCredentialsArray){
+						console.log('onLoginSuccess');
+						console.dir(inTransportLayer_string);
+						sessionSetupAndValidation("loginByScan", waitingDeviceTokenId);
+
+
+						createFilters();
+
+						//- waitingDialog = new WaitingDialog();
+						//- waitingDialog.show();
+
+						contactsObject = new ContactsObject();
+						userObject = new UserObject(function(userErr, userData){
+								console.log('userData:');
+								console.dir(userData);
+								contactsObject.refresh(function(contactErr, contactData){
+								console.log('contactsObject callback');
+								console.dir(contactData);
+								//loadSmsWindow();
+								//var panel_0 = $('#qrAccord').accordion('getPanel', 0);
+								console.dir($('#qrAccord').accordion('getPanel', 0));
+								$('#qrAccord').accordion('getPanel', 0).panel(
+									{
+										openDuration:3000,
+										closeDuration:3000
+									}
+								),
+								$('#qrAccord').accordion('getPanel', 0).panel("collapse",true);
+								$('#qrAccord').accordion('getPanel', 1).panel("expand",true);
+							});
+						});
+
+
+						
+						deviceQuerySync = new DeviceQuerySync(commManager);
+						storageObject = new StorageObject();
+						storageObject.getSmsLastId(function(inResultOflastId){
+							//console.log('lastResultId---------------------');
+							//console.dir(inResultOflastId);
+							deviceQuerySync.sms_getAllMessages(inResultOflastId, function(inSmsArray){
+								storageObject.addManySms(inSmsArray, function(inResult){
+
+		//							loadSmsWindow();
+
+								});
+							});
+						});
+						
+
+
+						//loadSmsWindow();
+						//getAllSmsByNumber();
+						//- $.get( "/widget_contactscollection", function(data){
+						//- 	$("#contactsWindow").append(data);
+						//- });
+
+					},
+					//#############################################################################################################
+					//--------When one of your family devices dis/connect ---------------------------------------------------------
+					//#############################################################################################################
+
+					onFamilyDeviceConnect:function(inMsg, inLocal, inData, inRefObj){
+					},
+
+					onFamilyDeviceDisconnect:function(inMsg, inLocal, inData, inRefObj){
+					}
+				}
+			);
+		});
+
+
+		//#############################################################################################################
+		//--------C o n t a c t s   O b j e c t ---------------------------------------------------------
+		//#############################################################################################################
+		var ContactsObject = function(){
+			var _this = this;
+			var contactHash;
+
+			this.refresh = function(inPostFunction){
+				loadData(inPostFunction);
+			}
+
+			this.getContactByPhone = function(inNumber){
+				if(inNumber){
+					if(contactHash){
+						var theContact = contactHash[cleanPhoneNumber(inNumber)];
+						if(theContact){
+							return theContact;
+						}else{
+							return false;
+						}
+					}
+				}
+			}
+
+			this.getAllContacts = function(){
+				if(contactHash){
+					return contactHash;
+				}
+			}
+
+			this.getImageUrlByPhone = function(){
+				if(inNumber){
+					if(contactHash){
+						var theContact = contactHash[cleanPhoneNumber(inNumber)];
+						if(theContact){
+							var theImageUrl = theContact.imageUrl;
+							if(theImageUrl){
+								return theContact.imageUrl;
+							}
+						}
+					}
+				}
+				return false;
+			}
+
+			var loadData = function(inPostFunction){
+				$postAjax(
+					{
+						url:'database/getContacts',
+						send:
+							{
+
+							},
+						onAjaxSuccess:function(inResponseText){
+
+							inResponseText = JSON.parse(inResponseText);
+							var contactInfoHashByPhone = {};
+							if(inResponseText.hadError == false){
+								//console.log('inResponseText.hadError == false');
+								if(inResponseText.rows){
+									for(rowIndex in inResponseText.rows){
+										if(inResponseText.rows[rowIndex].phoneNumber){
+											var cleanedPhoneNumber = cleanPhoneNumber(inResponseText.rows[rowIndex].phoneNumber);
+											inResponseText.rows[rowIndex].cleanPhoneNumber = cleanedPhoneNumber;
+											contactInfoHashByPhone[cleanedPhoneNumber] = inResponseText.rows[rowIndex];
+										}
+									}
+									contactHash = contactInfoHashByPhone;
+								}
+							}
+							console.log('####################################################');
+							console.log('------> CONTACT OBJECTS LOADED.... <----------------');
+							console.log('####################################################');
+							if(inPostFunction){
+								inPostFunction(inResponseText.hadError, contactInfoHashByPhone);
+							}
+						}
+					}
+				);
+			}
+		}//end contactsObj...
+
+		//#############################################################################################################
+		//-------- W a i t i n g   D i a l o g ---------------------------------------------------------
+		//#############################################################################################################
+		var WaitingDialog = function(){
+			var id = "dd_" + new Date().getTime();
+			var htmlString = '<div id="' + id + '"><center><img id="waitImage" src="public/images/ui/wait.gif"></img></center>></div>';
+			$("body").append(htmlString);
+			$('#' + id).dialog(
+				{
+					title: 'My Dialog',
+					width: 400,
+					height: 200,
+					closed: false,
+					cache: false,
+					//href: 'get_content.php',
+					modal: true
+				}
+			);
+			//var dialogHtml ='<center><dialog id="window"><h3>Hello World!</h3><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum, inventore!</p><button id="waitDialogCancelButton">Exit</button></dialog>';
+			
+			this.show = function(){
+				$('#' + id).dialog('open');
+			}
+
+			this.close = function(){
+				$('#' + id).dialog('close');
+			}
+
+		}
+
+		//#############################################################################################################
+		//-------- U s e r   O b j e c t ---------------------------------------------------------
+		//#############################################################################################################
+		var UserObject = function(inPostFunction){
+			var _this = this;
+			var userData;
+			this.getUserData = function(){
+				return userData;
+			}
+
+			this.refresh = function(inPostFunction){
+				_this.loadData(inPostFunction);
+			}
+
+			this.getImageUrl = function(){
+				if(userData){
+					if(userData.screenImage){
+						return userData.screenImage;
+					}
+				}
+				return false;
+			}
+
+			var loadData = function(inPostFunction){
+				$postAjax(
+					{
+						url:'database/getUserData',
+						send:
+							{
+
+							},
+						onAjaxSuccess:function(inResponseText){
+							inResponseText = JSON.parse(inResponseText);
+							var contactInfoHashByPhone = {};
+							if(inResponseText.hadError == false){
+								console.log('inResponseText.hadError == false');
+								if(inResponseText.rows){
+									userData = inResponseText.rows[0];
+									console.log('userdata--------------------------');
+									console.dir(userData);
+								}
+							}
+
+							if(inPostFunction){
+								inPostFunction(inResponseText.hadError, userData);
+							}
+						}
+					}
+				);
+			}
+			loadData(inPostFunction);
+		}//end userObj...
+
+
+
+
+
+		//------
+		var createFilters = function(){
+			var filterObj = new commManager.FilterObject();
+			filterObj.add('notification', function(inMsg, inLocal, inTransportLayer_json, inRefObj){
+
+
+
+				if(inTransportLayer_json.dataLayer.action == 'outgoingSms'){
+					console.log('outgoingSms--------------------');
+					// reread sync between db and phn
+					storageObject.getSmsLastId(function(inResultOflastId){
+						deviceQuerySync.sms_getAllMessages(inResultOflastId, function(inSmsArray){
+							storageObject.addManySms(inSmsArray, function(inResult){
+								if(widgetSmsMessageWindowScript){
+									console.log('widgetSmsMessageWindowScript.refreshGrid()--------------------');
+									if(widgetSmsMessageWindowScript){
+										widgetSmsMessageWindowScript.refreshGrid();
+									}
+								}
+							});
+						});
+					});
+				}//endOutgoingSms---
+
+
+
+
+				if(inTransportLayer_json.dataLayer.action == 'incomingSms'){
+					storageObject.getSmsLastId(function(inResultOflastId){
+						deviceQuerySync.sms_getAllMessages(inResultOflastId, function(inSmsArray){
+							storageObject.addManySms(inSmsArray, function(inResult){
+								if(widgetSmsMessageWindowScript){
+									console.log('widgetSmsMessageWindowScript.refreshGrid()--------------------');
+									if(widgetSmsMessageWindowScript){
+										widgetSmsMessageWindowScript.refreshGrid();
+									}
+								}
+							});
+						});
+					});
+					$.messager.show(
+						{
+							timeout:15000,
+							title:"<img style='float: left; height:40px' src='public/images/ui/email.png'/>" + "Incoming Sms Message",
+							msg:'Name:' + inTransportLayer_json.dataLayer.name + '<br>' + 'Phone Number:' + inTransportLayer_json.dataLayer.phoneNumber + '<br><br>' + 'Message:<br>' + inTransportLayer_json.dataLayer.msg,
+							showType:'slide',
+							height:'300px',
+							style:
+								{
+									right:'',
+									top:document.body.scrollTop+document.documentElement.scrollTop,
+									bottom:''
+								}
+						}
+					);
+				}
+
+				if(inTransportLayer_json.dataLayer.action == 'incomingPhoneCall'){
+					$.messager.show(
+						{
+							timeout:15000,
+							title:"<img style='float: left; height:40px' src='public/images/ui/email.png'/>" + "Incoming Phone Call",
+							msg:'Name:' + inTransportLayer_json.dataLayer.name + '<br>' + 'Phone Number:' + inTransportLayer_json.dataLayer.phoneNumber,
+							showType:'slide',
+							height:'300px',
+							style:
+								{
+									right:'',
+									top:document.body.scrollTop+document.documentElement.scrollTop,
+									bottom:''
+								}
+						}
+					);
+				}
+
+
+
+
+			});
+		}
+
+		var doClick = function(){
+			console.log('doClick');
+			commManager.transactionToDeviceToken(
+				{
+					routing:
+						{
+							command:'openPhone'
+						},
+
+					onComplete:function(inDataLayer, inTransportLayer){
+						console.log('onComplete transactionToDeviceToken call back entered');
+					}
+				}
+			);
+		}
+
+		var doClick2 = function(){
+			console.log('doClick2');
+			commManager.transactionToDeviceToken(
+				{
+					routing:
+						{
+							command:'phoneToSpeaker'
+						},
+
+					onComplete:function(inDataLayer, inTransportLayer){
+						console.log('onComplete transactionToDeviceToken call back entered');
+					}
+				}
+			);
+		}
+
+		var doClick3 = function(){
+			console.log('doClick3');
+			commManager.transactionToDeviceToken(
+				{
+					routing:
+						{
+							command:'getContactInformation'
+						},
+
+					onComplete:function(inDataLayer, inTransportLayer){
+						console.log('onComplete transactionToDeviceToken call back entered');
+						console.dir(inDataLayer);
+						console.log('---------------------------------------');
+						console.dir(inDataLayer.contactInformation);
+
+						var memberPanel_ajxObj = new clientUtilModule.AjaxJsonPostObject(
+								{
+									url:'widget_phoneContacts',
+									onAjaxSuccess:function(inResponseText){
+										$('#phoneContactDiv').html(inResponseText);
+									}
+								}
+						).send(
+							{
+								contactInformation:inDataLayer.contactInformation
+							}
+						);
+
+
+					}
+				}
+			);
+
+
+
+
+
+		}
+
+
+
+
+		var sessionSetupAndValidation = function(inType, inWaitingDeviceTokenId){
+			$postAjax(
+				{
+					url:'security/process',
+					send:
+						{
+							type:inType,
+							waitingDeviceTokenId:inWaitingDeviceTokenId
+						},
+					onAjaxSuccess:function(inResponseText){
+						//alert(inResponseText);
+					}
+				}
+			);
+		}
+
+		var loadSmsWindow = function(){
+			$( "#smsWindowDiv" ).load( "/widget_smsmessagewindow", function(){
+				widgetSmsMessageWindowScript.load();
+				widgetSmsMessageWindowScript.show();
+
+			});
+
+			//- $.get( "/widget_smsmessagewindow", function(data){
+			//- 		$("#smsWindowDiv").append(data);
+			//- });
+		}
+
+		var loadContactsWindow = function(){
+			$( "#contactsWindow" ).load( "/widget_contactscollection", function(){
+				//widgetContactsCollectionScript.loadWindow();
+				widgetContactsCollectionScript.load();
+				widgetContactsCollectionScript.show();
+
+			});
+
+			//- $.get( "/widget_contactscollection", function(data){
+			//- 	$("#contactsWindow").append(data);
+			//- });
+		}
+
+		var chunkArray;
+		var getAllSmsByNumber = function(){
+			commManager.sendTransactionSeries(
+				{
+					command:'getAllSmsByNumber', //'GetAllSmsByNumber',
+					data:
+						{
+							phoneNumber:"256-606-6202"
+
+						},
+					onFirst:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+						console.log("CALBACK onFirst");
+						chunkArray = [];
+					},
+
+					onLast:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+						console.log("CALBACK onLast");
+						console.dir(chunkArray);
+					},
+
+					onAll:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+						console.log("CALBACK onAll");
+
+						if(inDataLayer_json.dataArray){
+							for(index in inDataLayer_json.dataArray){
+								chunkArray.push(inDataLayer_json.dataArray[index]);
+							}
+						}
+
+						next();
+					},
+					onComplete:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+						console.log("CALBACK onComplete");
+						console.dir(chunkArray);
+					}
+
+				}
+			);
+		}
