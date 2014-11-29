@@ -45,6 +45,12 @@ body()
 			-webkit-box-shadow:#999 2px 0px 3px;
 			margin-bottom:4px;
 		}
+		.center{
+			margin-left: auto;
+			margin-right: auto;
+			width: 70%;
+			background-color: #b0e0e6;
+		}
 
 
 
@@ -54,10 +60,27 @@ body()
 	//body(style"background-image: url('public/images/ui/background_crack.jpg')")
 	div(id="main_layout_0" class="easyui-layout" data-options="fit:true" style"")
 		div(data-options="region:'north',split:true" style="height:50px; background-image: url('public/images/ui/background_crack.jpg')")
+			div(class="easyui-panel" data-options="fit:true" style="padding:5px; opacity:.8;")
+				a(id="main_menu_lb_0" href="#" class="easyui-linkbutton" data-options="plain:true" style="") Home
+				a(id="main_menu_lb_1" href="#" class="easyui-splitbutton" data-options="menu:'#mm2',iconCls:'icon-edit'") Edit
+				//a(id="main_menu_lb_2" href="#" class="easyui-splitbutton" data-options="menu:'#mm2',iconCls:'icon-ok'") Ok
+				//a(id="main_menu_lb_3" href="#" class="easyui-menubutton" data-options="menu:'#mm3',iconCls:'icon-help'") Help
+			div(id="mm2" style="width:100px;")
+				div(data-options="iconCls:'icon-ok'") Ok
+				div(data-options="iconCls:'icon-cancel'") Cancel
+
+
 		div(data-options="region:'south',split:true" style="height:50px")
 		div(data-options="region:'west',split:true" style="width:150px; background-image: url('public/images/ui/background_crack.jpg')")
 		div(data-options="region:'center',split:true,title:'East',collapsible:false" style="background-image: url('public/images/ui/background_crack.jpg')")
-
+			#qrAccord(class="easyui-accordion center" data-options="" style="width:220px;")
+				#lay1(title="Scan to login" data-options="iconCls:'icon-search',collapsed:false,collapsible:true" style="padding:10px;")
+					center
+						#qrCodeDiv(style="background-color: #ffffff;")
+				#lay2(title="Who" data-options="" style="padding:10px;")
+					center
+						#ffffff
+							h1 hello man
 
 
 
@@ -76,14 +99,14 @@ body()
 			center
 				#phoneContactDiv
 				a(id="downloadLinkApp" href="public/download/androidapp/QrReader.apk" download) download app
-				#qrAccord(class="easyui-accordion" style="width:220px;")
-					#lay1(title="Scan to login" data-options="iconCls:'icon-search',collapsed:false,collapsible:true" style="padding:10px;")
-						center
-							#qrCodeDiv(style="background-color: #ffffff;")
-					#lay2(title="Who" data-options="" style="padding:10px;")
-						center
-							#ffffff
-								h1 hello man
+				//- #qrAccord(class="easyui-accordion" style="width:220px;")
+				//- 	#lay1(title="Scan to login" data-options="iconCls:'icon-search',collapsed:false,collapsible:true" style="padding:10px;")
+				//- 		center
+				//- 			#qrCodeDiv(style="background-color: #ffffff;")
+				//- 	#lay2(title="Who" data-options="" style="padding:10px;")
+				//- 		center
+				//- 			#ffffff
+				//- 				h1 hello man
 				//#addContactDiv
 				button(onclick="doClick();") click
 				button(onclick="doClick2();") click2
@@ -116,6 +139,8 @@ body()
 
 		var deviceQuerySync;
 
+		var menuObject;
+
 
 		jQuery.fn.center = function () {
 			this.css("position","absolute");
@@ -127,6 +152,8 @@ body()
 		}
 		$( document ).ready(function(){
 			var waitingDeviceTokenId;
+			menuObject = new MenuObject();
+			menuObject.load();
 
 			$('#qrAccord').accordion(
 				{
@@ -393,7 +420,23 @@ body()
 			loadData(inPostFunction);
 		}//end userObj...
 
+		//#############################################################################################################
+		//--------M E N U   O B J E C T ---------------------------------------------------------
+		//#############################################################################################################
+		var MenuObject = function(){
+			var _this = this;
 
+			this.load = function(){
+				$('#main_menu_lb_0').linkbutton(
+					{
+						text:'Send Sms',
+						iconCls:'icon-ok',
+						iconAlign:'left',
+						width:80
+					}
+				);
+			}
+		}
 
 
 

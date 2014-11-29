@@ -123,8 +123,8 @@ wss.on('connection', function(ws){
 var TcpServer = require(basePath + '/libs/tcpservices/tcpserver.js');
 var tcpServer = new TcpServer(
 	{
-		host:"192.168.0.16",
-		port:30400,
+		host:configData.bridgeServices.host,
+		port:configData.bridgeServices.port,
 		onInstall:function(){},
 		onDisconnect:function(){},
 		onConnect:function(){},
