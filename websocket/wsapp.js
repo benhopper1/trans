@@ -30,7 +30,7 @@ var connection = Connection.getMaybeCreate(
 
 
 
-//{port: 30300}
+
 var WebSocketServer = require(basePath + '/node_modules/ws').Server
   , wss = new WebSocketServer(
 	{

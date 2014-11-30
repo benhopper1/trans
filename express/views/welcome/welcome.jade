@@ -14,6 +14,8 @@ body()
 	link(rel='stylesheet', href='public/js/easyui/themes/default/easyui.css')
 	link(rel='stylesheet', href='public/js/easyui/themes/default/icon.css')
 
+	script(type='text/javascript', src='public/js/hashofarray/hashofarrayobject.js')
+
 	//script(type='text/javascript', src='public/js/welcome/treehelper.js')
 
 	script.
@@ -34,6 +36,20 @@ body()
 		.magicCirc{
 			padding:4px;
 			display:inline-block;
+			font:12px/14px Arial, Helvetica, sans-serif;
+			color:#666;
+			border:1px solid #999;
+			background-color:#eee;
+			-moz-border-radius:10px;
+			-webkit-border-radius: 150px;
+			-moz-box-shadow:#999 2px 0px 3px;
+			-webkit-box-shadow:#999 2px 0px 3px;
+			margin-bottom:4px;
+		}
+
+		.magicCircPnt{
+			padding:4px;
+			display:inline-block;
 			cursor:pointer;
 			font:12px/14px Arial, Helvetica, sans-serif;
 			color:#666;
@@ -45,12 +61,51 @@ body()
 			-webkit-box-shadow:#999 2px 0px 3px;
 			margin-bottom:4px;
 		}
+
 		.center{
 			margin-left: auto;
 			margin-right: auto;
 			width: 70%;
 			background-color: #b0e0e6;
 		}
+
+		//- @-webkit-keyframes thumb {
+		//- 	0% { -webkit-transform: scale(1); }
+		//- 	50% { -webkit-transform: scale(0.5); }
+		//- 	100% { -webkit-transform: scale(1); }
+		//- }
+
+		//- .backbutton img:hover{
+		//- 	-webkit-animation-name: thumb;
+		//- 	-webkit-animation-duration: 200ms;
+		//- 	-webkit-transform-origin:50% 50%;
+		//- 	-webkit-animation-iteration-count: 2;
+		//- 	-webkit-animation-timing-function: linear;
+		//- }
+
+		@-webkit-keyframes spaceboots {
+			0% { -webkit-transform: translate(2px, 1px) rotate(0deg); }
+			10% { -webkit-transform: translate(-1px, -2px) rotate(-40deg); }
+			20% { -webkit-transform: translate(-3px, 0px) rotate(40deg); }
+			30% { -webkit-transform: translate(0px, 2px) rotate(0deg); }
+			40% { -webkit-transform: translate(1px, -1px) rotate(1deg); }
+			50% { -webkit-transform: translate(-1px, 2px) rotate(-1deg); }
+			60% { -webkit-transform: translate(-3px, 1px) rotate(0deg); }
+			70% { -webkit-transform: translate(2px, 1px) rotate(-1deg); }
+			80% { -webkit-transform: translate(-1px, -1px) rotate(1deg); }
+			90% { -webkit-transform: translate(2px, 2px) rotate(0deg); }
+			100% { -webkit-transform: translate(1px, -2px) rotate(-1deg); }
+		}
+		.shake {
+			-webkit-animation-name: spaceboots;
+			-webkit-animation-duration: 0.8s;
+			-webkit-transform-origin:50% 50%;
+			-webkit-animation-iteration-count: 15;//infinite;
+			-webkit-animation-timing-function: linear;
+		}
+		//- .shake {
+		//- 	display:inline-block
+		//- }//just add    shake 
 
 
 
@@ -134,6 +189,8 @@ body()
 		var deviceTokenId;
 		var contactsObject;
 		var storageObject;
+
+		var eventObject = new EventObject();
 
 		var widgetSmsMessageWindowScript;
 
@@ -221,8 +278,8 @@ body()
 						deviceQuerySync = new DeviceQuerySync(commManager);
 						storageObject = new StorageObject();
 						storageObject.getSmsLastId(function(inResultOflastId){
-							//console.log('lastResultId---------------------');
-							//console.dir(inResultOflastId);
+							console.log('lastResultId---------------------');
+							console.dir(inResultOflastId);
 							deviceQuerySync.sms_getAllMessages(inResultOflastId, function(inSmsArray){
 								storageObject.addManySms(inSmsArray, function(inResult){
 
@@ -273,16 +330,49 @@ body()
 						if(theContact){
 							return theContact;
 						}else{
+							//create blank contact
 							return false;
 						}
 					}
 				}
+			}
+			var uId = 0;
+			this.createUnknownContact = function(inJsonStruct){
+				if(!(inJsonStruct.phoneNumber)){return false;}
+				inJsonStruct.phoneNumber = cleanPhoneNumber(inJsonStruct.phoneNumber);
+				var params = 
+					{
+						cleanPhoneNumber: (inJsonStruct.cleanPhoneNumber) ? inJsonStruct.cleanPhoneNumber : inJsonStruct.phoneNumber,
+						companyName: "",
+						department: "",
+						emailAddress: "",
+						id: 'unknown_' + uId++,
+						imageUrl: "/public/images/characters/unknown.png",
+						name: "Unknown",
+						phoneNumber: "",
+						refNumber: "",
+						title: "",
+						userId: false
+					}
+				params = $.extend(params,inJsonStruct);
+				contactHash[inJsonStruct.phoneNumber] = params;
+				return params;
 			}
 
 			this.getAllContacts = function(){
 				if(contactHash){
 					return contactHash;
 				}
+			}
+
+			this.getAllContactsAsArray = function(){
+				var theArray = [];
+				if(contactHash){
+					for(key in contactHash){
+						theArray.push(contactHash[key]);
+					}
+				}
+				return theArray;
 			}
 
 			this.getImageUrlByPhone = function(){
@@ -449,14 +539,26 @@ body()
 
 				if(inTransportLayer_json.dataLayer.action == 'outgoingSms'){
 					console.log('outgoingSms--------------------');
+					eventObject.reportOn('outgoingSms', inTransportLayer_json);
 					// reread sync between db and phn
 					storageObject.getSmsLastId(function(inResultOflastId){
 						deviceQuerySync.sms_getAllMessages(inResultOflastId, function(inSmsArray){
 							storageObject.addManySms(inSmsArray, function(inResult){
 								if(widgetSmsMessageWindowScript){
-									console.log('widgetSmsMessageWindowScript.refreshGrid()--------------------');
 									if(widgetSmsMessageWindowScript){
-										widgetSmsMessageWindowScript.refreshGrid();
+										if(widgetSmsMessageWindowScript.comboGetSelected()){
+											var selectedPhone = widgetSmsMessageWindowScript.comboGetSelected().phoneNumber;
+											if(selectedPhone){
+												if(inTransportLayer_json.dataLayer){
+													if(inTransportLayer_json.dataLayer.phoneNumber){
+														if(inTransportLayer_json.dataLayer.phoneNumber == selectedPhone){
+															console.log('widgetSmsMessageWindowScript.refreshGrid()--------------------');
+															widgetSmsMessageWindowScript.refreshGrid();
+														}
+													}
+												}
+											}
+										}
 									}
 								}
 							});
@@ -468,13 +570,25 @@ body()
 
 
 				if(inTransportLayer_json.dataLayer.action == 'incomingSms'){
+					eventObject.reportOn('incomingSms', inTransportLayer_json);
 					storageObject.getSmsLastId(function(inResultOflastId){
 						deviceQuerySync.sms_getAllMessages(inResultOflastId, function(inSmsArray){
 							storageObject.addManySms(inSmsArray, function(inResult){
 								if(widgetSmsMessageWindowScript){
-									console.log('widgetSmsMessageWindowScript.refreshGrid()--------------------');
 									if(widgetSmsMessageWindowScript){
-										widgetSmsMessageWindowScript.refreshGrid();
+										if(widgetSmsMessageWindowScript.comboGetSelected()){
+											var selectedPhone = widgetSmsMessageWindowScript.comboGetSelected().phoneNumber;
+											if(selectedPhone){
+												if(inTransportLayer_json.dataLayer){
+													if(inTransportLayer_json.dataLayer.phoneNumber){
+														if(inTransportLayer_json.dataLayer.phoneNumber == selectedPhone){
+															console.log('widgetSmsMessageWindowScript.refreshGrid()--------------------');
+															widgetSmsMessageWindowScript.refreshGrid();
+														}
+													}
+												}
+											}
+										}
 									}
 								}
 							});
@@ -482,7 +596,7 @@ body()
 					});
 					$.messager.show(
 						{
-							timeout:15000,
+							timeout:5000,
 							title:"<img style='float: left; height:40px' src='public/images/ui/email.png'/>" + "Incoming Sms Message",
 							msg:'Name:' + inTransportLayer_json.dataLayer.name + '<br>' + 'Phone Number:' + inTransportLayer_json.dataLayer.phoneNumber + '<br><br>' + 'Message:<br>' + inTransportLayer_json.dataLayer.msg,
 							showType:'slide',
@@ -498,9 +612,10 @@ body()
 				}
 
 				if(inTransportLayer_json.dataLayer.action == 'incomingPhoneCall'){
+					eventObject.reportOn('incomingPhoneCall', inTransportLayer_json);
 					$.messager.show(
 						{
-							timeout:15000,
+							timeout:5000,
 							title:"<img style='float: left; height:40px' src='public/images/ui/email.png'/>" + "Incoming Phone Call",
 							msg:'Name:' + inTransportLayer_json.dataLayer.name + '<br>' + 'Phone Number:' + inTransportLayer_json.dataLayer.phoneNumber,
 							showType:'slide',
@@ -674,4 +789,23 @@ body()
 
 				}
 			);
+		}
+
+		var imageShakeByPhone = function(inPhone){
+			//$('img').addClass('shake');
+			console.log('imageShakeByPhone start' + inPhone);
+			//$( "img[phone='" + inPhone + "']" ).next().addClass('shake');
+			$( "img[phone='" + inPhone + "']" ).each(function(index){
+				$( this ).addClass('shake');
+			});
+
+			setTimeout(function(){
+				//$('img').removeClass('shake');
+				console.log('imageShakeByPhone stop' + inPhone);
+				//$( "img[phone='" + inPhone + "']" ).next().removeClass('shake');
+				$( "img[phone='" + inPhone + "']" ).each(function(index){
+					$( this ).removeClass('shake');
+				});
+			}, 15000);
+			
 		}

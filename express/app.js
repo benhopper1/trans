@@ -64,7 +64,7 @@ app.set('view engine', 'php');
 app.all(/.+\.php$/, phpExpress.router);
 
 app.use(logger('dev'));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit:'50mb'}));
 app.use(methodOverride());
 app.use(cookieParser('server secret here'));
 

@@ -287,6 +287,11 @@ var DeviceQuerySync = function(inCommManagerInstance){
 //#############################################################################################
 var StorageObject = function(){
 	var _this = this;
+	var smsLimit = false;
+
+	this.setSmsLimit = function(inLimit){
+		smsLimit = inLimit;
+	}
 
 	this.addManySms = function(inSmsArray, inPostFunction){
 		$postAjax(
@@ -332,7 +337,8 @@ var StorageObject = function(){
 				url:'/database/sms/getAllSmsByPhone',
 				send:
 					{
-						phoneNumber:inPhoneNumber
+						phoneNumber:inPhoneNumber,
+						limit:smsLimit
 					},
 				onAjaxSuccess:function(inResponseText){
 					inResponseText = JSON.parse(inResponseText);
@@ -362,6 +368,103 @@ var StorageObject = function(){
 				}
 			}
 		);
+	}
+
+}
+
+//###################################### OBJECT ###############################################
+//--------------------- > StorageObject < -----------------------------------
+//#############################################################################################
+var Backstack = function(inJsonStruct){
+	var _this = this;
+	if(typeof inJsonStruct.limit === 'undefined'){inJsonStruct.limit = 1000000;}
+	var limit = inJsonStruct.limit;
+	var stack = [];
+
+	this.push = function(inData){
+		if(!(inData)){return false;}
+
+		var existVal = exist(inData);
+		if(existVal == -1){
+			stack.push(inData);
+			if(inJsonStruct.onPush){
+				inJsonStruct.onPush(inData);
+			}
+
+			if(stack.length > limit){
+				var tmpItem = stack.pop();
+				if(inJsonStruct.onPop){
+					inJsonStruct.onPop(tmpItem);
+				}
+			}
+		}else{
+			remove(existVal);
+			stack.push(inData);
+			if(inJsonStruct.onPush){
+				inJsonStruct.onPush(inData);
+			}
+		}
+		console.log('Backstack dump-----');
+		console.dir(stack);
+	}
+
+	this.isEmpty = function(){
+		return (stack.length > 0) ? true : false;
+	}
+
+	this.top = function(){
+		if(!(stack.length > 0)){ return false;}
+		return stack[stack.length - 1];
+	}
+
+	var exist = function(inItem){
+		for(index in stack){
+			if(JSON.stringify(stack[index]) == JSON.stringify(inItem)){
+				console.log('exist true');
+				return index;
+			}
+		}
+		console.log('exist false');
+		return -1;
+	}
+
+	var remove = function(inIndex){
+		var tmpArray = [];
+		for(index in stack){
+			if(!(index == inIndex)){
+				tmpArray.push(stack[index]);
+			}else{
+				var tmpItem = stack[index];
+				if(inJsonStruct.onPop){
+					inJsonStruct.onPop(tmpItem);
+				}
+			}
+		}
+
+		stack = tmpArray;
+	}
+
+}
+
+//###################################### OBJECT ###############################################
+//--------------------- > E v e n t   O b j e c t < -----------------------------------
+//#############################################################################################
+var EventObject = function(){
+	var _this = this;
+
+	var hashOfArray = new HashOfArrayObject();
+
+	this.setOn = function(inEventKey, inPostFunction){
+		hashOfArray.add(inEventKey, inPostFunction);
+	}
+
+	this.reportOn = function(inEventKey, inData){
+		var theArray = hashOfArray.getArrayFromHash(inEventKey);
+		for(index in theArray){
+			if(theArray[index]){
+				theArray[index](inData);
+			}
+		}
 	}
 
 }
