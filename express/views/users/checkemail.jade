@@ -1,0 +1,32 @@
+doctype html
+html
+	head(lang="en")
+		title ${1:title name}
+		meta(http-equiv="content-type", content="text/html; charset=UTF-8")
+		meta(name="description", content="")
+		meta(name="keywords", content="")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
+		script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
+		script(type='text/javascript', src='public/js/easyui/jquery.easyui.min.js')
+		link(rel='stylesheet', href='public/js/easyui/themes/default/easyui.css')
+		link(rel='stylesheet', href='public/js/easyui/themes/default/icon.css')
+
+	body(style="background-color: #000000; color: #ffffff;")
+		center
+			h3
+				p You will be sent an email that includes a link to activate your account
+
+
+			a(href="mailto:someone@example.com?Subject=Hello%20again") linkkkkk
+			br
+
+			//button(id="widgetContactsCollection_buttonOk" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" href="javascript:AndroidFunction.save('actionName');" onclick="AndroidFunction.save('actionName');" style="width:80px") Ok
+			button(onclick="Android.showToast('Hello ben');") click
+			button(onclick="Android.loadReadEmailIntent('do email man!!');") email
+
+
+
+
+	script.
+		//document.write("hhkuhokhkhkjhkjhk");
+		//document.write(AndroidFunction.save('actionName'));

@@ -244,50 +244,67 @@ body()
 					onLoginSuccess:function(inTransportLayer_string, inFamilyCredentialArray, filteredCredentialsArray){
 						console.log('onLoginSuccess');
 						console.dir(inTransportLayer_string);
-						sessionSetupAndValidation("loginByScan", waitingDeviceTokenId);
+
+						//- var transport_json33 = JSON.parse(inTransportLayer_string);
+						//- console.log("->userId:" + transport_json33.userId);
+
+						//- if(inTransportLayer_string){
+						//- 	if(inTransportLayer_string.userId){
+								
+						//- 	}
+						//- }
+						
+						//- //set up user id cookie
 
 
-						createFilters();
 
-						//- waitingDialog = new WaitingDialog();
-						//- waitingDialog.show();
+						sessionSetupAndValidation("loginByScan", waitingDeviceTokenId, function(inJsonStruct){
+							createFilters();
 
-						contactsObject = new ContactsObject();
-						userObject = new UserObject(function(userErr, userData){
-								console.log('userData:');
-								console.dir(userData);
-								contactsObject.refresh(function(contactErr, contactData){
-								console.log('contactsObject callback');
-								console.dir(contactData);
-								//loadSmsWindow();
-								//var panel_0 = $('#qrAccord').accordion('getPanel', 0);
-								console.dir($('#qrAccord').accordion('getPanel', 0));
-								$('#qrAccord').accordion('getPanel', 0).panel(
-									{
-										openDuration:3000,
-										closeDuration:3000
-									}
-								),
-								$('#qrAccord').accordion('getPanel', 0).panel("collapse",true);
-								$('#qrAccord').accordion('getPanel', 1).panel("expand",true);
+							//- waitingDialog = new WaitingDialog();
+							//- waitingDialog.show();
+
+							contactsObject = new ContactsObject();
+							userObject = new UserObject(function(userErr, userData){
+									console.log('userData:');
+									console.dir(userData);
+									contactsObject.refresh(function(contactErr, contactData){
+									console.log('contactsObject callback');
+									console.dir(contactData);
+									//loadSmsWindow();
+									//var panel_0 = $('#qrAccord').accordion('getPanel', 0);
+									console.dir($('#qrAccord').accordion('getPanel', 0));
+									$('#qrAccord').accordion('getPanel', 0).panel(
+										{
+											openDuration:3000,
+											closeDuration:3000
+										}
+									),
+									$('#qrAccord').accordion('getPanel', 0).panel("collapse",true);
+									$('#qrAccord').accordion('getPanel', 1).panel("expand",true);
+								});
 							});
+
+
+							
+							deviceQuerySync = new DeviceQuerySync(commManager);
+							storageObject = new StorageObject();
+							storageObject.getSmsLastId(function(inResultOflastId){
+								console.log('lastResultId---------------------');
+								console.dir(inResultOflastId);
+								deviceQuerySync.sms_getAllMessages(inResultOflastId, function(inSmsArray){
+									storageObject.addManySms(inSmsArray, function(inResult){
+
+			//							loadSmsWindow();
+
+									});
+								});
+							});
+
 						});
 
 
 						
-						deviceQuerySync = new DeviceQuerySync(commManager);
-						storageObject = new StorageObject();
-						storageObject.getSmsLastId(function(inResultOflastId){
-							console.log('lastResultId---------------------');
-							console.dir(inResultOflastId);
-							deviceQuerySync.sms_getAllMessages(inResultOflastId, function(inSmsArray){
-								storageObject.addManySms(inSmsArray, function(inResult){
-
-		//							loadSmsWindow();
-
-								});
-							});
-						});
 						
 
 
@@ -710,7 +727,7 @@ body()
 
 
 
-		var sessionSetupAndValidation = function(inType, inWaitingDeviceTokenId){
+		var sessionSetupAndValidation = function(inType, inWaitingDeviceTokenId, inPostFunction){
 			$postAjax(
 				{
 					url:'security/process',
@@ -721,6 +738,7 @@ body()
 						},
 					onAjaxSuccess:function(inResponseText){
 						//alert(inResponseText);
+						if(inPostFunction){inPostFunction(JSON.parse(inResponseText));}
 					}
 				}
 			);

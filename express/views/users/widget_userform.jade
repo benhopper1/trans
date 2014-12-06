@@ -1,0 +1,335 @@
+doctype html
+html
+	head(lang="en")
+		title ${1:title name}
+		meta(http-equiv="content-type", content="text/html; charset=UTF-8")
+		meta(name="description", content="")
+		meta(name="keywords", content="")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
+		// if lt IE 9
+		script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
+		//script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
+		//script(type='text/javascript', src='/js/qrcode/qrcode.js')
+
+		//script(type='text/javascript', src='/js/commmanager/commmanager.js')
+		script(type='text/javascript', src='/js/clientutil/clientutil.js')
+
+
+		script(type='text/javascript', src='/public/js/easyui/jquery.easyui.min.js')
+		link(rel='stylesheet', href='/public/js/easyui/themes/default/easyui.css')
+		link(rel='stylesheet', href='/public/js/easyui/themes/default/icon.css')
+
+
+		body(style="background-color: #000000; color: #ffffff;")
+
+			style.
+				.imgAndData{
+					font-size: 13px;
+					font-style: normal;
+					font-weight: normal;
+					padding-left: 5px;
+					LINE-HEIGHT:15px;
+					background-color: #eee;
+
+				}
+
+				.magicCirc{
+					padding:4px;
+					display:inline-block;
+					font:12px/14px Arial, Helvetica, sans-serif;
+					color:#666;
+					border:1px solid #999;
+					background-color:#eee;
+					-moz-border-radius:10px;
+					-webkit-border-radius: 150px;
+					-moz-box-shadow:#999 2px 0px 3px;
+					-webkit-box-shadow:#999 2px 0px 3px;
+					margin-bottom:4px;
+				}
+
+				.magicCircPnt{
+					padding:4px;
+					display:inline-block;
+					cursor:pointer;
+					font:12px/14px Arial, Helvetica, sans-serif;
+					color:#666;
+					border:1px solid #999;
+					background-color:#eee;
+					-moz-border-radius:10px;
+					-webkit-border-radius: 150px;
+					-moz-box-shadow:#999 2px 0px 3px;
+					-webkit-box-shadow:#999 2px 0px 3px;
+					margin-bottom:4px;
+				}
+
+				.center{
+					margin-left: auto;
+					margin-right: auto;
+					width: 70%;
+					background-color: #b0e0e6;
+				}
+
+				//- @-webkit-keyframes thumb {
+				//- 	0% { -webkit-transform: scale(1); }
+				//- 	50% { -webkit-transform: scale(0.5); }
+				//- 	100% { -webkit-transform: scale(1); }
+				//- }
+
+				//- .backbutton img:hover{
+				//- 	-webkit-animation-name: thumb;
+				//- 	-webkit-animation-duration: 200ms;
+				//- 	-webkit-transform-origin:50% 50%;
+				//- 	-webkit-animation-iteration-count: 2;
+				//- 	-webkit-animation-timing-function: linear;
+				//- }
+
+				@-webkit-keyframes spaceboots {
+					0% { -webkit-transform: translate(2px, 1px) rotate(0deg); }
+					10% { -webkit-transform: translate(-1px, -2px) rotate(-40deg); }
+					20% { -webkit-transform: translate(-3px, 0px) rotate(40deg); }
+					30% { -webkit-transform: translate(0px, 2px) rotate(0deg); }
+					40% { -webkit-transform: translate(1px, -1px) rotate(1deg); }
+					50% { -webkit-transform: translate(-1px, 2px) rotate(-1deg); }
+					60% { -webkit-transform: translate(-3px, 1px) rotate(0deg); }
+					70% { -webkit-transform: translate(2px, 1px) rotate(-1deg); }
+					80% { -webkit-transform: translate(-1px, -1px) rotate(1deg); }
+					90% { -webkit-transform: translate(2px, 2px) rotate(0deg); }
+					100% { -webkit-transform: translate(1px, -2px) rotate(-1deg); }
+				}
+				.shake {
+					-webkit-animation-name: spaceboots;
+					-webkit-animation-duration: 0.8s;
+					-webkit-transform-origin:50% 50%;
+					-webkit-animation-iteration-count: 15;//infinite;
+					-webkit-animation-timing-function: linear;
+				}
+
+
+
+			form(action="/upload", method="post", enctype="multipart/form-data")
+				input(id="upload" type="file" name="uploadedFile" style="display: none;" onchange="console.log('changed!!!')")
+
+			//div(id="userForm_window" class="easyui-window" title="Window Layout" data-options="iconCls:'icon-save', fit:true" style="width:100%;height:100%;")
+			div(id="userForm_Area"  style="padding:10px 10px 20px 10px")
+				form(id="userForm" method="post")
+					table(cellpadding="5")
+						tr
+							td First Name:
+							td
+								input(id="widget_userForm_firstName" class="easyui-textbox" type="text" name="name" data-options="required:true")
+
+						tr
+							td Last Name:
+							td
+								input(id="widget_userForm_lastName" class="easyui-textbox" type="text" name="name" data-options="required:true")
+
+						tr
+							td Phone:
+							td
+								input(id="widget_userForm_phone" class="easyui-textbox" type="text" name="name" data-options="required:true")
+
+						tr
+							td Email:
+							td
+								input(id="widget_userForm_email" class="easyui-textbox" type="text" name="email" data-options="required:true,validType:'email'")
+
+						tr
+							td User Name:
+							td
+								input(id="widget_userForm_userName" class="easyui-textbox" type="text" name="name" data-options="required:true")
+
+						tr
+							td Password:
+							td
+								input(id="widget_userForm_password" class="easyui-textbox" type="text" name="name" data-options="required:true")
+
+						tr
+							td Verify:
+							td
+								input(id="widget_userForm_password2" class="easyui-textbox" type="text" name="name" data-options="required:true")
+
+						tr
+							td Address:
+							td
+								input(id="widget_userForm_address" class="easyui-textbox" type="text" name="name" data-options="required:true")
+
+						tr
+							td City:
+							td
+								input(id="widget_userForm_city" class="easyui-textbox" type="text" name="name" data-options="required:true")
+
+						tr
+							td State:
+							td
+								input(id="widget_userForm_state" class="easyui-textbox" type="text" name="name" data-options="required:true")
+
+						tr
+							td Zipcode:
+							td
+								input(id="widget_userForm_zipcode" class="easyui-textbox" type="text" name="name" data-options="required:true")
+
+						tr
+							td Country:
+							td
+								input(id="widget_userForm_country" class="easyui-textbox" type="text" name="name" data-options="required:true")
+
+
+
+
+						tr
+							td Image:
+							td
+								a(id="tt_0" title="Click to select a local image."  class="easyui-tooltip")
+									center
+										//img(id="widget_userForm_image" class="magicCircPnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" onclick="Widget_userFormScript.chooseFile();")
+										img(id="widget_userForm_image" class="magicCircPnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" onclick="Android.fileChooser();")
+
+
+						tr
+							td
+								a(id="addEditUser_save" href="javascript:void(0)" class="easyui-linkbutton" ) Save
+							td
+								a(id="addEditUser_clear" href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()") Clear
+
+				//- div(id="addContactBottomArea"  style="text-align:center;padding:5px")
+				//- 	a(id="addEditUser_save" href="javascript:void(0)" class="easyui-linkbutton" onclick="Widget_userFormScript.addToStore()") Save
+				//- 	a(id="addEditUser_clear" href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()") Clear
+
+
+
+
+
+			script.
+
+				var Widget_userFormScript = new function(){
+					var _this = this;
+
+					$('#upload').change(function(){
+						//new image to dispay.
+						_this.uploadImage();
+					});
+					this.load = function(){
+						$('#userForm_window').window({
+							title:'User Form',
+							closed:true,
+							width:'100%',
+							height:'100%',
+							modal:true,
+							minimizable:false,
+							maximizable:false,
+							onBeforeClose: function(){
+							},
+							onBeforeOpen: function(){
+							},
+						});
+
+						$('#addEditUser_save').linkbutton(
+							{
+								text:'Save',
+								//iconCls:'icon-send',
+								//iconAlign:'left',
+								width:80
+							}
+						);
+
+						$('#addEditUser_clear').linkbutton(
+							{
+								text:'Clear',
+								//iconCls:'icon-send',
+								//iconAlign:'left',
+								width:80
+							}
+						);
+
+						//==============================================
+						// EVENT SETUP
+						//==============================================
+						$('#addEditUser_save').click(function(){
+							_this.addToStore();
+						});
+						
+					}
+
+					this.updateImageSource = function(inSrc){
+						console.log('updateImageSource ENTERED(html):' + inSrc);
+						$('#widget_userForm_image').attr('src', inSrc);
+						$('#widget_userForm_country').val(inSrc);
+						console.log($('#widget_userForm_image').attr('src'));
+						console.log($('#widget_userForm_country').val());
+					}
+
+					this.close = function(){
+						$('#userForm_window').window('close');
+					}
+
+					this.show = function(){
+						$('#userForm_window').window('open');
+					}
+
+					this.chooseFile = function(){
+						$('#upload').trigger('click');
+					}
+
+					this.uploadImage = function(){
+						$ajaxFilePost(
+							{
+								fileInputElement:'upload',
+
+								options:
+									{
+										command:'imageStore',
+										theme:'normalUserImage'
+									},
+
+								onComplete:function(inResponse){
+									if(inResponse.domainFilePath){
+										$('#widget_userForm_image').attr('src', inResponse.domainFilePath);
+									}
+								}
+							}
+						);
+					}
+
+					this.addToStore = function(){
+						$postAjax(
+							{
+								url:'database/addUser',
+								send:
+									{
+										firstName:		$('#widget_userForm_firstName').val(),
+										lastName:		$('#widget_userForm_lastName').val(),
+										emailAddress:	$('#widget_userForm_email').val(),
+										userName:		$('#widget_userForm_userName').val(),
+										password:		$('#widget_userForm_password').val(),
+										address:		$('#widget_userForm_address').val(),
+										city:			$('#widget_userForm_city').val(),
+										state:			$('#widget_userForm_state').val(),
+										zipcode:		$('#widget_userForm_zipcode').val(),
+										country:		$('#widget_userForm_country').val(),
+										screenImage:	$('#widget_userForm_image').attr('src'),
+										//activateCode:	$('#widget_userForm_firstName').val(),
+									},
+								onAjaxSuccess:function(inHtml){
+									inResponseText = JSON.parse(inResponseText);
+									console.log('back from db------------');
+									$.get( "/users/checkemail", function(data){
+										$("#contactsWindow").append(data);
+									});
+									//console.dir(inResponseText);
+									//$('body').html(inHtml);//{renders:users/checkemail.jade}
+								}
+							}
+						);
+
+					}
+
+
+
+
+
+					$(document).ready(function(){
+						_this.load();
+						_this.show();
+					});
+
+				}

@@ -1,0 +1,72 @@
+doctype html
+html
+	head(lang="en")
+		title Mobile login
+		meta(http-equiv="content-type", content="text/html; charset=UTF-8")
+		meta(name="description", content="")
+		meta(name="keywords", content="")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
+		script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
+		script(type='text/javascript', src='public/js/easyui/jquery.easyui.min.js')
+		link(rel='stylesheet', href='public/js/easyui/themes/default/easyui.css')
+		link(rel='stylesheet', href='public/js/easyui/themes/default/icon.css')
+
+		script(type='text/javascript', src='/js/clientutil/clientutil.js')
+
+	body(style="background-color: #000000; color: #ffffff;")
+		center
+			h4
+				p Mobile login Screen
+
+				table(cellpadding="5")
+					tr
+						td User name:
+						td
+							input(id="mobileLogin_username" class="easyui-textbox" type="text" value="be" name="userName" data-options="required:true")
+					tr
+						td Password:
+						td
+							input(id="mobileLogin_password" class="easyui-textbox" type="password" value="4747" name="password" data-options="required:true")
+
+				//button(onclick="Android.loadReadEmailIntent('do email man!!');") OK
+				button(onclick="login();") OK
+				br
+				br
+				br
+				a(id="addEditContacts_clear" href="javascript:void(0)" onclick="Android.surfTo_SameDomain('/user/widget_userForm')" class="easyui-linkbutton") Create Account
+
+
+
+
+	script.
+		var login = function(){
+			$postAjax(
+				{
+					url:'/user/mobileLogin',
+					send:
+						{
+							userName:$('#mobileLogin_username').val(),
+							password:$('#mobileLogin_password').val(),
+							deviceId:0,
+							agent:navigator.userAgent,
+							deviceNumber:'na',
+							deviceType:'androidApp'//move to serverside....based on useragent...
+						},
+					onAjaxSuccess:function(inResponseText){
+						inResponseText = JSON.parse(inResponseText);
+						if(inResponseText){
+							if(inResponseText.result){
+								inResponseText.result.password = $('#mobileLogin_password').val();
+								alert(JSON.stringify(inResponseText));
+								Android.reportOnComplete(JSON.stringify(inResponseText));
+							}else{
+								//problem--
+								inResponseText.hadError = true;
+								Android.reportOnComplete(JSON.stringify(inResponseText));
+							}
+						}
+						
+					}
+				}
+			);
+		}
