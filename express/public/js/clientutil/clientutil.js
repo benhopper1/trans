@@ -231,6 +231,19 @@ var phoneNumberCompare = function(inNumberA, inNumberB){
 	return cleanPhoneNumber(inNumberA) == cleanPhoneNumber(inNumberB);
 }
 
+var phoneDisplayFormat = function(inNumber){
+	if(inNumber.length = 10){
+		return '1' + inNumber.substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)$2-$3');
+	}
+
+	if(inNumber.length = 11){
+
+		return '1' + inNumber.substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)$2-$3');
+	}
+
+	return inNumber;
+}
+
 
 
 //###################################### OBJECT ###############################################
@@ -270,6 +283,35 @@ var DeviceQuerySync = function(inCommManagerInstance){
 					//chunkArray.sort(function(a,b) { return parseInt(b.id) - parseInt(a.id) } );
 					console.log('-------completed sms_getAllMessages----------------------------------------------');
 					//console.dir(chunkArray);
+					if(inPostFunction){inPostFunction(chunkArray);}
+				}
+			}
+		);//endTrans
+	}
+
+	this.phoneLog_getAll = function(inLastSyncedId, inPostFunction){
+		var chunkArray = [];
+		commManager.sendTransactionSeries(
+			{
+				command:'getAllPhoneLogs',
+				data:
+					{
+						lastId:inLastSyncedId
+
+					},
+				onAll:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+					console.log("CALBACK onAll");
+
+					if(inDataLayer_json.dataArray){
+						for(index in inDataLayer_json.dataArray){
+							chunkArray.push(inDataLayer_json.dataArray[index]);
+						}
+					}
+
+					next();
+				},
+				onComplete:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+					console.log('-------completed phoneLog_getAll----------------------------------------------');
 					if(inPostFunction){inPostFunction(chunkArray);}
 				}
 			}
@@ -365,6 +407,42 @@ var StorageObject = function(){
 				onAjaxSuccess:function(inResponseText){
 					inResponseText = JSON.parse(inResponseText);
 					if(inPostFunction){inPostFunction(inResponseText.result);}
+				}
+			}
+		);
+	}
+
+	this.getPhoneLogLastId = function(inPostFunction){
+		$postAjax(
+			{
+				url:'/database/phonelog/getPhoneLogLastId',
+				send:
+					{
+
+					},
+				onAjaxSuccess:function(inResponseText){
+					inResponseText = JSON.parse(inResponseText);
+					var lastId = 0;
+					if(inResponseText.result.lastId){
+						lastId = inResponseText.result.lastId.toString();
+					}
+					if(inPostFunction){inPostFunction(lastId);}
+				}
+			}
+		);
+	}
+
+	this.addManyPhoneLog = function(inTheArray, inPostFunction){
+		$postAjax(//addManyPhoneLog
+			{
+				url:'/database/phonelog/addManyPhoneLog',
+				send:
+					{
+						dataArray:inTheArray
+					},
+				onAjaxSuccess:function(inResponseText){
+					inResponseText = JSON.parse(inResponseText);
+					if(inPostFunction){inPostFunction(inResponseText);}
 				}
 			}
 		);

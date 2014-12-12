@@ -54,8 +54,17 @@ body
 					div(title="<span class='tt-inner'><img style='float: left; height:40px; ' src='public/images/ui/androidPhoneImg.png'/>Phone</span>" style="padding:10px")
 						p In computing, an image scanner—often abbreviated to just scanner—is a device that optically scans images, printed text, handwriting, or an object, and converts it to a digital image.
 
-					div(title="<span class='tt-inner'><img style='float: left; height:40px' src='public/images/ui/email.png'/>Email</span>" style="padding:10px")
-						p A personal digital assistant (PDA), also known as a palmtop computer, or personal data assistant, is a mobile device that functions as a personal information manager. PDAs are largely considered obsolete with the widespread adoption of smartphones.
+
+					div(title="<span id='tab_import' class='tt-inner'><img style='float: left; height:40px' src='public/images/ui/email.png'/>Import <br>Contacts</span>" style="padding:10px")
+						div(id="widgetContactsCollection_importLayout" class="easyui-layout" data-options="fit:true")
+							div(data-options="region:'center',split:true" style="")
+								table(id="widgetContactsImportGrid" class="easyui-datagrid" title="" style="" data-options="fit:true,singleSelect:true,collapsible:true")
+									thead
+										tr
+							div(data-options="region:'south',split:true" style="height:33")
+								button(id="bt_importImport" class="easyui-linkbutton") Import
+								button(id="bt_refreshImport" class="easyui-linkbutton") Refresh
+
 
 					div(title="<span class='tt-inner'><img style='float: left;' src='public/images/ui/tablet.png'/>Nothing</span>" style="padding:10px")
 						p A tablet computer, or simply tablet, is a one-piece mobile computer. Devices typically have a touchscreen, with finger or stylus gestures replacing the conventional computer mouse.
@@ -109,6 +118,12 @@ body
 				});
 
 				$('#widgetContactsCollection_layout_0').layout(
+					{
+						fit:true
+					}
+				);
+
+				$('#widgetContactsCollection_importLayout').layout(
 					{
 						fit:true
 					}
@@ -168,7 +183,35 @@ body
 					}
 				);
 
+				$('#widgetContactsImportGrid').datagrid({
+					fitColumns:true,
+					checkOnSelect:true,
+					singleSelect:false,
+					columns:
+						[
+							[
+								{
+									field:'import',
+									title:'import',
+									checkbox:true,
+									width:'18%',
+								},
 
+								{
+									field:'name',
+									title:'contactName',
+									width:'58%'
+								},
+
+								{
+									field:'number',
+									title:'contactNumber',
+									width:'49%',
+									align:'left'
+								}
+							]
+						],
+				});
 
 
 
@@ -292,7 +335,7 @@ body
 
 				});
 
-
+				_this.clearGrid();
 				_this.loadAllContactsFromService(function(err){
 					_this.gridSelectFirstRow();
 				});
@@ -326,6 +369,23 @@ body
 					}
 				});//----end click
 
+				$('#bt_refreshImport').click(function(){
+					console.log('bt_bt_refreshImport clcik');
+					_this.importGridRefresh();
+				});
+
+				$('#bt_importImport').click(function(){
+					_this.importGridImport();
+				});
+
+				$('#tab_import').click(function(){
+					_this.importGridRefresh();
+				});
+
+
+				//var comboArray = $('#smsContactCombo').combobox('getData');
+
+				
 				//- $('#widgetContactsCollectionDataGrid').datagrid('load', {
 				//- 	name: 'easyui',
 				//- 	address: 'ho'
@@ -336,19 +396,146 @@ body
 
 
 
+			this.numberAlreadyExistInContacts = function(inNumber){
+				var existingNumbersArrayOfJson = $('#widgetContactsCollectionDataGrid').datagrid('getData').rows;
+				console.log('existingNumbersArrayOfJson');
+				console.dir(existingNumbersArrayOfJson);
+				var result = false;
+				for(var index in existingNumbersArrayOfJson){
+					console.log('test' + inNumber + " == " + existingNumbersArrayOfJson[index].contactNumber);
+					if(inNumber == existingNumbersArrayOfJson[index].contactNumber){
+						console.log('true');
+						return true;
+					}
+				}
+				return result;
+			}
 
 
 
 
+			this.importGridRefresh = function(){
+				_this.importGridClear();
+				_this.getAllPhoneContacts(function(inImportArray){
+					console.log('inImportArray');
+					console.dir(inImportArray);
+					if(inImportArray){
+						for(var indeX in inImportArray){
+							if(_this.numberAlreadyExistInContacts(inImportArray[indeX].number) != true){
+								console.log('should bne :' + inImportArray[indeX].number);
+								console.dir(inImportArray[index]);
+								_this.importGridDataAppendRow(inImportArray[indeX]);
+							}
+						}
+					}
+				});
+			}
+
+			this.saveContact = function(inContact, inPostFunction){
+
+			}
+
+			this.importGridImport = function(inPostFunction){
+				var checkedRowsArray = $('#widgetContactsImportGrid').datagrid('getChecked');
+
+				async.eachSeries(checkedRowsArray, function(theRow, next){
+					$postAjax(
+							{
+								url:'database/addContact',
+								send:
+									{
+										companyName:'',
+										department:'',
+										companyName:'',
+										emailAddress:'',
+										imageUrl:getDefaultMemberImageUrl(),
+										name:theRow.name,
+										phoneNumber:theRow.number,
+										refNumber:'',
+										title:'',
+									},
+								onAjaxSuccess:function(inResponseText){
+									//inResponseText = JSON.parse(inResponseText);
+									_this.gridDataAppendRow(
+										{
+											contactName:theRow.name,
+											contactNumber:theRow.number,
+											imagePath:getDefaultMemberImageUrl()
+										}
+									);
+									next();
+								}
+							}
+						);
+
+
+				},function(err){
+					// DONE
+					//console.log('Error');
+					_this.importGridRefresh();
+					_this.gridSelectLastRow();
+					if(inPostFunction){
+						inPostFunction(err);
+					}
+				});
 
 
 
+				//- for(var index in checkedRowsArray){
+
+
+
+				//- 	//-----------------------
+				//- 		$postAjax(
+				//- 			{
+				//- 				url:'database/addContact',
+				//- 				send:
+				//- 					{
+				//- 						companyName:'',
+				//- 						department:'',
+				//- 						companyName:'',
+				//- 						emailAddress:'',
+				//- 						imageUrl:'',
+				//- 						name:checkedRowsArray[index].name,
+				//- 						phoneNumber:checkedRowsArray[index].number,
+				//- 						refNumber:'',
+				//- 						title:'',
+				//- 					},
+				//- 				onAjaxSuccess:function(inResponseText){
+				//- 					inResponseText = JSON.parse(inResponseText);
+
+				//- 				}
+				//- 			}
+				//- 		);
+
+
+				//- 	_this.gridDataAppendRow(
+				//- 		{
+				//- 			contactName:checkedRowsArray[index].name,
+				//- 			contactNumber:checkedRowsArray[index].number
+				//- 		}
+				//- 	);
+				//- }
+			}
+
+			this.importGridDataAppendRow = function(inRowData){
+				if(!(inRowData)){return false;}
+				$('#widgetContactsImportGrid').datagrid('appendRow',inRowData);
+			}
+			this.importGridClear = function(){
+				//$('#widgetContactsCollectionDataGrid').datagrid('reload');
+				$('#widgetContactsImportGrid').datagrid(
+					{
+						data: []
+					}
+				);
+			}
 
 			this.clearGrid = function(){
 				//$('#widgetContactsCollectionDataGrid').datagrid('reload');
 				$('#widgetContactsCollectionDataGrid').datagrid(
 					{
-						data: [{}]
+						data: []
 					}
 				);
 			}
@@ -470,30 +657,71 @@ body
 			//- 	);
 			//- }//--end loadAllContactsFromDevice--------------------
 		//img(id="testxx" class="memberImage magicCirc" src="public/images/characters/face1.jpg" style="height:50px;" )
-			this.postTest = function(){
-				var row = $('#widgetContactsCollectionDataGrid').datagrid('getSelected');
-				console.log('dataLeaving:');
-				console.dir(row);
-				$postAjax(
+			//- this.postTest = function(){
+			//- 	var row = $('#widgetContactsCollectionDataGrid').datagrid('getSelected');
+			//- 	console.log('dataLeaving:');
+			//- 	console.dir(row);
+			//- 	$postAjax(
+			//- 		{
+			//- 			url:'database/addContact',
+			//- 			send:
+			//- 				{
+			//- 					companyName:'MyCompany',
+			//- 					department:'myDepartment',
+			//- 					emailAddress:'myEnailAddr',
+			//- 					//imageUrl:configData.contacts.defaultImageUrl,
+			//- 					name:'benHoHard   eex name ',
+			//- 					phoneNumber:'1(256) 353-8952',
+			//- 					refNumber:'',
+			//- 					title:''
+			//- 				},
+			//- 			onAjaxSuccess:function(inResponseText){
+			//- 				//alert(inResponseText);
+			//- 			}
+			//- 		}
+			//- 	);
+
+			//- }
+
+			this.getAllPhoneContacts = function(inPostFunction){
+				var theArray;
+				commManager.sendTransactionSeries(
 					{
-						url:'database/addContact',
-						send:
+						command:'getAllPhoneContacts',
+						data:
 							{
-								companyName:'MyCompany',
-								department:'myDepartment',
-								emailAddress:'myEnailAddr',
-								//imageUrl:configData.contacts.defaultImageUrl,
-								name:'benHoHard   eex name ',
-								phoneNumber:'1(256) 353-8952',
-								refNumber:'',
-								title:''
+								notUsed:'na'
 							},
-						onAjaxSuccess:function(inResponseText){
-							//alert(inResponseText);
+						onFirst:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+							console.log("CALBACK onFirst");
+							theArray = [];
+						},
+
+						onLast:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+							console.log("CALBACK onLast");
+							console.dir(theArray);
+						},
+
+						onAll:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+							console.log("CALBACK onAll");
+
+							if(inDataLayer_json.dataArray){
+								for(index in inDataLayer_json.dataArray){
+									theArray.push(inDataLayer_json.dataArray[index]);
+								}
+							}
+
+							next();
+						},
+						onComplete:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+							console.log("CALBACK onComplete");
+							console.dir(theArray);
+							if(inPostFunction){
+								inPostFunction(theArray);
+							}
 						}
 					}
 				);
-
 			}
 
 		}();

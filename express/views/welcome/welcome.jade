@@ -1,7 +1,7 @@
 head 
 
 
-body()
+body(style="background-image: url('public/images/ui/background_crack.jpg')")
 	script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
 	script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
 	script(type='text/javascript', src='/js/qrcode/qrcode.js')
@@ -15,6 +15,7 @@ body()
 	link(rel='stylesheet', href='public/js/easyui/themes/default/icon.css')
 
 	script(type='text/javascript', src='public/js/hashofarray/hashofarrayobject.js')
+	script(type='text/javascript', src='public/js/async/async.js')
 
 	//script(type='text/javascript', src='public/js/welcome/treehelper.js')
 
@@ -22,6 +23,9 @@ body()
 		var getUserId =function(){return '#{userId}';}
 		var getDeviceId = function(){return '#{deviceId}';}
 		var getURL = function(){return '#{URL}';}
+		var getDefaultUserImageUrl = function(){return '#{defaultUserImageUrl}';}
+		var getDefaultMemberImageUrl = function(){return '#{defaultMemberImageUrl}';}
+
 	style.
 		.imgAndData{
 			font-size: 13px;
@@ -103,9 +107,15 @@ body()
 			-webkit-animation-iteration-count: 15;//infinite;
 			-webkit-animation-timing-function: linear;
 		}
-		//- .shake {
-		//- 	display:inline-block
-		//- }//just add    shake 
+		.magicShadow{
+			-moz-box-shadow:10px 10px 5px #000000;
+			-webkit-box-shadow:10px 10px 5px #000000;
+			box-shadow:10px 10px 5px #000000;
+		}
+
+		.magicPointer{
+			cursor:pointer;
+		}
 
 
 
@@ -114,7 +124,7 @@ body()
 	//body(style="background-color: #ffffff;")
 	//body(style"background-image: url('public/images/ui/background_crack.jpg')")
 	div(id="main_layout_0" class="easyui-layout" data-options="fit:true" style"")
-		div(data-options="region:'north',split:true" style="height:50px; background-image: url('public/images/ui/background_crack.jpg')")
+		div(data-options="region:'north',split:true" style="height:50px; ")
 			div(class="easyui-panel" data-options="fit:true" style="padding:5px; opacity:.8;")
 				a(id="main_menu_lb_0" href="#" class="easyui-linkbutton" data-options="plain:true" style="") Home
 				a(id="main_menu_lb_1" href="#" class="easyui-splitbutton" data-options="menu:'#mm2',iconCls:'icon-edit'") Edit
@@ -127,27 +137,43 @@ body()
 
 		div(data-options="region:'south',split:true" style="height:50px")
 		div(data-options="region:'west',split:true" style="width:150px; background-image: url('public/images/ui/background_crack.jpg')")
+			button(onclick="loadSmsWindow();") Sms
+			br
+			button(onclick="loadContactsWindow();") Contacts
+			br
+			center
+				button(onclick="getAllSmsByNumber();") Phone Control
+			br
+			//#ttttt(class="magicSquare")
+			//button(class="magicSquare" onclick="xxx();") press me not
+			//- div(style="width:100px; height:100px;" class="magicSquare")
+			//- 	img(id="loginUserImage" src="/public/images/e5d049b0-7e4a-11e4-a8c5-89b11e82a359.jpg")
+			br
+			center
+				button(class="magicSquare magicPointer magicShadow" onclick="xxx();" style="width:100px; height:100px; background-image: url('public/images/ui/sms100x.png'); background-repeat:no-repeat;" ) press me not
 		div(data-options="region:'center',split:true,title:'East',collapsible:false" style="background-image: url('public/images/ui/background_crack.jpg')")
-			#qrAccord(class="easyui-accordion center" data-options="" style="width:220px;")
+			center
+				img(src="public/images/ui/arfsync_logo.png")
+			#qrAccord(class="easyui-accordion center magicShadow" data-options="" style="width:220px;")
 				#lay1(title="Scan to login" data-options="iconCls:'icon-search',collapsed:false,collapsible:true" style="padding:10px;")
 					center
 						#qrCodeDiv(style="background-color: #ffffff;")
-				#lay2(title="Who" data-options="" style="padding:10px;")
+				#lay2(title="Who" data-options="" style="padding:10px; background:-webkit-gradient(linear, 0% 24%, 0% 73%, from(#221AC4), to(#2779C3));")
 					center
 						#ffffff
-							h1 hello man
+							img(id="loginUserImage" src="")
+							h1(id="loginUserFullName") unknown
 
 
 
 
-			img(src="public/temp/12566066202.jpg")
-			br
-			button(onclick="loadSmsWindow();") loadSmsWindow
-			br
-			button(onclick="loadContactsWindow();") loadContactsWindow
-			br
-			button(onclick="getAllSmsByNumber();") getAllSmsByNumber
-			br
+			//- br
+			//- button(onclick="loadSmsWindow();") Sms
+			//- br
+			//- button(onclick="loadContactsWindow();") Contacts
+			//- br
+			//- button(onclick="getAllSmsByNumber();") Phone Control
+			//- br
 
 			#smsWindowDiv
 			#contactsWindow
@@ -163,20 +189,20 @@ body()
 				//- 			#ffffff
 				//- 				h1 hello man
 				//#addContactDiv
-				button(onclick="doClick();") click
-				button(onclick="doClick2();") click2
-				button(onclick="doClick3();") click3
-				img(id="imgView")
+				//- button(onclick="doClick();") click
+				//- button(onclick="doClick2();") click2
+				//- button(onclick="doClick3();") click3
+				//- img(id="imgView")
 
-				table(style="width:70%")
-					tr
-						td
-							#treeBase(style="width:200px;height:500px; overflow: scroll; border:1px solid #ccc;")
-								ul(id="tree" class="easyui-tree" )
+				//- table(style="width:70%")
+				//- 	tr
+				//- 		td
+				//- 			#treeBase(style="width:200px;height:500px; overflow: scroll; border:1px solid #ccc;")
+				//- 				ul(id="tree" class="easyui-tree" )
 
-						td
-							#displayDiv
-							a(id="downloadLink" href="" download)
+				//- 		td
+				//- 			#displayDiv
+				//- 			a(id="downloadLink" href="" download)
 
 
 
@@ -185,6 +211,7 @@ body()
 
 
 	script.
+		//console.log('phonetset:' + phoneDisplayFormat('12564445555'));
 		var commManager;
 		var deviceTokenId;
 		var contactsObject;
@@ -197,6 +224,24 @@ body()
 		var deviceQuerySync;
 
 		var menuObject;
+
+
+		var theLayout = new function(){
+			var _this = this;
+
+			this.load = function(){
+				//- $('#main_layout_0').layout('resize', {
+				//- 	width:'80%',
+				//- 	height:300
+				//- })
+				
+			}
+
+			this.postLoginResize = function(){
+
+			}
+
+		}();
 
 
 		jQuery.fn.center = function () {
@@ -255,6 +300,10 @@ body()
 						//- }
 						
 						//- //set up user id cookie
+						//- getAllPhoneContacts(function(inJsonStruct){
+						//- 	console.log('---------getAllPhoneContacts CALLBACK!!-----------------------');
+						//- 	console.dir(inJsonStruct);
+						//- });
 
 
 
@@ -282,6 +331,10 @@ body()
 									),
 									$('#qrAccord').accordion('getPanel', 0).panel("collapse",true);
 									$('#qrAccord').accordion('getPanel', 1).panel("expand",true);
+									setTimeout(function(){
+										$('#qrAccord').accordion('remove', 0);
+									},5000);
+									
 								});
 							});
 
@@ -295,11 +348,48 @@ body()
 								deviceQuerySync.sms_getAllMessages(inResultOflastId, function(inSmsArray){
 									storageObject.addManySms(inSmsArray, function(inResult){
 
-			//							loadSmsWindow();
+
 
 									});
 								});
 							});
+
+							//deviceQuerySync.phoneLog_getAll(0, function(inCallLogArray){
+							//console.log('callLog callback------------------');
+							//console.dir(inCallLogArray);
+							storageObject.getPhoneLogLastId(function(inResultOflastId){
+								deviceQuerySync.phoneLog_getAll(inResultOflastId, function(inCallLogArray){
+									storageObject.addManyPhoneLog(inCallLogArray, function(inResult){
+										console.log('storageObject.addManyPhoneLog complete');
+										console.dir(inResult);
+									});
+								});
+							});
+
+							
+
+
+							//test area------
+							$postAjax(
+								{
+									url:'/database/phonelog/getLast',
+									send:
+										{
+											//use phoneNumber or not for all phonenumbers
+											//phoneNumber:'19198596799',
+											queryOption:'today'
+										},
+									onAjaxSuccess:function(inResponseText){
+										//inResponseText = JSON.parse(inResponseText);
+										alert(inResponseText);
+										//if(inPostFunction){inPostFunction(JSON.parse(inResponseText));}
+									}
+								}
+							);
+						//}
+
+
+
 
 						});
 
@@ -514,6 +604,12 @@ body()
 									userData = inResponseText.rows[0];
 									console.log('userdata--------------------------');
 									console.dir(userData);
+									if(userData.screenImage && userData.fullName){
+										$('#loginUserImage').attr('src',userData.screenImage);
+										$('#loginUserImage').addClass('magicCirc');
+										$('#loginUserFullName').html(userData.fullName);
+										//magicCirc
+									}
 								}
 							}
 
@@ -827,3 +923,45 @@ body()
 			}, 15000);
 			
 		}
+
+
+		//- var getAllPhoneContacts = function(inPostFunction){
+		//- 	var theArray;
+		//- 	commManager.sendTransactionSeries(
+		//- 		{
+		//- 			command:'getAllPhoneContacts',
+		//- 			data:
+		//- 				{
+		//- 					notUsed:'na'
+		//- 				},
+		//- 			onFirst:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+		//- 				console.log("CALBACK onFirst");
+		//- 				theArray = [];
+		//- 			},
+
+		//- 			onLast:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+		//- 				console.log("CALBACK onLast");
+		//- 				console.dir(theArray);
+		//- 			},
+
+		//- 			onAll:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+		//- 				console.log("CALBACK onAll");
+
+		//- 				if(inDataLayer_json.dataArray){
+		//- 					for(index in inDataLayer_json.dataArray){
+		//- 						theArray.push(inDataLayer_json.dataArray[index]);
+		//- 					}
+		//- 				}
+
+		//- 				next();
+		//- 			},
+		//- 			onComplete:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+		//- 				console.log("CALBACK onComplete");
+		//- 				console.dir(theArray);
+		//- 				if(inPostFunction){
+		//- 					inPostFunction(theArray);
+		//- 				}
+		//- 			}
+		//- 		}
+		//- 	);
+		//- }

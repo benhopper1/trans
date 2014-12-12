@@ -85,7 +85,7 @@ var Model = function(){
 				inPostFunction(err, 
 					{
 						userName:inUserName,
-						isActive:(result[0]) ? result[0].active : false,
+						isActive:(result[0]) ? ((result[0].active == 1) ? true : false)  : false,
 						exist:(result.length > 0)
 					}
 				);

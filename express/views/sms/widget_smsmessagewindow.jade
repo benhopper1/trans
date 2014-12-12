@@ -139,7 +139,16 @@ div(id="widgetSmsMessageWindowDiv" class="easyui-window" title="Window Layout" d
 									field:'body',
 									title:'What',
 									width:'55%',
-									align:'left'
+									align:'left',
+									formatter: function(value,row,index){
+										//console.log('ROW___________________');
+										//console.dir(row);gridBodyPanel    onclick="alert(\'' + row.body + '\');"
+										//onblur="$(\'#widgetSmsMessageDataGrid\').datagrid(\'endEdit\', ' + index + ');"
+										return '<div id="smsGridRowBody_' + row.id + '"  ondblclick="widgetSmsMessageWindowScript.gridBodyPanel(\'smsGridRowBody_' + row.id + '\', ' + index + ')"> ' + row.body + '</div>';
+										
+										//return row.body;
+									},
+									editor:'textarea'
 								}
 							]
 						],
@@ -149,29 +158,32 @@ div(id="widgetSmsMessageWindowDiv" class="easyui-window" title="Window Layout" d
 					url:'database/getContactsForCombo',
 					valueField:'id',
 					textField:'phoneNumber',
-					data:
-						[
-							{
-								id: '1a',
-								phoneNumber: 'Java'
-							},{
-								id: 2,
-								phoneNumber: 'Perl'
-							},{
-								id: 3,
-								phoneNumber: 'Ruby22'
-							}
-						],
+					//- data:
+					//- 	[
+					//- 		{
+					//- 			id: '1a',
+					//- 			phoneNumber: 'Java'
+					//- 		},{
+					//- 			id: 2,
+					//- 			phoneNumber: 'Perl'
+					//- 		},{
+					//- 			id: 3,
+					//- 			phoneNumber: 'Ruby22'
+					//- 		}
+					//- 	],
 					formatter: function(row){
 						var opts = $(this).combobox('options');
 						var phoneNumber = 'value:' + row[opts.valueField];
 						var caption = row[opts.textField];
-						return '<div class=""><img style="vertical-align:middle;" src="' + row['imageUrl'] + '" width="50px" class="magicCirc" phone="' + phoneNumber + '"></img>' + "&nbsp;&nbsp;&nbsp;&nbsp;" + row[opts.textField] + "</div>";
+						return '<div class=""><img style="vertical-align:middle;" src="' + row['imageUrl'] + '" width="50px" class="magicCirc" phone="' + phoneNumber + '"></img>' + "&nbsp;&nbsp;&nbsp;&nbsp;" + phoneDisplayFormat(row[opts.textField]) + "</div>";
 					},
 					onSelect:function(record){
 						console.log('onSelect:');
 						console.dir(record);
 						_this.fillGridForPhoneNumber(record.phoneNumber);
+					},
+					onLoadSuccess:function(){
+						_this.comboSetToFirst();
 					}
 				});
 
@@ -180,7 +192,7 @@ div(id="widgetSmsMessageWindowDiv" class="easyui-window" title="Window Layout" d
 					storageObject.setSmsLimit(20);
 				}
 
-				_this.addContactToContactCombo();
+				_this.addContactToContactCombo();//remove
 				//#########################################################
 				//-----------> EVENTS <------------------------------------
 				//#########################################################
@@ -225,9 +237,14 @@ div(id="widgetSmsMessageWindowDiv" class="easyui-window" title="Window Layout" d
 						}
 					}
 				);
-				_this.addCurrentContact(contactsObject.getContactByPhone('12057905955'));
-				//_this.addCurrentContact();
-				//_this.addCurrentContact();
+				//_this.addCurrentContact(contactsObject.getContactByPhone('12057905955'));
+
+				//----set combo to index 0-----------
+				//- _this.comboSetToFirst();
+				//- setTimeout(function(){
+				//- 	_this.comboSetToFirst();
+				//- },5000);
+
 
 
 
@@ -328,6 +345,17 @@ div(id="widgetSmsMessageWindowDiv" class="easyui-window" title="Window Layout" d
 				}
 			}
 
+			this.comboSetToFirst = function(){
+				console.log('comboSetToFirst 0');
+				if($('#smsContactCombo').combobox('getData')[0]){
+					console.log('comboSetToFirst 1');
+					if($('#smsContactCombo').combobox('getData')[0].id){
+						console.log('comboSetToFirst 2');
+						$('#smsContactCombo').combobox('select', $('#smsContactCombo').combobox('getData')[0].id);
+					}
+				}
+			}
+
 			this.comboGetItemByPhone = function(inPhone){
 				var comboArray = $('#smsContactCombo').combobox('getData');
 				for(index in comboArray){
@@ -375,6 +403,25 @@ div(id="widgetSmsMessageWindowDiv" class="easyui-window" title="Window Layout" d
 					}
 				}
 			}
+
+			this.gridBodyPanel = function(inId, index){
+				$('#widgetSmsMessageDataGrid').datagrid('selectRow', index).datagrid('beginEdit', index);
+				//- var oldHtml = $('#' + inId).html();
+				//- //alert('<img src="public/images/ui/email.png" onclick="$(\'#' + inId + '\').html(\'' + oldHtml + '\');"/>');
+				//- var panelHtml = 
+				//- 	'<div id="panel_' + inId + '" class="easyui-panel" title="Extended Information" style="width:700px;height:200px;padding:10px;">' +
+				//- 		'<textarea rows="4" cols="25" onblur="$(\'#' + inId + '\').html(\'' + oldHtml + '\');" >' +
+				//- 			$('#' + inId).html() +
+				//- 		'</textarea>' +
+				//- 		//'<button onclick="$(\'#' + inId + '\').html(\'' + oldHtml + '\');"> Phone Control </button>' +
+				//- 	'</div>'
+				//- ;
+
+
+
+				//- $('#' + inId).html(panelHtml);
+			}
+
 			this.gridDataAppendRow = function(inRowData){
 				$('#widgetSmsMessageDataGrid').datagrid('appendRow',inRowData);
 			}
@@ -422,7 +469,7 @@ div(id="widgetSmsMessageWindowDiv" class="easyui-window" title="Window Layout" d
 						 		id:inAllSmsResults[index].smsId,
 						 		read:inAllSmsResults[index].read,
 						 		thread:inAllSmsResults[index].thread,
-								imageUrl:(inAllSmsResults[index].smsContext == 'inBox') ? inAllSmsResults[index].imageUrl : inAllSmsResults[index].screenImage
+								imageUrl:(inAllSmsResults[index].smsContext == 'inBox') ? _this.comboGetSelected().imageUrl : inAllSmsResults[index].screenImage
 							}
 						);
 					}
@@ -460,7 +507,7 @@ div(id="widgetSmsMessageWindowDiv" class="easyui-window" title="Window Layout" d
 						 		read:inAllSmsResults[index].read,
 						 		thread:inAllSmsResults[index].thread,
 						 		smsContext:inAllSmsResults[index].smsContext,
-								imageUrl:(inAllSmsResults[index].smsContext == 'inBox') ? inAllSmsResults[index].imageUrl : inAllSmsResults[index].screenImage
+								imageUrl:(inAllSmsResults[index].smsContext == 'inBox') ? _this.comboGetSelected().imageUrl : inAllSmsResults[index].screenImage
 							}
 						);
 					}

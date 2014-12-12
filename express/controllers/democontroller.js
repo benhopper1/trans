@@ -30,6 +30,8 @@ module.exports.controller = function(app){
 				deviceId:"815",//req.cookies.deviceId,
 				URL:configData.domain.address + ":" + configData.domain.port,
 				webSocketClient:configData.webSocketClient,
+				defaultUserImageUrl:configData.defaultUserImageUrl,
+				defaultMemberImageUrl:configData.defaultMemberImageUrl,
 				data:
 					{
 					}

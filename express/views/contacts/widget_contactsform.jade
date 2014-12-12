@@ -259,10 +259,21 @@ script.
 						console.log('add...loading contact ');
 						state = 'add';
 						$('#addContactForm').window('open');
+						if(!(_this.getImageSrc())){
+							_this.setImageSrc(getDefaultMemberImageUrl());
+						}
 					}
 				}
 			}
 			
+		}
+
+		this.getImageSrc = function(){
+			return $('#widget_contactsForm_image').attr('src');
+		}
+
+		this.setImageSrc = function(inSrc){
+			$('#widget_contactsForm_image').attr('src',inSrc);
 		}
 
 	}();

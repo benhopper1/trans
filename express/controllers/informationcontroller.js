@@ -41,7 +41,10 @@ module.exports.controller = function(app) {
 
 						defaultUserImageUrl:configData.defaultUserImageUrl,
 
-						addUserRoute:'/user/database/addUser'
+						addUserRoute:'/user/database/addUser',
+
+						userNameExistRoute:'/user/userNameExist'
+
 					}
 			}
 		));

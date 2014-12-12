@@ -1,0 +1,529 @@
+
+head 
+	meta(charset="UTF-8")
+	meta(name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+
+
+body(style="background-image: url('/public/images/ui/background_crack.jpg')")
+	script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
+	script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
+	script(type='text/javascript', src='/js/qrcode/qrcode.js')
+
+	script(type='text/javascript', src='/js/commmanager/commmanager.js')
+	script(type='text/javascript', src='/js/clientutil/clientutil.js')
+
+
+	script(type='text/javascript', src='/public/js/easyui/jquery.easyui.min.js')
+	link(rel='stylesheet', href='/public/js/easyui/themes/default/easyui.css')
+	link(rel='stylesheet', href='/public/js/easyui/themes/default/icon.css')
+
+	script(type='text/javascript', src='/public/js/hashofarray/hashofarrayobject.js')
+	script(type='text/javascript', src='/public/js/async/async.js')
+
+	script.
+		var getUserId =function(){return '#{userId}';}
+		var getDeviceId = function(){return '#{deviceId}';}
+		var getURL = function(){return '#{URL}';}
+		var getDefaultUserImageUrl = function(){return '#{defaultUserImageUrl}';}
+		var getDefaultMemberImageUrl = function(){return '#{defaultMemberImageUrl}';}
+
+
+	style.
+		header {
+			line-height:18px;
+			background-color:black;
+			height:23px;
+			color:white;
+			text-align:top;
+			padding:0px;
+		}
+		nav {
+			line-height:22px;
+			//background-color:#eeeeee;
+			height:60px;
+			width:60px;
+			float:left;
+			padding:0px;
+		}
+		section {
+			line-height:1px;
+			width:160px;
+			float:left;
+			padding:0px;
+			vertical-align: text-top;
+		}
+		footer {
+			background-color:black;
+			color:white;
+			clear:both;
+			text-align:center;
+			padding:1px;
+		}
+				.imgAndData{
+			font-size: 13px;
+			font-style: normal;
+			font-weight: normal;
+			padding-left: 5px;
+			LINE-HEIGHT:15px;
+			background-color: #eee;
+
+		}
+
+		.magicCirc{
+			padding:4px;
+			display:inline-block;
+			font:12px/14px Arial, Helvetica, sans-serif;
+			color:#666;
+			border:1px solid #999;
+			background-color:#eee;
+			-moz-border-radius:10px;
+			-webkit-border-radius: 150px;
+			-moz-box-shadow:#999 2px 0px 3px;
+			-webkit-box-shadow:#999 2px 0px 3px;
+			margin-bottom:4px;
+		}
+
+		.magicCircPnt{
+			padding:4px;
+			display:inline-block;
+			cursor:pointer;
+			font:12px/14px Arial, Helvetica, sans-serif;
+			color:#666;
+			border:1px solid #999;
+			background-color:#eee;
+			-moz-border-radius:10px;
+			-webkit-border-radius: 150px;
+			-moz-box-shadow:#999 2px 0px 3px;
+			-webkit-box-shadow:#999 2px 0px 3px;
+			margin-bottom:4px;
+		}
+
+		.center{
+			margin-left: auto;
+			margin-right: auto;
+			width: 70%;
+			background-color: #b0e0e6;
+		}
+
+		//- @-webkit-keyframes thumb {
+		//- 	0% { -webkit-transform: scale(1); }
+		//- 	50% { -webkit-transform: scale(0.5); }
+		//- 	100% { -webkit-transform: scale(1); }
+		//- }
+
+		//- .backbutton img:hover{
+		//- 	-webkit-animation-name: thumb;
+		//- 	-webkit-animation-duration: 200ms;
+		//- 	-webkit-transform-origin:50% 50%;
+		//- 	-webkit-animation-iteration-count: 2;
+		//- 	-webkit-animation-timing-function: linear;
+		//- }
+
+		@-webkit-keyframes spaceboots {
+			0% { -webkit-transform: translate(2px, 1px) rotate(0deg); }
+			10% { -webkit-transform: translate(-1px, -2px) rotate(-40deg); }
+			20% { -webkit-transform: translate(-3px, 0px) rotate(40deg); }
+			30% { -webkit-transform: translate(0px, 2px) rotate(0deg); }
+			40% { -webkit-transform: translate(1px, -1px) rotate(1deg); }
+			50% { -webkit-transform: translate(-1px, 2px) rotate(-1deg); }
+			60% { -webkit-transform: translate(-3px, 1px) rotate(0deg); }
+			70% { -webkit-transform: translate(2px, 1px) rotate(-1deg); }
+			80% { -webkit-transform: translate(-1px, -1px) rotate(1deg); }
+			90% { -webkit-transform: translate(2px, 2px) rotate(0deg); }
+			100% { -webkit-transform: translate(1px, -2px) rotate(-1deg); }
+		}
+		.shake {
+			-webkit-animation-name: spaceboots;
+			-webkit-animation-duration: 0.8s;
+			-webkit-transform-origin:50% 50%;
+			-webkit-animation-iteration-count: 15;//infinite;
+			-webkit-animation-timing-function: linear;
+		}
+		.magicShadow{
+			-moz-box-shadow:10px 10px 5px #000000;
+			-webkit-box-shadow:10px 10px 5px #000000;
+			box-shadow:10px 10px 5px #000000;
+		}
+
+		.magicPointer{
+			cursor:pointer;
+		}
+
+	//h1 /phone/widget_phoneWindow
+	//center
+	div(id="widgetPhoneWindow" class="easyui-window" title="Window Layout" data-options="iconCls:'icon-send'" style=";padding:5px;")
+		div(id="widgetPhone_layout_0" class="easyui-layout" data-options="fit:true")
+			div(data-options="region:'west',split:true" style="width:24%")
+				a(href="javascript:void(0)" id="mb_widgetPhone_logCriteria" class="easyui-menubutton" data-options="menu:'#mm',iconCls:'icon-edit'")
+					div(id="mb_widgetPhone_logCriteriaCaption") Today
+				div(id="mm" style="width:150px;")
+					div(class="clickCriteria" data-options="iconCls:'icon-undo'" onclick="$('#mb_widgetPhone_logCriteriaCaption').text(this.innerText)") Today
+					div(class="clickCriteria" data-options="iconCls:'icon-redo'" onclick="$('#mb_widgetPhone_logCriteriaCaption').text(this.innerText)") Yesterday
+					div(class="menu-sep")
+					div(class="clickCriteria" data-options="iconCls:'icon-redo'" onclick="$('#mb_widgetPhone_logCriteriaCaption').text(this.innerText)") Past 15
+					div(class="clickCriteria" data-options="iconCls:'icon-redo'" onclick="$('#mb_widgetPhone_logCriteriaCaption').text(this.innerText)") All
+				//input(id="widgetPhonePhoneCombo" value="001")
+				select(id="widgetPhonePhoneCombo" class="easyui-combobox" style="width:170px")
+
+				//--grid------
+				//div(data-options="region:'center', border:true, " style="width:100%; ")
+				table(id="widgetPhoneLogGrid" class="easyui-datagrid" title="" style="" data-options="fit:true,singleSelect:true,collapsible:true")
+					thead
+						tr
+
+			div(data-options="region:'center',split:true" style="width:24%")
+				#test
+
+
+	script.
+
+		var Widget_phoneWindowScript = new function(){
+			var _this = this;
+
+			this.load = function(){
+				$('#widgetPhoneWindow').window({
+					closed:false,
+					title:'Sms Communication Window',
+					width:'95%',
+					height:'80%',
+					modal:false,
+					minimizable:false,
+					maximizable:false,
+					onBeforeClose: function(){},
+					onBeforeOpen: function(){
+						$('#widgetPhoneWindow').window('center');
+					}
+				});
+				//- $('#cc').combobox({
+				//- 	url:'combobox_data.json',
+				//- 	valueField:'id',
+				//- 	textField:'text'
+				//- });
+				$('#mb_widgetPhone_logCriteria').menubutton({
+					iconCls: 'icon-edit',
+					menu: '#mm',
+					onClick:function(){
+						console.log('menu click!!!');
+					}
+				});
+
+				$('#widgetPhoneLogGrid').datagrid({
+
+					fitColumns:true,
+					columns:
+						[
+							[
+								{
+									field:'entryDateTime',
+									title:'When',
+									width:'100%',
+									formatter: function(value,row,index){
+										(row.imageUrl)? row.imageUrl : row.imageUrl = getDefaultMemberImageUrl();
+										(row.name != null)? row.name : row.name = '';
+										console.log('formaterDump:');
+										console.dir(row);
+										return _this.createCallLogEntryHtml(
+											{
+												imageUrl:row.imageUrl,
+												name:row.name,
+												phoneNumber:phoneDisplayFormat(row.phoneNumber),
+												callDayTime:row.callDayTime,
+												status:row.status,
+											}
+										);
+										//console.log('ROW___________________');
+										//console.dir(row);
+										//- if(row.smsContext == 'inBox'){
+										//- 	return "<img class='magicCirc' style='height:40px;' src = '" + row.imageUrl + "' phone='" + row.contactPhoneNumber + "'></img>"; //value + "9";
+										//- }else{
+										//- 	return "<img class='magicCirc' style='height:40px;' src = '" + row.imageUrl + "' ></img>"; //value + "9";
+										//- }
+									}
+
+								},
+
+
+								//- {
+								//- 	field:'yesterday',
+								//- 	title:'Call Log',
+								//- 	width:'80%',
+								//- 	align:'left',
+								//- 	//- formatter: function(value,row,index){
+								//- 	//- 	//console.log('ROW___________________');
+								//- 	//- 	//console.dir(row);gridBodyPanel    onclick="alert(\'' + row.body + '\');"
+								//- 	//- 	//onblur="$(\'#widgetSmsMessageDataGrid\').datagrid(\'endEdit\', ' + index + ');"
+								//- 	//- 	return '<div id="smsGridRowBody_' + row.id + '"  ondblclick="widgetSmsMessageWindowScript.gridBodyPanel(\'smsGridRowBody_' + row.id + '\', ' + index + ')"> ' + row.body + '</div>';
+										
+								//- 	//- 	//return row.body;
+								//- 	//- },
+								//- 	//- editor:'textarea'
+								//- }
+							]
+						],
+				});
+				
+				$('#widgetPhonePhoneCombo').combobox({
+					valueField:'id',
+					textField:'text'
+				});
+				//======================================================
+				// -----  E V E N T S ----------------------------------
+				//======================================================
+
+				$('.clickCriteria').click(function(e){
+					var clickCriteria = e.currentTarget.innerText;
+					var selectedPhoneNumber;
+					if(_this.phoneComboGetSelected()){
+						selectedPhoneNumber = _this.phoneComboGetSelected().id;
+					}
+					if(clickCriteria == 'Today'){
+						_this.loadDataForPhoneLogGrid(
+							{
+								queryOption:'today',
+								phoneNumber:(selectedPhoneNumber)? selectedPhoneNumber : null
+
+							}, false
+						);
+					}
+					if(clickCriteria == 'Yesterday'){
+						_this.loadDataForPhoneLogGrid(
+							{
+								queryOption:'yesterday'
+
+							}, false
+						);
+					}
+					if(clickCriteria == 'Past 15'){
+						_this.loadDataForPhoneLogGrid(
+							{
+								queryOption:'everyday',
+								limit:15
+							}, false
+						);
+					}
+					if(clickCriteria == 'All'){
+						_this.loadDataForPhoneLogGrid(
+							{
+								queryOption:'everyday',
+							}, false
+						);
+					}
+				});
+
+
+
+				//init load of data------
+				_this.loadDataForPhoneLogGrid(
+					{
+						queryOption:'everyday',
+						//phoneNumber:'12565029902',
+						limit:'15'
+					},
+						function(inData){
+						}
+				);
+
+			}
+
+			this.phoneComboGetSelected = function(){
+				var comboArray = $('#widgetPhonePhoneCombo').combobox('getData');
+				var selectedId = $('#widgetPhonePhoneCombo').combobox('getValue')
+				for(index in comboArray){
+					if(comboArray[index].id == selectedId){
+						return comboArray[index];
+					}
+				}
+			}
+
+			this.addArrayToPhoneCombo = function(inJsonStruct){
+				$('#widgetPhonePhoneCombo').combobox('loadData',inJsonStruct);
+			}
+
+			this.centerWindow = function(){
+				$('#widgetPhoneWindow').window('center');
+			}
+
+			this.createCallLogEntryHtml = function(inJsonStruct){
+				//name, imageUrl, phoneNumber, when, status
+				var fieldData = 
+					{
+						imageUrl:getDefaultMemberImageUrl(),
+						phoneNumber:'',
+						name:'',
+						callDayTime:'',
+						status:''
+					}
+
+				fieldData = $.extend(fieldData, inJsonStruct);
+				var statusImageUrlHtml;
+				if(fieldData.status == 'MISSED'){
+					statusImageUrlHtml = '<img style="vertical-align:middle;" src="' + '/public/images/ui/misscall.png' + '" height="16px" class="magicCirc" phone="' + 'phoneNumber' + '"></img>';
+				}
+				if(fieldData.status == 'OUTGOING'){
+					statusImageUrlHtml = '<img style="vertical-align:middle;" src="' + '/public/images/ui/outgoingcall.png' + '" height="16px" class="magicCirc" phone="' + 'phoneNumber' + '"></img>';
+				}
+				if(fieldData.status == 'INCOMING'){
+					statusImageUrlHtml = '<img style="vertical-align:middle;" src="' + '/public/images/ui/incomingcall.png' + '" height="16px" class="magicCirc" phone="' + 'phoneNumber' + '"></img>';
+				}
+				var htmlString = 
+					'<header>' +
+						statusImageUrlHtml + 
+						'&nbsp;&nbsp;&nbsp;&nbsp;' + fieldData.status + 
+					'</header>' +
+
+					'<center><nav>' +
+						'<img style="vertical-align:middle;" src="' + fieldData.imageUrl + '" height="50px" class="magicCirc" phone="' + 'phoneNumber' + '"></img>' + 
+					'</nav></center>' +
+
+					'<center><section>' +
+						'<p>' + fieldData.name + '</p>' +
+						'<h5>' + fieldData.phoneNumber + '</h5>' +
+						'<h5>' + fieldData.callDayTime + '</h5>' +
+
+					'</section></center>' 
+
+					//- '<footer>' +
+					//- 	'Copyright © W3Schools.com' +
+					//- '</footer>'
+				;
+
+				return htmlString;
+			}
+
+
+
+
+			this.syncPhoneToStore = function(){
+				//deviceQuerySync
+			}
+
+			this.getPhoneLog = function(inJsonStruct, inPostFunction){
+				$postAjax(
+					{
+						url:'/database/phonelog/getLast',
+						send:inJsonStruct,
+						onAjaxSuccess:function(inResponseText){
+							var theReturn = JSON.parse(inResponseText);
+							if(theReturn.result){
+								if(inPostFunction){
+									inPostFunction(theReturn.result);
+								}
+							}
+						}
+					}
+				);
+			}
+
+			this.getUniquePhoneNumbers = function(inJsonStruct, inPostFunction){
+				$postAjax(
+					{
+						url:'/database/phonelog/getUPhoneNumbers',
+						send:inJsonStruct,
+						onAjaxSuccess:function(inResponseText){
+							var theReturn = JSON.parse(inResponseText);
+							if(theReturn.result){
+								if(inPostFunction){
+									inPostFunction(theReturn.result);
+								}
+							}
+						}
+					}
+				);
+			}
+
+			this.phoneLogGridDataAppendRow = function(inRowData){
+				$('#widgetPhoneLogGrid').datagrid('appendRow',inRowData);
+			}
+
+			this.phoneLogGridDataAppendRows = function(inArrayOfRowData){
+				for(theRowIndex in inArrayOfRowData){
+					$('#widgetPhoneLogGrid').datagrid('appendRow',inArrayOfRowData[theRowIndex]);
+				}
+			}
+
+			this.phoneLogGridClear = function(){
+				$('#widgetPhoneLogGrid').datagrid(
+					{
+						data: []
+					}
+				);
+			}
+
+			this.loadDataForPhoneLogGrid = function(inJsonStruct, inPostFunction){
+				_this.phoneLogGridClear();
+				_this.getPhoneLog(inJsonStruct, function(inData){
+					_this.phoneLogGridDataAppendRows(inData)
+				});
+			}
+
+
+
+
+
+
+
+
+		}();
+
+		//autoLaunchFortesting!!!!
+		$(document).ready(function(){
+			Widget_phoneWindowScript.load();
+			Widget_phoneWindowScript.getPhoneLog(
+				{
+					queryOption:'today',
+					//phoneNumber:'1256502902',
+					//status:'MISSED'
+
+				},function(resultArray){
+					//alert(JSON.stringify(resultArray));
+				}
+			);
+
+			$('#test').html(Widget_phoneWindowScript.createCallLogEntryHtml());
+			Widget_phoneWindowScript.addArrayToPhoneCombo(
+				[
+					{
+						"id":1,
+						"text":"text1"
+					},{
+						"id":2,
+						"text":"text2"
+					},{
+						"id":3,
+						"text":"text3",
+						"selected":true
+					},{
+						"id":4,
+						"text":"text4"
+					},{
+						"id":5,
+						"text":"text5"
+					}
+				]
+			);
+
+			Widget_phoneWindowScript.getUniquePhoneNumbers(
+				{
+					limit:'1000'
+
+				},function(result){
+					//alert(JSON.stringify(result));
+					var newArrayOfHash = [];
+					for(var index in result){
+						if(result[index].phoneNumber){
+							newArrayOfHash.push(
+								{
+									id:result[index].phoneNumber,
+									text:phoneDisplayFormat(result[index].phoneNumber),
+									name:result[index].name,
+									imageUrl:result[index].imageUrl
+								}
+							);
+						}
+					}
+					Widget_phoneWindowScript.addArrayToPhoneCombo(newArrayOfHash);
+				}
+			);
+
+		});
+
