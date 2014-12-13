@@ -45,6 +45,50 @@ module.exports.controller = function(app){
 	});
 
 
+	app.get('/phone/widget_phonePropertyGrid', function(req, res){
+		console.log("/phone/widget_phonePropertyGrid get ");
+		res.render('phone/widget_phonepropertygrid.jade',
+			{
+				userId:req.cookies.userId,
+				deviceId:"815",//req.cookies.deviceId,
+				URL:configData.domain.address + ":" + configData.domain.port,
+				webSocketClient:configData.webSocketClient,
+				defaultUserImageUrl:configData.defaultUserImageUrl,
+				defaultMemberImageUrl:configData.defaultMemberImageUrl,
+				data:req.query
+			}
+		);
+	});
+
+	app.get('/phone/json/controllgrid', function(req, res){
+		console.log("/widget_phoneWindow post");
+		console.dir(req.query);
+
+
+		//res.setHeader('Content-Type', 'application/json');
+		res.json(
+			[{
+					"id":1,
+					"text":"hopper1"
+				},{
+					"id":2,
+					"text":"text2"
+				},{
+					"id":3,
+					"text":"text3",
+					"selected":true
+				},{
+					"id":4,
+					"text":"text4"
+				},{
+					"id":5,
+					"text":"text5"
+			}]
+		);
+	});
+
+
+
 
 	app.post('/phone/widget_phoneWindow', function(req, res){
 		console.log("/widget_phoneWindow post");

@@ -1,0 +1,158 @@
+
+
+head 
+	meta(charset="UTF-8")
+	meta(name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+
+
+body(style="background-image: url('/public/images/ui/background_crack.jpg')")
+	- if(data.command == 'solo')
+		script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
+		script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
+		script(type='text/javascript', src='/js/qrcode/qrcode.js')
+
+		script(type='text/javascript', src='/js/commmanager/commmanager.js')
+		script(type='text/javascript', src='/js/clientutil/clientutil.js')
+
+
+		script(type='text/javascript', src='/public/js/easyui/jquery.easyui.min.js')
+		link(rel='stylesheet', href='/public/js/easyui/themes/default/easyui.css')
+		link(rel='stylesheet', href='/public/js/easyui/themes/default/icon.css')
+
+		script(type='text/javascript', src='/public/js/hashofarray/hashofarrayobject.js')
+		script(type='text/javascript', src='/public/js/async/async.js')
+
+		script.
+			var getUserId =function(){return '#{userId}';}
+			var getDeviceId = function(){return '#{deviceId}';}
+			var getURL = function(){return '#{URL}';}
+			var getDefaultUserImageUrl = function(){return '#{defaultUserImageUrl}';}
+			var getDefaultMemberImageUrl = function(){return '#{defaultMemberImageUrl}';}
+
+
+	//h1 phone propert ygrid   
+
+
+	table(id="phoneControlGrid" class="easyui-propertygrid" style="width:340px" data-options="")
+	table(id="phonePropertyGrid" class="easyui-propertygrid" style="width:300px" data-options="")
+	button(onclick="test();") TEST
+	button(onclick="test2();") TEST2
+
+
+
+
+
+script.
+	var Widget_phonePropertyGridScript = new function(){
+		var _this = this;
+
+		this.load = function(){
+			$('#phoneControlGrid').propertygrid({
+				url:'/public/json/phonecontrolgrid_000.json',
+				method:'get',
+				showGroup:true,
+				scrollbarSize:0
+			});
+			$('#phonePropertyGrid').propertygrid({
+				showGroup:true,
+				scrollbarSize:0
+			});
+		}
+
+		this.getSelectedCatagoryData = function(){
+			var allData = $('#phoneControlGrid').propertygrid('getData').rows;
+			console.dir(allData);
+			var theCatagoryValue;
+			for(var index in allData){
+				if(allData[index].name == 'Catagory'){
+					theCatagoryValue = allData[index].value;
+					if(theCatagoryValue){
+						console.log('test666666:' + theCatagoryValue);
+						var dataArray = allData[index].editor.options.data;
+						for(var dataArrayIndex in dataArray){
+							if(dataArray[dataArrayIndex].id == theCatagoryValue){
+								console.log('----------------------');
+								console.dir(dataArray[dataArrayIndex]);
+								return dataArray[dataArrayIndex];
+							}
+						}
+					}
+				}
+			}
+		}
+
+		this.control_refresh = function(){
+			$('#phoneControlGrid').propertygrid('loadData',$('#phoneControlGrid').propertygrid('getData'));
+		}
+
+		this.buildCatagory = function(){
+			var catagoryData = _this.getSelectedCatagoryData();
+			var propertyArray = catagoryData.properties;
+			for(var propertyArrayIndex in propertyArray){
+				$('#phonePropertyGrid').propertygrid('appendRow',propertyArray[propertyArrayIndex]);
+			}
+			$('#phonePropertyGrid').propertygrid('expandGroup');
+		}
+
+		this.control_getValueByName = function(inName){
+			var theArray = $('#phoneControlGrid').propertygrid('getData').rows;
+			for(var theArrayIndex in theArray){
+				if(theArray[theArrayIndex].name.toLowerCase() == inName.toLowerCase()){
+					return theArray[theArrayIndex].value;
+				}
+			}
+			return false;
+		}
+
+		this.control_updateValueByName = function(inName, inNewValue){
+			var theArray = $('#phoneControlGrid').propertygrid('getData').rows;
+			for(var theArrayIndex in theArray){
+				if(theArray[theArrayIndex].name.toLowerCase() == inName.toLowerCase()){
+					theArray[theArrayIndex].value = inNewValue;
+					_this.control_refresh();
+					return false;
+				}
+			}
+		}
+
+	}();
+
+		//combobox
+
+
+
+
+	$(document).ready(function(){
+		Widget_phonePropertyGridScript.load();
+	});
+
+
+	var test = function(){
+		//- var row = 
+		//- 	{
+		//- 		name:'AddName',
+		//- 		value:'',
+		//- 		group:'Marketing Settings',
+		//- 		editor:'text'
+		//- 	}
+		//- ;
+		//- console.dir($('#phoneControlGrid').propertygrid('getData'));
+		//- var selectedId = $('#phoneControlGrid').propertygrid('getValue');
+		//- console.log('selectedId' + selectedId);
+		//- $('#phoneControlGrid').propertygrid('appendRow',row);
+		//Widget_phonePropertyGridScript.getSelectedCatagoryData();
+		$('#phonePropertyGrid').propertygrid('loadData',[]);
+		Widget_phonePropertyGridScript.buildCatagory();
+	}
+	var test2 = function(){
+		Widget_phonePropertyGridScript.control_updateValueByName('catagory', '000002');
+		//- console.log('----');
+		//- console.dir($('#phoneControlGrid').propertygrid('getData'));
+
+
+		//- $('#phoneControlGrid').propertygrid('selectRow',2);
+		//- console.dir($('#phoneControlGrid').propertygrid('getSelected'));
+		//- $('#phoneControlGrid').propertygrid('getSelected').value = "hello kkkk";
+		//- $('#phoneControlGrid').propertygrid('getSelected').name = "hello kkkk";
+		//- $('#phoneControlGrid').propertygrid('loadData',$('#phoneControlGrid').propertygrid('getData')  );
+	}

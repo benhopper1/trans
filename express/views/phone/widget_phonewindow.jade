@@ -172,7 +172,23 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 						tr
 
 			div(data-options="region:'center',split:true" style="width:24%")
-				#test
+				//=============================================================================================================================
+				//------ Tab layout
+				//=============================================================================================================================
+				div(id="widgetPhone_layout_1" class="easyui-layout" data-options="fit:true")
+					//============================================================================
+					div(data-options="region:'west',split:true" style="width:40%")
+
+					//============================================================================
+					div(data-options="region:'center',split:true" style="width:24%")
+						div(id="widgetContactsCollection_tabs_0" class="easyui-tabs" data-options="fit:true, tabWidth:100,tabHeight:60" style="width:700px;height:250px")
+							div(title="<span id='tab_import' class='tt-inner'><img style='float: left; height:40px' src='public/images/ui/email.png'/>Import <br>Contacts</span>" style="padding:10px")
+								//p Notes Relation :
+								//select(id="widgetPhonePhoneCombo" class="easyui-combobox" style="width:170px")
+								//button(onclick="test();") TEST
+								#phonePropertyGridWidget
+								textarea(id="ta_phoneLogNotes" rows="10" cols="50")
+
 
 
 	script.
@@ -220,8 +236,8 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 									formatter: function(value,row,index){
 										(row.imageUrl)? row.imageUrl : row.imageUrl = getDefaultMemberImageUrl();
 										(row.name != null)? row.name : row.name = '';
-										console.log('formaterDump:');
-										console.dir(row);
+										//console.log('formaterDump:');
+										//console.dir(row);
 										return _this.createCallLogEntryHtml(
 											{
 												imageUrl:row.imageUrl,
@@ -264,14 +280,30 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 				
 				$('#widgetPhonePhoneCombo').combobox({
 					valueField:'id',
-					textField:'text'
+					textField:'text',
+					onSelect:function(record){
+						_this.refreshPhoneLogGrid();
+						console.log('record');
+						console.dir(record);
+					}
 				});
+				$.get( "/phone/widget_phonePropertyGrid", function(data){
+					$('#phonePropertyGridWidget').html(data);
+				});
+				
+
 				//======================================================
 				// -----  E V E N T S ----------------------------------
 				//======================================================
 
 				$('.clickCriteria').click(function(e){
-					var clickCriteria = e.currentTarget.innerText;
+					_this.refreshPhoneLogGrid();
+				});
+
+				this.refreshPhoneLogGrid = function(){
+					var clickCriteria = $('#mb_widgetPhone_logCriteriaCaption').html();
+					console.log('clickCriteria:' + clickCriteria);
+					console.dir($('#mb_widgetPhone_logCriteriaCaption').html());
 					var selectedPhoneNumber;
 					if(_this.phoneComboGetSelected()){
 						selectedPhoneNumber = _this.phoneComboGetSelected().id;
@@ -288,7 +320,8 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 					if(clickCriteria == 'Yesterday'){
 						_this.loadDataForPhoneLogGrid(
 							{
-								queryOption:'yesterday'
+								queryOption:'yesterday',
+								phoneNumber:(selectedPhoneNumber)? selectedPhoneNumber : null
 
 							}, false
 						);
@@ -297,7 +330,8 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 						_this.loadDataForPhoneLogGrid(
 							{
 								queryOption:'everyday',
-								limit:15
+								limit:15,
+								phoneNumber:(selectedPhoneNumber)? selectedPhoneNumber : null
 							}, false
 						);
 					}
@@ -305,29 +339,77 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 						_this.loadDataForPhoneLogGrid(
 							{
 								queryOption:'everyday',
+								phoneNumber:(selectedPhoneNumber)? selectedPhoneNumber : null,
 							}, false
 						);
 					}
-				});
+				}
 
 
 
-				//init load of data------
+				//============================
+				//---------- > I N I T < -----
+				//============================
 				_this.loadDataForPhoneLogGrid(
 					{
-						queryOption:'everyday',
-						//phoneNumber:'12565029902',
-						limit:'15'
+						queryOption:'today',
+						limit:'1000'
 					},
 						function(inData){
 						}
 				);
+				_this.loadAllNumberIntoPhoneCombo();
 
+			}// ===  end of load----- ========================================================
+
+		//====================================================================================
+		//---------- > M E T H O D S < -------------------------------------------------------
+		//====================================================================================
+
+			this.loadAllNumberIntoPhoneCombo = function(){
+				_this.getUniquePhoneNumbers(
+					{
+						limit:'1000'
+
+					},function(result){
+						//alert(JSON.stringify(result));
+						var newArrayOfHash = [];
+						for(var index in result){
+							if(result[index].phoneNumber){
+								newArrayOfHash.push(
+									{
+										id:result[index].phoneNumber,
+										text:phoneDisplayFormat(result[index].phoneNumber),
+										name:result[index].name,
+										imageUrl:result[index].imageUrl
+									}
+								);
+							}
+						}
+						Widget_phoneWindowScript.addArrayToPhoneCombo(newArrayOfHash);
+					}
+				);
+
+				//});
+			}
+
+			this.phoneComboClear = function(){
+				var insertData = 
+					[
+						{
+							id:false,
+							imageUrl:getDefaultMemberImageUrl(),
+							name:"NA",
+							text: "   ----> All Numbers <----   "
+						}
+					]
+				$('#widgetPhonePhoneCombo').combobox('clear');
+				$('#widgetPhonePhoneCombo').combobox('loadData',insertData);
 			}
 
 			this.phoneComboGetSelected = function(){
 				var comboArray = $('#widgetPhonePhoneCombo').combobox('getData');
-				var selectedId = $('#widgetPhonePhoneCombo').combobox('getValue')
+				var selectedId = $('#widgetPhonePhoneCombo').combobox('getValue');
 				for(index in comboArray){
 					if(comboArray[index].id == selectedId){
 						return comboArray[index];
@@ -335,7 +417,82 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 				}
 			}
 
+			//add one record
+			/*
+			*	@param0	jsonStruct 		the option : 
+			*							{
+			*								select:justAdded / top / false==no selection
+			*								place:start / end / second / false==end
+			*							}
+			*	@param1 jsonStruct 	the record to be inserted
+			*/
+			this.appendToPhoneCombo = function(inOptionJsonStruct, inRecordJsonStruct){
+				var option = 
+					{
+						select:false,
+						place:'end'
+					}
+				option = $.extend(option, inOptionJsonStruct);
+
+				var currentRecords = $('#widgetPhonePhoneCombo').combobox('getData');
+				var justAddedIndex = -1;
+				if(option['place'] == 'start'){
+					currentRecords.unshift(inRecordJsonStruct);
+					$('#widgetPhonePhoneCombo').combobox('loadData',currentRecords);
+					justAddedIndex = 0;
+				}
+				if(option['place'] == 'end'){
+					currentRecords.push(inRecordJsonStruct);
+					$('#widgetPhonePhoneCombo').combobox('loadData',currentRecords);
+					justAddedIndex = (currentRecords.length -1);
+				}
+				if(option['place'] == 'second'){
+					var newArray = [];
+					if(currentRecords.length < 1){
+						newArray.push(inRecordJsonStruct);
+						justAddedIndex = (currentRecords.length -1);
+					}
+					if(currentRecords.length == 1){
+						newArray.push(currentRecords[0]);
+						newArray.push(inRecordJsonStruct);
+						justAddedIndex = 1;
+					}
+					if(currentRecords.length > 1){
+						for(var currentIndex in currentRecords){
+							newArray.push(currentRecords[currentIndex]);
+							if(currentIndex == 0){
+								newArray.push(inRecordJsonStruct);
+								justAddedIndex = 1;
+							}
+						}
+					}
+					$('#widgetPhonePhoneCombo').combobox('loadData',newArray);
+				}
+
+				if(option['select'] == 'justAdded'){
+					if($('#widgetPhonePhoneCombo').combobox('getData').length > 1){
+						if(justAddedIndex != -1){
+							$('#widgetPhonePhoneCombo').combobox('select', $('#widgetPhonePhoneCombo').combobox('getData')[justAddedIndex].id);
+						}
+					}
+				}
+				if(option['select'] == 'top'){
+						$('#widgetPhonePhoneCombo').combobox('unselect', $('#widgetPhonePhoneCombo').combobox('getData')[0].id);
+						$('#widgetPhonePhoneCombo').combobox('select', $('#widgetPhonePhoneCombo').combobox('getData')[0].id);
+				}
+			}
+
 			this.addArrayToPhoneCombo = function(inJsonStruct){
+				$('#widgetPhonePhoneCombo').combobox('clear');
+				// add to beginning of array
+				inJsonStruct.unshift(
+					{
+						id:false,
+						imageUrl:getDefaultMemberImageUrl(),
+						name:"NA",
+						text: "   ----> All Numbers <----   "
+					}
+				);
 				$('#widgetPhonePhoneCombo').combobox('loadData',inJsonStruct);
 			}
 
@@ -479,51 +636,83 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 				}
 			);
 
-			$('#test').html(Widget_phoneWindowScript.createCallLogEntryHtml());
-			Widget_phoneWindowScript.addArrayToPhoneCombo(
-				[
-					{
-						"id":1,
-						"text":"text1"
-					},{
-						"id":2,
-						"text":"text2"
-					},{
-						"id":3,
-						"text":"text3",
-						"selected":true
-					},{
-						"id":4,
-						"text":"text4"
-					},{
-						"id":5,
-						"text":"text5"
-					}
-				]
-			);
+			//$('#test').html(Widget_phoneWindowScript.createCallLogEntryHtml());
+			//- Widget_phoneWindowScript.addArrayToPhoneCombo(
+			//- 	[
+			//- 		{
+			//- 			"id":1,
+			//- 			"text":"text1"
+			//- 		},{
+			//- 			"id":2,
+			//- 			"text":"text2"
+			//- 		},{
+			//- 			"id":3,
+			//- 			"text":"text3",
+			//- 			"selected":true
+			//- 		},{
+			//- 			"id":4,
+			//- 			"text":"text4"
+			//- 		},{
+			//- 			"id":5,
+			//- 			"text":"text5"
+			//- 		}
+			//- 	]
+			//- );
 
-			Widget_phoneWindowScript.getUniquePhoneNumbers(
-				{
-					limit:'1000'
+			//- Widget_phoneWindowScript.getUniquePhoneNumbers(
+			//- 	{
+			//- 		limit:'1000'
 
-				},function(result){
-					//alert(JSON.stringify(result));
-					var newArrayOfHash = [];
-					for(var index in result){
-						if(result[index].phoneNumber){
-							newArrayOfHash.push(
-								{
-									id:result[index].phoneNumber,
-									text:phoneDisplayFormat(result[index].phoneNumber),
-									name:result[index].name,
-									imageUrl:result[index].imageUrl
-								}
-							);
-						}
-					}
-					Widget_phoneWindowScript.addArrayToPhoneCombo(newArrayOfHash);
-				}
-			);
+			//- 	},function(result){
+			//- 		//alert(JSON.stringify(result));
+			//- 		var newArrayOfHash = [];
+			//- 		for(var index in result){
+			//- 			if(result[index].phoneNumber){
+			//- 				newArrayOfHash.push(
+			//- 					{
+			//- 						id:result[index].phoneNumber,
+			//- 						text:phoneDisplayFormat(result[index].phoneNumber),
+			//- 						name:result[index].name,
+			//- 						imageUrl:result[index].imageUrl
+			//- 					}
+			//- 				);
+			//- 			}
+			//- 		}
+			//- 		Widget_phoneWindowScript.addArrayToPhoneCombo(newArrayOfHash);
+			//- 	}
+			//- );
 
 		});
 
+
+		/*
+		*	@param0	jsonStruct 		the option : 
+		*							{
+		*								select:justAdded / top / false==no selection
+		*								place:start / end / second / false==end
+		*							}
+		*	@param1 jsonStruct 	the record to be inserted
+		*/
+		//this.appendToPhoneCombo = function(inOptionJsonStruct, inRecordJsonStruct){
+		//- Widget_phoneWindowScript.appendToPhoneCombo(
+		//- 	{
+		//- 		select:'top',
+		//- 		place:'second'
+		//- 	}, 
+		//- 	{
+
+		//- 		id:new Date().getTime(),
+		//- 		imageUrl:getDefaultMemberImageUrl(),
+		//- 		name:"test",
+		//- 		text: "T E S T  E N T R Y"
+
+		//- 	}
+		//- );
+
+		// var text = $('textarea#mytextarea').val();
+		//$('#myTextBox').val('new value');
+		//- var test = function(){
+		//- 	var cursorPosition = $('#ta_phoneLogNotes').prop("selectionStart");
+		//- 	console.log('cursorPosition:' + cursorPosition);
+		//- }
+		

@@ -1,0 +1,113 @@
+{"total":7,"rows":[
+	{"name":"Relate To","value":"Bill Smith","group":"Control Attributes","editor":
+			{
+				"type":"combobox",
+				"options":
+					{
+						"valueField":"id",
+						"textField":"text",
+						"data":
+							[
+								{
+									"id":"Selected Log Entry",
+									"text":"Selected Log Entry",
+									"selected":true
+								}
+							]
+					}
+			}
+	},
+
+	{"name":"Catagory","value":"","group":"Control Attributes","editor":
+			{
+				"type":"combobox",
+				"options":
+					{
+						"valueField":"id",
+						"textField":"text",
+						"data":
+							[
+								{
+									"id":"general",
+									"text":"General",
+									"properties":
+										[
+											{
+												"id":"subject",
+												"name":"Subject",
+												"value":"My Subject",
+												"group":"General Properties",
+												"editor":"text"
+											},
+											{
+												"id":"importance",
+												"name":"Importance 0 : 10",
+												"value":"0",
+												"group":"General Properties",
+												"editor":"text"
+											}
+										]
+								},
+								{
+									"id":"other",
+									"text":"Other",
+									"properties":
+										[
+											{
+												"id":"other-subject",
+												"name":"other-Subject",
+												"value":"",
+												"group":"Properties",
+												"editor":"text"
+											},
+											{
+												"id":"other-importance",
+												"name":"other - Importance 0 : 10",
+												"value":"",
+												"group":"Properties",
+												"editor":"text"
+											}
+										]
+								}
+							]
+					}
+			}
+	},
+	{"name":"Name","value":"","group":"Relation Attributes","editor":
+			{
+				"type":"text"
+			}
+	},
+	{"name":"Phone Number","value":"","group":"Relation Attributes","editor":
+			{
+				"type":"text",
+				"options":
+					{
+						"valueField":"id",
+						"textField":"text"
+					}
+			}
+	},
+	{"name":"Ext","value":"","group":"Relation Attributes","editor":
+			{
+				"type":"text"
+			}
+	},
+	{"name":"Time","value":"","group":"Relation Attributes","editor":
+			{
+				"type":"text"
+			}
+	},
+	{"name":"Satus","value":"","group":"Relation Attributes","editor":
+			{
+				"type":"text"
+			}
+	},
+	{"name2":"Extra","value":"","group":"Relation Attributes","editor":
+			{
+				"type":"text"
+			}
+	}
+	
+	
+]}

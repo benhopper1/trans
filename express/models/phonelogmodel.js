@@ -249,7 +249,7 @@ var Model = function(){
 
 		var sqlString = 
 			"SELECT * FROM ( SELECT phoneNumber, userId, max(NAME) AS name, max(imageUrl) as imageUrl  FROM (SELECT t1.phoneNumber, t1.userId, ('') AS NAME, ('') AS imageUrl FROM tb_phoneLog AS t1" + " " +
-				"WHERE t1.userId = 1" + connection.escape(parseInt(fieldData.userId)) + " " +
+				"WHERE t1.userId = " + connection.escape(parseInt(fieldData.userId)) + " " +
 					"GROUP BY t1.phoneNumber UNION ALL SELECT t2.phoneNumber, t2.userId, max(t2.name), max(t2.imageUrl) FROM tb_storedContacts AS t2" + " " +
 				"WHERE t2.userId = " + connection.escape(parseInt(fieldData.userId)) + " " +
 					"GROUP BY t2.phoneNumber) AS t3 GROUP BY phoneNumber) AS t4 ORDER BY IF(NAME = '' OR NAME IS NULL,1,0),NAME" + " " +
