@@ -51,8 +51,8 @@ module.exports.controller = function(app){
 		var TcpClient = require(basePath + '/library/tcpservices/tcpclient.js');
 		tcpClient = new TcpClient(
 			{
-				host:'192.168.0.16',
-				port:30400
+				host:configData.bridgeService.address,
+				port:configData.bridgeService.port
 			}
 		);
 		console.log('tcpClient----------------------------------------------------------');

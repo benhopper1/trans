@@ -31,9 +31,35 @@ var HashOfArrayObject = function(inAllowDuplicates){
         if(allowDuplicates){
             hash[inKey].push(inValue);
         }else{
-            if(hash[inKey].indexOf(inValue) == -1){
-                hash[inKey].push(inValue);
-            }
+            /*if(isFunction(inValue)){
+                var match = false;
+                var theHashArray = hash[inKey];
+                for(var hashIndex in theHashArray){
+                    var theStoredFunction = theHashArray[hashIndex];
+                    if(isFunction(theStoredFunction)){
+                        if(JSON.stringify(theStoredFunction) != JSON.stringify(inValue)){
+                        }else{
+                            alert("added notMatched:" + JSON.stringify(theStoredFunction) + ">---to----<" + JSON.stringify(inValue));
+                            _this.dump();
+                            console.log("Matched:" + JSON.stringify(theStoredFunction) + ">---to----<" + JSON.stringify(inValue));
+                            match = true;
+                            break;
+                        }
+                    }
+                }
+                if(!(match)){
+                    hash[inKey].push(inValue);
+                    alert("added:" + JSON.stringify(inValue));
+                    _this.dump();
+                    console.log("added:" + JSON.stringify(inValue));
+                }
+            }else{*/
+
+                if(hash[inKey].indexOf(inValue) == -1){
+                    hash[inKey].push(inValue);
+                }
+
+            //}
         }
         
     }
@@ -166,6 +192,10 @@ var HashOfArrayObject = function(inAllowDuplicates){
             }
         }
         return false;
+    }
+
+    function isFunction(x) {
+      return Object.prototype.toString.call(x) == '[object Function]';
     }
 
 

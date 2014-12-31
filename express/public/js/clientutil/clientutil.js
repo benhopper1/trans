@@ -176,6 +176,67 @@ var clientUtilModule = new function(){
 
 }
 
+/*============================================================================
+*	optional callback, returns data synchronously, so this function blocks!!!
+*
+*============================================================================*/
+
+var $postSyncJsonInJsonOut = function(inUrl, inData, inOptionalPostFunction){
+	var def = $.Deferred();
+			var theData;
+			jQuery.ajax({
+				url:inUrl,
+				type: 'post',
+				data:inData,
+				DataType:'jsonp',
+				success:function(result) {
+					theData = result;
+					if(inOptionalPostFunction){inOptionalPostFunction(result);}
+					def.resolve(result);
+
+				},
+				error:function(){
+					theData = false;
+					if(inOptionalPostFunction){inOptionalPostFunction(theData);}
+					def.resolve(theData);
+				},
+				async:false
+			});
+			return theData;
+}
+
+/*============================================================================
+*	optional callback, returns data synchronously, so this function blocks!!!
+*
+*============================================================================*/
+
+var $getSyncJsonOut = function(inUrl, inOptionalPostFunction){
+	var def = $.Deferred();
+			var theData;
+			jQuery.ajax({
+				url:inUrl,
+				type: 'get',
+				data:false,
+				DataType:'jsonp',
+				success:function(result) {
+					theData = result;
+					if(inOptionalPostFunction){inOptionalPostFunction(result);}
+					def.resolve(result);
+
+				},
+				error:function(){
+					theData = false;
+					if(inOptionalPostFunction){inOptionalPostFunction(theData);}
+					def.resolve(theData);
+				},
+				async:false
+			});
+			return theData;
+}
+
+
+
+
 $postAjax = function(inData){
 	new clientUtilModule.AjaxJsonPostObject(inData);
 }
@@ -242,6 +303,16 @@ var phoneDisplayFormat = function(inNumber){
 	}
 
 	return inNumber;
+}
+var mysqlEpochToLocalDateTime = function(inValue){
+	var utcSeconds = inValue;
+	var newDate = new Date(0); // The 0 there is the key, which sets the date to the epoch
+	newDate.setUTCSeconds(utcSeconds);
+	return newDate.toLocaleString();
+}
+
+var array_unique = function(inArray){
+	return $.grep(inArray, function(v, k){return $.inArray(v ,inArray) === k;})
 }
 
 
@@ -530,7 +601,7 @@ var Backstack = function(inJsonStruct){
 var EventObject = function(){
 	var _this = this;
 
-	var hashOfArray = new HashOfArrayObject();
+	var hashOfArray = new HashOfArrayObject(false);
 
 	this.setOn = function(inEventKey, inPostFunction){
 		hashOfArray.add(inEventKey, inPostFunction);

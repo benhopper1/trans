@@ -60,7 +60,7 @@ module.exports.controller = function(app){
 		);
 	});
 
-	app.get('/phone/json/controllgrid', function(req, res){
+	app.post('/phone/json/controllgrid', function(req, res){
 		console.log("/widget_phoneWindow post");
 		console.dir(req.query);
 
@@ -95,6 +95,36 @@ module.exports.controller = function(app){
 		/*
 		console.dir(req.body);
 		res.render('phone/widget_phoneContacts.jade',req.body);*/
+	});
+
+	app.get('/phone/widget_documentReport', function(req, res){
+		console.log("/phone/widget_documentReport get ");
+		res.render('document/widget_document.jade',
+			{
+				userId:req.cookies.userId,
+				deviceId:"815",//req.cookies.deviceId,
+				URL:configData.domain.address + ":" + configData.domain.port,
+				webSocketClient:configData.webSocketClient,
+				defaultUserImageUrl:configData.defaultUserImageUrl,
+				defaultMemberImageUrl:configData.defaultMemberImageUrl,
+				data:req.query
+			}
+		);
+	});
+
+	app.post('/phone/widget_documentReport', function(req, res){
+		console.log("/phone/widget_documentReport get ");
+		res.render('document/widget_document.jade',
+			{
+				userId:req.cookies.userId,
+				deviceId:"815",//req.cookies.deviceId,
+				URL:configData.domain.address + ":" + configData.domain.port,
+				webSocketClient:configData.webSocketClient,
+				defaultUserImageUrl:configData.defaultUserImageUrl,
+				defaultMemberImageUrl:configData.defaultMemberImageUrl,
+				data:req.body
+			}
+		);
 	});
 
 
@@ -185,5 +215,58 @@ module.exports.controller = function(app){
 		});
 
 	});
+
+	app.post('/database/phonelog/addNote', function(req, res){
+		console.log("/database/phonelog/addNote");
+		console.log('---------userId---------------------------------:' +  req.cookies.userId);
+		console.log('body:');
+		console.dir(req.body);
+		req.body['userId'] = req.cookies.userId; 
+		phoneLogModel.phoneNotesAddNote(req.body, function(err, result){
+			res.setHeader('Content-Type', 'application/json');
+			res.end(JSON.stringify(result));
+		});
+	});
+
+	app.get('/phone/widget_phoneDocumentView', function(req, res){
+		console.log("/phone/widget_phoneDocumentView get");
+		res.render('phone/widget_phonedocumentview.jade',
+			{
+				userId:req.cookies.userId,
+				deviceId:"815",//req.cookies.deviceId,
+				URL:configData.domain.address + ":" + configData.domain.port,
+				webSocketClient:configData.webSocketClient,
+				defaultUserImageUrl:configData.defaultUserImageUrl,
+				defaultMemberImageUrl:configData.defaultMemberImageUrl,
+				data:req.query
+			}
+		);
+	});
+
+	app.post('/database/phoneNotes/getUDates', function(req, res){
+		console.log("/database/phoneNotes/getUDates");
+		console.log('---------userId---------------------------------:' +  req.cookies.userId);
+		console.log('body:');
+		console.dir(req.body);
+		req.body['userId'] = req.cookies.userId; 
+		phoneLogModel.phonesNotesGetUDates(req.body, function(err, result){
+			res.setHeader('Content-Type', 'application/json');
+			res.end(JSON.stringify(result));
+		});
+	});
+
+	app.post('/database/phoneNotes/phonesDocumentsAndNotesGet', function(req, res){
+		console.log("/database/phoneNotes/phonesDocumentsAndNotesGet");
+		console.log('---------userId---------------------------------:' +  req.cookies.userId);
+		console.log('body:');
+		console.dir(req.body);
+		req.body['userId'] = req.cookies.userId; 
+		phoneLogModel.phonesDocumentsAndNotesGet(req.body, function(err, result){
+			res.setHeader('Content-Type', 'application/json');
+			res.end(JSON.stringify(result));
+		});
+	});
+
+
 
 }

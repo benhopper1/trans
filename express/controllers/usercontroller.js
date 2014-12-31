@@ -30,7 +30,7 @@ module.exports.controller = function(app) {
 	});
 
 	app.post('/user/mobileLogin', function(req, res){
-		console.log("/user/mobileLogin get");
+		console.log("/user/mobileLogin post");
 		//res.render('users/mobilelogin.jade',req.body);
 		userModel.verifyAndGetUserData(
 			{
@@ -38,6 +38,8 @@ module.exports.controller = function(app) {
 				password:req.body.password,
 				onSuccess:function(inRecord){
 					req.body.userId = inRecord.id;
+					//req.cookies.userId = inRecord.id;
+					res.cookie('userId', inRecord.id, { maxAge: (60000 * 60 * 24), httpOnly: true });
 					userModel.useOrCreateDeviceId(req.body, function(err, inJsonStruct){
 						console.log('useOrCreateDeviceId');
 						console.log('error' + err);
@@ -54,12 +56,13 @@ module.exports.controller = function(app) {
 							}
 						));
 					});
+
 				},
 				onFail:function(inErr){
 					res.setHeader('Content-Type', 'application/json');
 					res.end(JSON.stringify(
 						{
-							hadError:((inErr)? true : false),
+							hadError:true,
 							err:inErr,
 							result:false
 						}
