@@ -66,7 +66,7 @@ var Controller = function(router){
 			console.log('cmd' + inTransportLayer.toJson().dataLayer.cmd);
 			console.log('cd' + inTransportLayer.toJson().dataLayer.cd);
 			console.log('dump hashOfWaitingWs--------------------');
-			console.dir(hashOfWaitingWs);
+			//console.dir(hashOfWaitingWs);
 			console.log('geting from hash:' + inTransportLayer.toJson().dataLayer.cd);
 			var waitingData = hashOfWaitingWs[inTransportLayer.toJson().dataLayer.cd];
 			if(waitingData){
@@ -78,6 +78,20 @@ var Controller = function(router){
 				console.log('password:' + inWs.password);
 				router.reportOnRoute(waitingData.wss, waitingData.ws, waitingTransportLayer);
 			}
+
+			var transactionTransportLayer = inTransportLayer.getTransportLayerOnly(); //waitingTransportLayer; //
+			transactionTransportLayer.addRoutingLayer(
+				{
+					type:'transactionToClient'
+				}
+			);
+			transactionTransportLayer.addDataLayer(
+				{
+					returning:'forCallback!!!',
+					qrCode:inTransportLayer.toJson().dataLayer.cd
+				}
+			);
+			inWs.send(transactionTransportLayer.toString());
 		}
 
 

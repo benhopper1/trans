@@ -4,56 +4,85 @@
 //link(rel='stylesheet', href='public/js/easyui/themes/default/icon.css')
 
 #ff
-	#panel_keypad(style="padding:10px;")
+	#panel_keypad(style="padding:10px;width:90;height:120")
 		table(class="magic" id="phoneContactsTable" width="100%" height="100%" style="border-spacing: 0px 0px;" cellpadding="0" cellspacing="0")
 			tr
 				td(style="width: 33%; height:25%")
-					button(style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('1');") 1
+					button(id="bt_phoneKeyPad_1" class="easyui-linkbutton" style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('1');") 1
 				td(style="width: 33%; height:25%")
-					button(style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('2');") 2
+					button(id="bt_phoneKeyPad_2" class="easyui-linkbutton" style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('2');") 2
 				td(style="width: 33%; height:25%")
-					button(style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('3');") 3
+					button(id="bt_phoneKeyPad_3" class="easyui-linkbutton" style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('3');") 3
 
 			tr
 				td(style="width: 33%; height:25%")
-					button(style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('4');") 4
+					button(id="bt_phoneKeyPad_4" class="easyui-linkbutton" style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('4');") 4
 				td(style="width: 33%; height:25%")
-					button(style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('5');") 5
+					button(id="bt_phoneKeyPad_5" class="easyui-linkbutton" style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('5');") 5
 				td(style="width: 33%; height:25%")
-					button(style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('6');") 6
+					button(id="bt_phoneKeyPad_6" class="easyui-linkbutton" style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('6');") 6
 
 			tr
 				td(style="width: 33%; height:25%")
-					button(style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('7');") 7
+					button(id="bt_phoneKeyPad_7" class="easyui-linkbutton" style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('7');") 7
 				td(style="width: 33%; height:25%")
-					button(style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('8');") 8
+					button(id="bt_phoneKeyPad_8" class="easyui-linkbutton" style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('8');") 8
 				td(style="width: 33%; height:25%")
-					button(style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('9');") 9
+					button(id="bt_phoneKeyPad_9" class="easyui-linkbutton" style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('9');") 9
 
 			tr
 				td(style="width: 33%; height:25%")
-					button(style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('15');") *
+					button(id="bt_phoneKeyPad_astric" class="easyui-linkbutton" style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('15');") *
 				td(style="width: 33%; height:25%")
-					button(style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('0');") 0
+					button(id="bt_phoneKeyPad_0" class="easyui-linkbutton" style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('0');") 0
 				td(style="width: 33%; height:25%")
-					button(style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('14');") #
+					button(id="bt_phoneKeyPad_hash" class="easyui-linkbutton" style="width: 100%; height : 100%;" onclick="WidgetKeypadScript.makePhoneTone('14');") #
 
 script.
 	var WidgetKeypadScript = new function(){
-		$(document).ready(function(){
-			$('#panel_keypad').window({
-				title:'  Phone Keypad',
-				width:160,
-				height:200,
-				modal:false,
-				minimizable:false,
-				maximizable:false,
-				onBeforeClose: function(){}
-			});
-		});
-
-
+		
 		var _this = this;
+
+		this.load = function(){
+			$('#bt_phoneKeyPad_1').linkbutton({
+
+			});
+			$('#bt_phoneKeyPad_2').linkbutton({
+
+			});
+			$('#bt_phoneKeyPad_3').linkbutton({
+
+			});
+			$('#bt_phoneKeyPad_4').linkbutton({
+
+			});
+			$('#bt_phoneKeyPad_5').linkbutton({
+
+			});
+			$('#bt_phoneKeyPad_6').linkbutton({
+
+			});
+			$('#bt_phoneKeyPad_7').linkbutton({
+
+			});
+			$('#bt_phoneKeyPad_8').linkbutton({
+
+			});
+			$('#bt_phoneKeyPad_9').linkbutton({
+
+			});
+			$('#bt_phoneKeyPad_astric').linkbutton({
+
+			});
+			$('#bt_phoneKeyPad_0').linkbutton({
+
+			});
+			$('#bt_phoneKeyPad_hash').linkbutton({
+
+			});
+
+
+		}
 
 		this.makePhoneTone = function(inNumber){
 			lastNumberDialed = inNumber;
@@ -76,3 +105,7 @@ script.
 			);
 		}
 	}();
+
+	$(document).ready(function(){
+		WidgetKeypadScript.load();
+	});

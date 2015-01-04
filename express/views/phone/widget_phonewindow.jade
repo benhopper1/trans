@@ -5,20 +5,21 @@ head
 
 
 body(style="background-image: url('/public/images/ui/background_crack.jpg')")
-	script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
-	script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
-	script(type='text/javascript', src='/js/qrcode/qrcode.js')
+	//script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
+	//script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
+	//script(type='text/javascript', src='/js/qrcode/qrcode.js')
+	//script(type='text/javascript', src='/js/commmanager/commmanager.js')
+	//script(type='text/javascript', src='/js/clientutil/clientutil.js')
+	//script(type='text/javascript', src='/public/js/easyui/jquery.easyui.min.js')
+	//script(type='text/javascript', src='/public/js/easyui/hopper/easyui.extention.js')
+	//link(rel='stylesheet', href='/public/js/easyui/themes/default/easyui.css')
+	//link(rel='stylesheet', href='/public/js/easyui/themes/default/icon.css')
+	//script(type='text/javascript', src='/public/js/hashofarray/hashofarrayobject.js')
+	//script(type='text/javascript', src='/public/js/async/async.js')
+	//script(type='text/javascript', src='/public/js/reportview/reportview.js')
 
-	script(type='text/javascript', src='/js/commmanager/commmanager.js')
-	script(type='text/javascript', src='/js/clientutil/clientutil.js')
 
 
-	script(type='text/javascript', src='/public/js/easyui/jquery.easyui.min.js')
-	link(rel='stylesheet', href='/public/js/easyui/themes/default/easyui.css')
-	link(rel='stylesheet', href='/public/js/easyui/themes/default/icon.css')
-
-	script(type='text/javascript', src='/public/js/hashofarray/hashofarrayobject.js')
-	script(type='text/javascript', src='/public/js/async/async.js')
 
 	script.
 		var getUserId =function(){return '#{userId}';}
@@ -31,9 +32,9 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 	style.
 		header {
 			line-height:18px;
-			background-color:black;
+			background-color:e0ecff;
 			height:23px;
-			color:white;
+			color:black;
 			text-align:top;
 			padding:0px;
 		}
@@ -151,7 +152,16 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 
 	//h1 /phone/widget_phoneWindow
 	//center
-	div(id="widgetPhoneWindow" class="easyui-window" title="Window Layout" data-options="iconCls:'icon-send'" style=";padding:5px;")
+
+	//==========================================================================
+	//------- H T M L ----------------------------------------------------------
+	//==========================================================================
+	
+
+					
+	//-------------------------------------------------
+		//was space2
+	div(id="widgetPhoneWindow" class="easyui-window" title="Window Layout" data-options="modal:false,inline:false,iconCls:'icon-send'" style="padding:5px;")
 		div(id="widgetPhone_layout_0" class="easyui-layout" data-options="fit:true")
 			div(data-options="region:'west',split:true" style="width:24%")
 				a(href="javascript:void(0)" id="mb_widgetPhone_logCriteria" class="easyui-menubutton" data-options="menu:'#mm',iconCls:'icon-edit'")
@@ -171,23 +181,36 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 					thead
 						tr
 
+
+
+
 			div(data-options="region:'center',split:true" style="width:24%")
 				//=============================================================================================================================
 				//------ Tab layout
 				//=============================================================================================================================
 				div(id="widgetPhone_layout_1" class="easyui-layout" data-options="fit:true")
 					//============================================================================
-					div(data-options="region:'west',split:true" style="width:40%")
+					div(data-options="region:'center',split:true" style="width:40%")
+
+						#phoneWindow_handset
+								
+
+
 
 					//============================================================================
-					div(data-options="region:'center',split:true" style="width:24%")
-						div(id="widgetContactsCollection_tabs_0" class="easyui-tabs" data-options="fit:true, tabWidth:100,tabHeight:60" style="width:700px;height:250px")
-							div(title="<span id='tab_import' class='tt-inner'><img style='float: left; height:40px' src='public/images/ui/email.png'/>Import <br>Contacts</span>" style="padding:10px")
+					div(data-options="region:'east',split:true" style="width:450px")
+						div(id="widgetPhone_tabs_0" class="easyui-tabs" data-options="fit:true" style="width:700px;height:250px")
+							div(title="<span id='tab_import' class='tt-inner'>Add Note</span>" style="padding:5px")
 								//p Notes Relation :
 								//select(id="widgetPhonePhoneCombo" class="easyui-combobox" style="width:170px")
 								//button(onclick="test();") TEST
 								#phonePropertyGridWidget
-								textarea(id="ta_phoneLogNotes" rows="10" cols="50")
+								//textarea(id="ta_phoneLogNotes" rows="10" cols="50")
+							//---VIEW NOTE
+							div(title="<span id='tab_view' class='tt-inner'>View Note</span>" style="padding:5px")
+								#poneDocumentViewDiv
+
+
 
 
 
@@ -198,6 +221,7 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 
 			this.load = function(){
 				$('#widgetPhoneWindow').window({
+					//inline:true,
 					closed:false,
 					title:'Sms Communication Window',
 					width:'95%',
@@ -210,6 +234,29 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 						$('#widgetPhoneWindow').window('center');
 					}
 				});
+				$('#widgetPhone_layout_0').layout(
+					{
+						fit:true
+					}
+				);
+				$('#widgetPhone_layout_1').layout(
+					{
+						fit:true
+					}
+				);
+				$('#widgetPhone_tabs_0').tabs(
+					{
+						selected:0,
+						fit:true,
+						tabWidth:100,
+						tabHeight:20,
+						width:'700px',
+						height:'250px',
+						onSelect:function(title){
+							console.log(title + ' is selected');
+						}
+					}
+				);
 				//- $('#cc').combobox({
 				//- 	url:'combobox_data.json',
 				//- 	valueField:'id',
@@ -226,6 +273,9 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 				$('#widgetPhoneLogGrid').datagrid({
 
 					fitColumns:true,
+					onSelect:function(index,row){
+						eventObject.reportOn('widgetPhoneLogGrid_onSelect', row);
+					},
 					columns:
 						[
 							[
@@ -242,38 +292,15 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 											{
 												imageUrl:row.imageUrl,
 												name:row.name,
+												noteCount:row.noteCount,
 												phoneNumber:phoneDisplayFormat(row.phoneNumber),
 												callDayTime:row.callDayTime,
 												status:row.status,
 											}
 										);
-										//console.log('ROW___________________');
-										//console.dir(row);
-										//- if(row.smsContext == 'inBox'){
-										//- 	return "<img class='magicCirc' style='height:40px;' src = '" + row.imageUrl + "' phone='" + row.contactPhoneNumber + "'></img>"; //value + "9";
-										//- }else{
-										//- 	return "<img class='magicCirc' style='height:40px;' src = '" + row.imageUrl + "' ></img>"; //value + "9";
-										//- }
 									}
 
 								},
-
-
-								//- {
-								//- 	field:'yesterday',
-								//- 	title:'Call Log',
-								//- 	width:'80%',
-								//- 	align:'left',
-								//- 	//- formatter: function(value,row,index){
-								//- 	//- 	//console.log('ROW___________________');
-								//- 	//- 	//console.dir(row);gridBodyPanel    onclick="alert(\'' + row.body + '\');"
-								//- 	//- 	//onblur="$(\'#widgetSmsMessageDataGrid\').datagrid(\'endEdit\', ' + index + ');"
-								//- 	//- 	return '<div id="smsGridRowBody_' + row.id + '"  ondblclick="widgetSmsMessageWindowScript.gridBodyPanel(\'smsGridRowBody_' + row.id + '\', ' + index + ')"> ' + row.body + '</div>';
-										
-								//- 	//- 	//return row.body;
-								//- 	//- },
-								//- 	//- editor:'textarea'
-								//- }
 							]
 						],
 				});
@@ -289,6 +316,15 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 				});
 				$.get( "/phone/widget_phonePropertyGrid", function(data){
 					$('#phonePropertyGridWidget').html(data);
+				});
+
+				$.get( "/phone/widget_phonedocumentview", function(data){
+					//console.log('html doc view div:' + data);
+					$('#poneDocumentViewDiv').html(data);
+				});
+
+				$.get( "/handset/widget_handset", function(data){
+					$("#phoneWindow_handset").append(data);
 				});
 				
 
@@ -392,6 +428,7 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 
 				//});
 			}
+
 
 			this.phoneComboClear = function(){
 				var insertData = 
@@ -508,7 +545,8 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 						phoneNumber:'',
 						name:'',
 						callDayTime:'',
-						status:''
+						status:'',
+						noteCount:0
 					}
 
 				fieldData = $.extend(fieldData, inJsonStruct);
@@ -523,9 +561,10 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 					statusImageUrlHtml = '<img style="vertical-align:middle;" src="' + '/public/images/ui/incomingcall.png' + '" height="16px" class="magicCirc" phone="' + 'phoneNumber' + '"></img>';
 				}
 				var htmlString = 
-					'<header>' +
+					'<header style="background-color:a19988">' +
 						statusImageUrlHtml + 
-						'&nbsp;&nbsp;&nbsp;&nbsp;' + fieldData.status + 
+						'<left style="position: relative;left: 40;">' + fieldData.status + '</left>' + 		//'&nbsp;&nbsp;&nbsp;&nbsp;' + fieldData.status + 
+						'&nbsp;&nbsp;&nbsp;&nbsp;' + '<right style="position: relative;left: 100;">' + fieldData.noteCount + '</right>' +
 					'</header>' +
 
 					'<center><nav>' +
@@ -613,6 +652,10 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 				});
 			}
 
+			this.phoneLogGrid_getSelected = function(){
+				return $('#widgetPhoneLogGrid').datagrid('getSelected');
+			}
+
 
 
 
@@ -621,6 +664,16 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 
 
 		}();
+
+
+		//TODO;
+		/*
+
+			Change query to also include count of notes per phonelog entry
+
+
+		*/
+
 
 		//autoLaunchFortesting!!!!
 		$(document).ready(function(){
@@ -632,13 +685,15 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 					//status:'MISSED'
 
 				},function(resultArray){
+					console.log('getPhoneLog-0-0-0-0-0-0-');
+					console.dir(resultArray);
 					//alert(JSON.stringify(resultArray));
 				}
 			);
 
 			//$('#test').html(Widget_phoneWindowScript.createCallLogEntryHtml());
 			//- Widget_phoneWindowScript.addArrayToPhoneCombo(
-			//- 	[
+			//- 	[.
 			//- 		{
 			//- 			"id":1,
 			//- 			"text":"text1"
@@ -715,4 +770,5 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 		//- 	var cursorPosition = $('#ta_phoneLogNotes').prop("selectionStart");
 		//- 	console.log('cursorPosition:' + cursorPosition);
 		//- }
-		
+	//script(type="text/javascript" src="/public/js/perspective/PerspectivePageViewNavigation/js/classie.js")
+	//script(type="text/javascript" src="/public/js/perspective/PerspectivePageViewNavigation/js/menu.js")

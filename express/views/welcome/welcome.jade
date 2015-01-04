@@ -11,13 +11,22 @@ body(style="background-image: url('public/images/ui/background_crack.jpg')")
 
 
 	script(type='text/javascript', src='public/js/easyui/jquery.easyui.min.js')
+	script(type='text/javascript', src='/public/js/easyui/hopper/easyui.extention.js')
 	link(rel='stylesheet', href='public/js/easyui/themes/default/easyui.css')
 	link(rel='stylesheet', href='public/js/easyui/themes/default/icon.css')
 
 	script(type='text/javascript', src='public/js/hashofarray/hashofarrayobject.js')
 	script(type='text/javascript', src='public/js/async/async.js')
 
+	script(type='text/javascript', src='/public/js/reportview/reportview.js')
+
 	//script(type='text/javascript', src='public/js/welcome/treehelper.js')
+
+	//licens for the icons:(link back, maybe about) http://creativecommons.org/licenses/by-sa/3.0/
+	//link(rel="stylesheet" type="text/css" href="/public/js/perspective/PerspectivePageViewNavigation/css/normalize.css")
+	//link(rel="stylesheet" type="text/css" href="/public/js/perspective/PerspectivePageViewNavigation/css/demo.css")
+	//link(rel="stylesheet" type="text/css" href="/public/js/perspective/PerspectivePageViewNavigation/css/component.css")
+	//script(type="text/javascript" src="/public/js/perspective/PerspectivePageViewNavigation/js/modernizr.custom.25376.js")
 
 	script.
 		var getUserId =function(){return '#{userId}';}
@@ -142,7 +151,7 @@ body(style="background-image: url('public/images/ui/background_crack.jpg')")
 			button(onclick="loadContactsWindow();") Contacts
 			br
 			center
-				button(onclick="getAllSmsByNumber();") Phone Control
+				button(onclick="openHandset();") openHandset 
 			br
 			//#ttttt(class="magicSquare")
 			//button(class="magicSquare" onclick="xxx();") press me not
@@ -154,16 +163,31 @@ body(style="background-image: url('public/images/ui/background_crack.jpg')")
 		div(data-options="region:'center',split:true,title:'East',collapsible:false" style="background-image: url('public/images/ui/background_crack.jpg')")
 			center
 				img(src="public/images/ui/arfsync_logo.png")
-			#qrAccord(class="easyui-accordion center magicShadow" data-options="" style="width:220px;")
-				#lay1(title="Scan to login" data-options="iconCls:'icon-search',collapsed:false,collapsible:true" style="padding:10px;")
-					center
-						#qrCodeDiv(style="background-color: #ffffff;")
-				#lay2(title="Who" data-options="" style="padding:10px; background:-webkit-gradient(linear, 0% 24%, 0% 73%, from(#221AC4), to(#2779C3));")
-					center
-						#ffffff
-							img(id="loginUserImage" src="")
-							h1(id="loginUserFullName") unknown
+			div(id="login_panel" class="easyui-panel" title="Basic Panel" style="width:700px;height:200px;padding:10px;")
+				div(id="perspective" class="perspective effect-airbnb" style="height:300px; width:300px;")
+					div(class="container")
+						div(class="wrapper")
+							header(class="codrops-header")
+								//was 5
+								#qrAccord(class="easyui-accordion center magicShadow" data-options="" style="width:220px;")
+									#lay1(title="Scan to login" data-options="iconCls:'icon-search',collapsed:false,collapsible:true" style="padding:10px;")
+										center
+											#qrCodeDiv(style="background-color: #ffffff;")
+									#lay2(title="Who" data-options="" style="padding:10px; background:-webkit-gradient(linear, 0% 24%, 0% 73%, from(#221AC4), to(#2779C3));")
+										center
+											#ffffff
+												img(id="loginUserImage" src="")
+												h1(id="loginUserFullName") unknown
+								div(class="main clearfix")
+									div(class="column")
+										button(id="showMenu") Show Menu
 
+					nav(class="outer-nav left vertical" style="height:300px; width:300px;")
+						a(href="#" class="icon-home") Home
+						a(href="#" class="icon-news") Contact Us
+						a(href="#" class="icon-image") Destinations
+						a(href="#" class="icon-news") Discounted Hunts
+						
 
 
 
@@ -177,6 +201,8 @@ body(style="background-image: url('public/images/ui/background_crack.jpg')")
 
 			#smsWindowDiv
 			#contactsWindow
+			#testHandset
+			#welcome_phoneWindowDiv
 			center
 				#phoneContactDiv
 				a(id="downloadLinkApp" href="public/download/androidapp/QrReader.apk" download) download app
@@ -216,6 +242,7 @@ body(style="background-image: url('public/images/ui/background_crack.jpg')")
 		var deviceTokenId;
 		var contactsObject;
 		var storageObject;
+		//var filterObj;
 
 		var eventObject = new EventObject();
 
@@ -263,6 +290,12 @@ body(style="background-image: url('public/images/ui/background_crack.jpg')")
 					selected:0
 				}
 			);
+
+			$('#login_panel').panel({
+				title:'myTitle',
+				width:400,
+				height:400
+			});
 
 			commManager = commManagerNameSpace.getCommManagerInstance(
 				{
@@ -370,22 +403,22 @@ body(style="background-image: url('public/images/ui/background_crack.jpg')")
 
 
 							//test area------
-							$postAjax(
-								{
-									url:'/database/phonelog/getLast',
-									send:
-										{
-											//use phoneNumber or not for all phonenumbers
-											//phoneNumber:'19198596799',
-											queryOption:'today'
-										},
-									onAjaxSuccess:function(inResponseText){
-										//inResponseText = JSON.parse(inResponseText);
-										alert(inResponseText);
-										//if(inPostFunction){inPostFunction(JSON.parse(inResponseText));}
-									}
-								}
-							);
+							//- $postAjax(
+							//- 	{
+							//- 		url:'/database/phonelog/getLast',
+							//- 		send:
+							//- 			{
+							//- 				//use phoneNumber or not for all phonenumbers
+							//- 				//phoneNumber:'19198596799',
+							//- 				queryOption:'today'
+							//- 			},
+							//- 		onAjaxSuccess:function(inResponseText){
+							//- 			//inResponseText = JSON.parse(inResponseText);
+							//- 			alert(inResponseText);
+							//- 			//if(inPostFunction){inPostFunction(JSON.parse(inResponseText));}
+							//- 		}
+							//- 	}
+							//- );
 						//}
 
 
@@ -683,7 +716,8 @@ body(style="background-image: url('public/images/ui/background_crack.jpg')")
 
 
 				if(inTransportLayer_json.dataLayer.action == 'incomingSms'){
-					eventObject.reportOn('incomingSms', inTransportLayer_json);
+					//alert('incomingSms');
+					//eventObject.reportOn('incomingSms', inTransportLayer_json);
 					storageObject.getSmsLastId(function(inResultOflastId){
 						deviceQuerySync.sms_getAllMessages(inResultOflastId, function(inSmsArray){
 							storageObject.addManySms(inSmsArray, function(inResult){
@@ -722,6 +756,7 @@ body(style="background-image: url('public/images/ui/background_crack.jpg')")
 								}
 						}
 					);
+					eventObject.reportOn('incomingSms', inTransportLayer_json);
 				}
 
 				if(inTransportLayer_json.dataLayer.action == 'incomingPhoneCall'){
@@ -924,6 +959,13 @@ body(style="background-image: url('public/images/ui/background_crack.jpg')")
 			
 		}
 
+		var openHandset = function(){
+			//testHandset
+			$.get( "/phone/widget_phonewindow", function(data){
+				$("#welcome_phoneWindowDiv").append(data);
+			});
+		}
+
 
 		//- var getAllPhoneContacts = function(inPostFunction){
 		//- 	var theArray;
@@ -965,3 +1007,5 @@ body(style="background-image: url('public/images/ui/background_crack.jpg')")
 		//- 		}
 		//- 	);
 		//- }
+	//script(type="text/javascript" src="/public/js/perspective/PerspectivePageViewNavigation/js/classie.js")
+	//script(type="text/javascript" src="/public/js/perspective/PerspectivePageViewNavigation/js/menu.js")

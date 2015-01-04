@@ -12,6 +12,14 @@ div(id="addContactForm" class="easyui-window" title="Window Layout" data-options
 					td Name:
 					td
 						input(id="widget_contactsForm_name" class="easyui-textbox" type="text" name="name" data-options="required:true")
+				tr
+					td Type:
+					td
+						select(id="widget_contactsForm_type" class="easyui-combobox" name="dept" style="width:200px;")
+							option() [HOME]
+							option() [MOBILE]
+							option() [WORK]
+							option() [OTHER]
 
 				tr
 					td Phone:
@@ -47,14 +55,15 @@ div(id="addContactForm" class="easyui-window" title="Window Layout" data-options
 
 
 	div(id="addContactBottomArea"  style="text-align:center;padding:5px")
-		a(id="addEditContacts_save" href="javascript:void(0)" class="easyui-linkbutton" onclick="Widget_contactsFormScript.addToStore()") Save
-		a(id="addEditContacts_clear" href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()") Clear
+		a(id="addEditContacts_save" href="javascript:void(0)" class="easyui-linkbutton" onclick="") Save
+		a(id="addEditContacts_clear" href="javascript:void(0)" class="easyui-linkbutton" onclick="") Clear
+		a(id="addEditContacts_close" href="javascript:void(0)" class="easyui-linkbutton" onclick="") Close
 
 
 
 
 
-script.
+script(id='Widget_contactsFormScriptDiv').
 
 	var Widget_contactsFormScript = new function(){
 		var _this = this;
@@ -70,7 +79,6 @@ script.
 
 		this.addToStore = function(){
 			if(state == 'edit'){
-
 				$postAjax(
 					{
 						url:'database/editContact',
@@ -84,11 +92,11 @@ script.
 								name:$('#widget_contactsForm_name').val(),
 								phoneNumber:cleanPhoneNumber($('#widget_contactsForm_phone').val()),
 								refNumber:edit_contact_refNumber,
-								title:$('#widget_contactsForm_title').val()
+								title:$('#widget_contactsForm_title').val(),
+								type:_this.typeComboGetSelected()
 							},
 						onAjaxSuccess:function(inResponseText){
 							//alert(inResponseText);
-
 							widgetContactsCollectionScript.updateGridDataForRowIndex(widgetContactsCollectionScript.getSelectedRowIndexFromGrid(),
 								{
 									id 				:edit_contact_id,
@@ -99,7 +107,9 @@ script.
 									companyName 	:$('#widget_contactsForm_company').val(),
 									department 		:$('#widget_contactsForm_department').val(),
 									title 			:$('#widget_contactsForm_title').val(),
-									refNumber 		:edit_contact_refNumber
+									refNumber 		:edit_contact_refNumber,
+								    type 			:_this.typeComboGetSelected()
+
 								}
 							);
 							//reselect to cause event to propergate new info---
@@ -126,7 +136,8 @@ script.
 								name:$('#widget_contactsForm_name').val(),
 								phoneNumber:cleanPhoneNumber($('#widget_contactsForm_phone').val()),
 								refNumber:'',
-								title:$('#widget_contactsForm_title').val()
+								title:$('#widget_contactsForm_title').val(),
+								type:_this.typeComboGetSelected()
 							},
 						onAjaxSuccess:function(inResponseText){
 							inResponseText = JSON.parse(inResponseText);
@@ -141,7 +152,8 @@ script.
 									companyName 	:$('#widget_contactsForm_company').val(),
 									department 		:$('#widget_contactsForm_department').val(),
 									title 			:$('#widget_contactsForm_title').val(),
-									refNumber 		:edit_contact_refNumber
+									refNumber 		:edit_contact_refNumber,
+									type 			:_this.typeComboGetSelected()
 								}
 							);
 
@@ -156,6 +168,8 @@ script.
 
 
 		}
+
+
 
 
 		this.chooseFile = function(){
@@ -186,6 +200,10 @@ script.
 			dataGridId = inDataGridId;
 		}
 
+		this.setFormTitle = function(inTitle){
+			$('#addContactForm').window('setTitle', inTitle);
+		}
+
 		this.load = function(){
 			$('#addContactForm').window({
 				title:'  XXX XXX',
@@ -199,6 +217,16 @@ script.
 				},
 				onBeforeOpen: function(){
 				},
+				//destroy
+				onClose:function(){
+					_this.destroy();
+				}
+			});
+
+			$('#widget_contactsForm_type').combobox({
+				//url:'combobox_data.json',
+				valueField:'id',
+				textField:'text'
 			});
 
 			$('#addEditContacts_save').linkbutton(
@@ -218,6 +246,25 @@ script.
 					width:80
 				}
 			);
+			$('#addEditContacts_close').linkbutton(
+				{
+					text:'Close',
+					//iconCls:'icon-send',
+					//iconAlign:'left',
+					width:80
+				}
+			);
+		}
+
+		this.typeComboGetSelected = function(){
+			var comboArray = $('#widget_contactsForm_type').combobox('getData');
+			var selectedId = $('#widget_contactsForm_type').combobox('getValue');
+			for(index in comboArray){
+				if(comboArray[index].id == selectedId){
+					return comboArray[index].text;
+				}
+			}
+			return false;
 		}
 
 		this.close = function(){
@@ -241,6 +288,7 @@ script.
 			if(inData){
 				if(inData.edit){
 					state = 'edit';
+					_this.setFormTitle('Edit Selected Contact');
 					$('#addContactForm').window('open');
 					if(dataGridId){
 						console.log('2rowIndex:' + widgetContactsCollectionScript.getSelectedRowIndexFromGrid());
@@ -252,12 +300,14 @@ script.
 						$('#widget_contactsForm_company')	.val($('#' + dataGridId).datagrid('getSelected').companyName);
 						$('#widget_contactsForm_department').val($('#' + dataGridId).datagrid('getSelected').department);
 						$('#widget_contactsForm_title')		.val($('#' + dataGridId).datagrid('getSelected').title);
-						edit_contact_refNumber = $('#' + dataGridId).datagrid('getSelected').refNumber;
+						$('#widget_contactsForm_type').combobox('selectByText', $('#' + dataGridId).datagrid('getSelected').type);
+						//edit_contact_refNumber = $('#' + dataGridId).datagrid('getSelected').refNumber;
 					}
 				}else{
 					if(inData.add){
 						console.log('add...loading contact ');
 						state = 'add';
+						_this.setFormTitle('Add New Contact');
 						$('#addContactForm').window('open');
 						if(!(_this.getImageSrc())){
 							_this.setImageSrc(getDefaultMemberImageUrl());
@@ -266,6 +316,30 @@ script.
 				}
 			}
 			
+
+
+			//events----------
+			$('#addEditContacts_save').click(function(){
+				_this.addToStore();
+			});
+			$('#addEditContacts_clear').click(function(){
+				_this.clearForm();
+			});
+			$('#addEditContacts_close').click(function(){
+				$('#addContactForm').window('close');
+			});
+
+			//- $('#addEditUser_close').linkbutton(
+						//- 	{
+						//- 		text:'Close',
+						//- 		//iconCls:'icon-send',
+						//- 		//iconAlign:'left',
+						//- 		width:80
+						//- 		//- onClick:function(){
+						//- 		//- 	alert("close");
+						//- 		//- }
+						//- 	}
+						//- );
 		}
 
 		this.getImageSrc = function(){
@@ -274,6 +348,17 @@ script.
 
 		this.setImageSrc = function(inSrc){
 			$('#widget_contactsForm_image').attr('src',inSrc);
+		}
+
+		this.destroy = function(){
+			delete window.Widget_contactsFormScript;
+			$('#Widget_contactsFormScriptDiv').unbind();
+			$('#Widget_contactsFormScriptDiv').remove();
+
+			$('#addContactForm').unbind();
+			$('#addContactForm').remove();
+			delete window.addContactForm;
+
 		}
 
 	}();

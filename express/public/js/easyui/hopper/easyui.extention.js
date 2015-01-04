@@ -221,7 +221,29 @@ $('#cb_phoneDocumentView_catagory').combobox('setHeader',
 			}
 			
 		});
-	}
+	},
+
+/*
+================================================================
+---- EXAMPLE ------------
+=========================
+		$('#cb_phoneDocumentView_relation').combobox('add',
+			[
+				{
+					id:'myId',
+					text:'myText'
+				}
+			]
+		);
+*/
+	selectByText:function(jq, inText){
+		jq.each(function(){
+			return $(this).combobox('select', inText);
+			//$(this).combobox('loadData',existingData);
+			
+		});
+	},
+
 
 
 

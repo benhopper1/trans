@@ -38,12 +38,18 @@ module.exports.controller = function(app) {
 						websockConnectString:configData.webSocketClient.connectString,
 
 						loginRoute:'/user/mobileLogin',
+						//loginRoute:configData.loginRoute,
 
 						defaultUserImageUrl:configData.defaultUserImageUrl,
 
 						addUserRoute:'/user/database/addUser',
+						//addUserRoute:configData.addUserRoute,
 
-						userNameExistRoute:'/user/userNameExist'
+						//userNameExistRoute:'/user/userNameExist',
+						userNameExistRoute:configData.userNameExistRoute,
+						tempUploadRoute:configData.tempUploadRoute,
+						contactImageUploadRoute:configData.contactImageUploadRoute,
+						memberImageUploadRoute:configData.memberImageUploadRoute
 
 					}
 			}

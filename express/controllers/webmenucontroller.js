@@ -19,10 +19,15 @@ module.exports.controller = function(app){
 
 
 	app.post('/webMenu/normalMenu', function(req, res){
-		console.log("/webMenu/normMenu GET");
-		/*req.session.destroy(function(err){
+		console.log("/webMenu/normMenu post");
+		req.session.destroy(function(err){
 			console.log('Session Started');
-		})*/
+		})
+
+		console.log('COOKIE USERID:' + req.cookies.userId);
+
+
+
 		res.render('webmenu/normalmenu.jade',
 			{
 				userId:req.cookies.userId,

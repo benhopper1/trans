@@ -316,6 +316,33 @@ var array_unique = function(inArray){
 }
 
 
+//opposite of extend,  recursive difference...
+// returns anything that is in obj1 that is not in obj2....
+var diff = function(obj1, obj2){
+	var delta = {};
+	for (var x in obj1) {
+		if (obj2.hasOwnProperty(x)) {
+			if (typeof obj2[x] == "object") {
+				//recurse nested objects/arrays
+				delta[x] = diff(obj1[x], obj2[x]);
+			}else{
+				//if obj2 doesn't match then - modified attribute
+				if (obj2[x] != obj1[x]) {
+					delta[x] = obj1[x];
+				}
+			}
+		}else{
+			//obj2 doesn't have this - new attribute
+			delta[x] = obj1[x];
+		}
+	}
+
+	return delta;
+}
+
+
+
+
 
 //###################################### OBJECT ###############################################
 //--------------------- > D e v i c e Q u e r y S y n c < -----------------------------------

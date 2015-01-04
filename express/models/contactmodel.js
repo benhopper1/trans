@@ -27,7 +27,8 @@ var Model = function(){
 				phoneNumber:'',
 				refNumber:'',
 				title:'',
-				userId:false
+				userId:false,
+				type:'[MOBILE]'
 			}
 		fieldData = extend(fieldData, inParams);
 
@@ -39,7 +40,7 @@ var Model = function(){
 		}
 
 		var sqlString = 
-			"INSERT INTO tb_storedContacts ( companyName, department, emailAddress, imageUrl, name, phoneNumber, refNumber, userId, title) VALUES " + 
+			"INSERT INTO tb_storedContacts ( companyName, department, emailAddress, imageUrl, name, phoneNumber, refNumber, type, userId, title) VALUES " + 
 				"(" 												  +
 					connection.escape(fieldData.companyName) 	+ "," +
 					connection.escape(fieldData.department) 	+ "," +
@@ -48,6 +49,7 @@ var Model = function(){
 					connection.escape(fieldData.name) 			+ "," +
 					connection.escape(fieldData.phoneNumber) 	+ "," +
 					connection.escape(fieldData.refNumber) 		+ "," +
+					connection.escape(fieldData.type) 			+ "," +
 					connection.escape(fieldData.userId) 		+ "," +
 					connection.escape(fieldData.title) 				  +
 				" );"
@@ -70,7 +72,8 @@ var Model = function(){
 				phoneNumber:'',
 				refNumber:'',
 				title:'',
-				userId:false
+				userId:false,
+				type:'[MOBILE]'
 			}
 		fieldData = extend(fieldData, inParams);
 
@@ -89,6 +92,7 @@ var Model = function(){
 			"name = " + connection.escape(fieldData.name) 						+ ", " +
 			"phoneNumber = " + connection.escape(fieldData.phoneNumber) 		+ ", " +
 			"refNumber = " + connection.escape(fieldData.refNumber) 			+ ", " +
+			"type = " + connection.escape(fieldData.type) 						+ ", " +
 			"title = " + connection.escape(fieldData.title) 					+ " " +
 			"WHERE userId = " + connection.escape(parseInt(fieldData.userId))	+ " " + 
 			"AND"																+ " " + 
@@ -117,7 +121,7 @@ var Model = function(){
 
 	this.getContacts = function(inParams, inPostFunction){
 		if(!(inParams.userId)){if(inPostFunction){inPostFunction(true, false, false);} return;}
-		var sqlString = "SELECT id, companyName, department, emailAddress, imageUrl, name, phoneNumber, refNumber, userId, title FROM tb_storedContacts WHERE userId = " +
+		var sqlString = "SELECT id, companyName, department, emailAddress, imageUrl, name, phoneNumber, refNumber,type, userId, title FROM tb_storedContacts WHERE userId = " +
 			connection.escape(inParams.userId);
 
 		connection.query(sqlString, function(err, rows, fields){
