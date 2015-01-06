@@ -2,8 +2,8 @@
 head 
 	meta(charset="UTF-8")
 	meta(name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
-//background-image: url('public/images/ui/background_crack.jpg')
-body(style="")
+//background-image: url('public/images/ui/beach_background.jpg')      background-color: #00ff00;
+body(style="background-image: url('public/images/ui/beach_background4.jpg')")
 	script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
 	script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
 	script(type='text/javascript', src='/js/qrcode/qrcode.js')
@@ -201,8 +201,11 @@ body(style="")
 			$("#my-menu").mmenu(
 				{
 					// options
-					classes: "mm-light",
+					//classes: "mm-light",
 					//offCanvas:false
+					offCanvas:true,
+					classes: "mm-fullscreen mm-light",
+					
 				}				
 
 

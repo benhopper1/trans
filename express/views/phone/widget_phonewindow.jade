@@ -172,8 +172,9 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 					div(class="menu-sep")
 					div(class="clickCriteria" data-options="iconCls:'icon-redo'" onclick="$('#mb_widgetPhone_logCriteriaCaption').text(this.innerText)") Past 15
 					div(class="clickCriteria" data-options="iconCls:'icon-redo'" onclick="$('#mb_widgetPhone_logCriteriaCaption').text(this.innerText)") All
-				//input(id="widgetPhonePhoneCombo" value="001")
-				select(id="widgetPhonePhoneCombo" class="easyui-combobox" style="width:170px")
+				//select(id="widgetPhonePhoneCombo" class="easyui-combobox" style="width:170px")
+				br
+				select(id="widgetPhonePhoneCombo" class="easyui-combobox" style="width:100%")
 
 				//--grid------
 				//div(data-options="region:'center', border:true, " style="width:100%; ")
@@ -284,6 +285,7 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 									title:'When',
 									width:'100%',
 									formatter: function(value,row,index){
+										//alert(JSON.stringify(row));
 										(row.imageUrl)? row.imageUrl : row.imageUrl = getDefaultMemberImageUrl();
 										(row.name != null)? row.name : row.name = '';
 										//console.log('formaterDump:');
@@ -312,6 +314,12 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 						_this.refreshPhoneLogGrid();
 						console.log('record');
 						console.dir(record);
+					},
+					formatter: function(row){
+						var opts = $(this).combobox('options');
+						var phoneNumber = 'value:' + row[opts.valueField];
+						var caption = row[opts.textField];
+						return '<div class=""><img style="vertical-align:middle;" src="' + row['imageUrl'] + '" width="50px" class="magicCirc" phone="' + phoneNumber + '"></img>' + "&nbsp;&nbsp;&nbsp;&nbsp;" + phoneDisplayFormat(row[opts.textField]) + "</div>";
 					}
 				});
 				$.get( "/phone/widget_phonePropertyGrid", function(data){
@@ -341,14 +349,21 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 					console.log('clickCriteria:' + clickCriteria);
 					console.dir($('#mb_widgetPhone_logCriteriaCaption').html());
 					var selectedPhoneNumber;
-					if(_this.phoneComboGetSelected()){
-						selectedPhoneNumber = _this.phoneComboGetSelected().id;
+					var selectedName;
+					var selectedType;
+					var theRecord = _this.phoneComboGetSelected();
+					if(theRecord){
+						selectedPhoneNumber = theRecord.id;
+						selectedName = theRecord.name;
+						selectedType = theRecord.type;
 					}
 					if(clickCriteria == 'Today'){
 						_this.loadDataForPhoneLogGrid(
 							{
 								queryOption:'today',
-								phoneNumber:(selectedPhoneNumber)? selectedPhoneNumber : null
+								phoneNumber:(selectedPhoneNumber)? selectedPhoneNumber : null,
+								name:(selectedName)? selectedName : null,
+								type:(selectedType)? selectedType : null,
 
 							}, false
 						);
@@ -357,7 +372,9 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 						_this.loadDataForPhoneLogGrid(
 							{
 								queryOption:'yesterday',
-								phoneNumber:(selectedPhoneNumber)? selectedPhoneNumber : null
+								phoneNumber:(selectedPhoneNumber)? selectedPhoneNumber : null,
+								name:(selectedName)? selectedName : null,
+								type:(selectedType)? selectedType : null,
 
 							}, false
 						);
@@ -367,7 +384,9 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 							{
 								queryOption:'everyday',
 								limit:15,
-								phoneNumber:(selectedPhoneNumber)? selectedPhoneNumber : null
+								phoneNumber:(selectedPhoneNumber)? selectedPhoneNumber : null,
+								name:(selectedName)? selectedName : null,
+								type:(selectedType)? selectedType : null,
 							}, false
 						);
 					}
@@ -376,6 +395,8 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 							{
 								queryOption:'everyday',
 								phoneNumber:(selectedPhoneNumber)? selectedPhoneNumber : null,
+								name:(selectedName)? selectedName : null,
+								type:(selectedType)? selectedType : null,
 							}, false
 						);
 					}
@@ -403,30 +424,53 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 		//====================================================================================
 
 			this.loadAllNumberIntoPhoneCombo = function(){
-				_this.getUniquePhoneNumbers(
-					{
-						limit:'1000'
-
-					},function(result){
-						//alert(JSON.stringify(result));
-						var newArrayOfHash = [];
-						for(var index in result){
-							if(result[index].phoneNumber){
-								newArrayOfHash.push(
-									{
-										id:result[index].phoneNumber,
-										text:phoneDisplayFormat(result[index].phoneNumber),
-										name:result[index].name,
-										imageUrl:result[index].imageUrl
-									}
-								);
-							}
-						}
-						Widget_phoneWindowScript.addArrayToPhoneCombo(newArrayOfHash);
+				_this.getContactsArray(function(inContactArray){
+					//alert("getContactsArray" + JSON.stringify(inContactArray));
+					var newArrayOfHash = [];
+					for(var index in inContactArray){
+						//if(inContactArray[index].phoneNumber){
+							newArrayOfHash.push(
+								{
+									id:inContactArray[index].phoneNumber,//inContactArray[index].name + '_' + inContactArray[index].type,
+									text:phoneDisplayFormat(inContactArray[index].phoneNumber),
+									name:inContactArray[index].name,
+									type:inContactArray[index].type,
+									imageUrl:inContactArray[index].imageUrl
+								}
+							);
+						//}
 					}
-				);
+					Widget_phoneWindowScript.addArrayToPhoneCombo(newArrayOfHash);
 
-				//});
+
+				});
+
+
+
+				//- _this.getUniquePhoneNumbers(
+				//- 	{
+				//- 		limit:'1000'
+
+				//- 	},function(result){
+				//- 		//alert(JSON.stringify(result));
+				//- 		var newArrayOfHash = [];
+				//- 		for(var index in result){
+				//- 			if(result[index].phoneNumber){
+				//- 				newArrayOfHash.push(
+				//- 					{
+				//- 						id:result[index].phoneNumber,
+				//- 						text:phoneDisplayFormat(result[index].phoneNumber),
+				//- 						name:result[index].name,
+				//- 						imageUrl:result[index].imageUrl
+				//- 					}
+				//- 				);
+				//- 			}
+				//- 		}
+				//- 		Widget_phoneWindowScript.addArrayToPhoneCombo(newArrayOfHash);
+				//- 	}
+				//- );
+
+
 			}
 
 
@@ -654,6 +698,32 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 
 			this.phoneLogGrid_getSelected = function(){
 				return $('#widgetPhoneLogGrid').datagrid('getSelected');
+			}
+
+			this.getContactsArray = function(inPostFunction){
+				$postAjax(
+					{
+						url:'database/getContacts',
+						send:
+							{
+							},
+						onAjaxSuccess:function(inResponseText){
+							inResponseText = JSON.parse(inResponseText);
+							console.log('ajax callback------------------------');
+							console.dir(inResponseText);
+							if(inResponseText.hadError == false){
+								console.log('inResponseText.hadError == false');
+								if(inResponseText.rows){
+									//alert("getContactsArray" + JSON.stringify(inResponseText));
+									if(inPostFunction){inPostFunction(inResponseText.rows);}
+									return;
+								}
+							}
+							if(inPostFunction){inPostFunction({});}
+						}
+					}
+
+				);
 			}
 
 

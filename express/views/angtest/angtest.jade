@@ -46,40 +46,33 @@ body(style="")
 
 	script.
 		$(document).ready(function() {
-			
+			console.log('ok up and doc loaded');
+			//alert(JSON.stringify(MyObject.getContactsArrayWrapper()));
+			MyObject.test();
 		});
 
 
+		var MyObject = new function(){
+			var _this = this;
 
-		var data_0 =
-			{
-				ben:'work',
-				sue:'work',
-				bob:'work'
-
+			this.test = function(){
+				var waitPanel = new WaitPanel(
+					{
+						//imageUrl:'/public/images/ui/register.png'
+					}
+				);
+				waitPanel.show();
+				//waitPanel.destroy();
+				//waitPanel.show();
 			}
+		
+		}();
 
-			var data_1 =
-			{
-				ben:'work',
-				sue:'home',
-				bob:'work1'
 
-			}
 
-		alert( 
-		  JSON.stringify(
-		  	diff(
-			 	data_0, 
-				data_1
-			)
-		  )
-		);
 
-			//- alert( 
-			//-   JSON.stringify(
-			//- 	 diff({ hello : 'world', gone : 'fishing' }, 
-			//- 		  { hello : 'world', gone : 'fishing1' })
-			//-   )
-			//- );
+
+		
+
+
 	

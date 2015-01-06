@@ -176,7 +176,10 @@ body(style="background-image: url('/public/images/ui/background_crack.jpg')")
 									{
 										field:'contactName',
 										title:'contactName',
-										width:'33%'
+										width:'33%',
+										formatter: function(value, row, index){
+											return row.contactName + ' ' + row.type;
+										}
 									},
 
 									{

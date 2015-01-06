@@ -553,9 +553,12 @@ var CommManagerNameSpace = function(){
 				}
 			}
 			if(parseInt(inFrame) != 0){
+				console.log('HOPPER -> FRAME != 0');
 				if(inTransportLayer_json.routingLayer.hasNext  == "0"){
+					console.log("HOPPER -> FRAME != 0 && hasNext == 0");
 					console.log('hasNext == 0 Frame != 0');
-					//if(storedObject.reportOnAll){storedObject.reportOnAll(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, storedObject.next);}
+					//testing onall???? next will not run on reportall last iteration.. see empty function param
+					if(storedObject.reportOnAll){storedObject.reportOnAll(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, function(){});}
 					if(storedObject.reportOnLast){storedObject.reportOnLast(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, storedObject.next);}
 					if(storedObject.reportOnComplete){storedObject.reportOnComplete(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, storedObject.next);}
 				

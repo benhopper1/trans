@@ -531,6 +531,23 @@ var StorageObject = function(){
 	}
 
 	this.addManyPhoneLog = function(inTheArray, inPostFunction){
+		$.messager.progress(
+			{
+					title:"<img style='float: left; height:40px' src='public/images/ui/email.png'/>" + "Loading Device Call log into database",
+					msg:'Name:',
+					showType:'slide',
+					height:'300px',
+					style:
+						{
+							right:'',
+							top:document.body.scrollTop+document.documentElement.scrollTop,
+							bottom:''
+						},
+					interval:600
+
+			}
+		); 
+
 		$postAjax(//addManyPhoneLog
 			{
 				url:'/database/phonelog/addManyPhoneLog',
@@ -540,6 +557,7 @@ var StorageObject = function(){
 					},
 				onAjaxSuccess:function(inResponseText){
 					inResponseText = JSON.parse(inResponseText);
+					$.messager.progress('close');
 					if(inPostFunction){inPostFunction(inResponseText);}
 				}
 			}
@@ -643,4 +661,76 @@ var EventObject = function(){
 		}
 	}
 
+}
+
+
+//###################################### OBJECT ###############################################
+//--------------------- > Wait Panel < --------------------------------------------------------
+//#############################################################################################
+
+var WaitPanel = function(inJsonStruct){
+	var _this = this;
+	var options = 
+		{
+			imageUrl:'/public/images/ui/wait.gif',
+			height:'120px',
+			width:'120px',
+			display:'none',
+			message:'Please Wait',
+			top:'50px',
+			left:'550px',
+			center:true
+		}
+	options = $.extend(options, inJsonStruct);
+	var elementId = 'waitPanelDiv';
+
+	//$('body').append('<div id="' + elementId + '" style="display:' + options.display + '"/>');
+	if(options.center){
+		$('body').append('<center><div id="' + elementId + '" style="z-index:99999999;"/></center>');
+	}else{
+		$('body').append('<div id="' + elementId + '" style="z-index:99999999;top:' + options.top + '; left:' + options.left +';"/>');
+	}
+	$('#' + elementId).window({
+		minimizable:false,
+		collapsible:false,
+		maximizable:false,
+		closable:false,
+		modal:true,
+
+		width:options.height,
+		height:options.width,
+		title:options.message,
+		top:options.top,
+		left:options.left,
+		doSize:true,
+		content:'<center><img src="'+ options.imageUrl +'" style="height:90%; "/></center>',
+		closed:true
+
+	});
+
+	//$('#' + elementId).panel('move',{top:40,left:300});
+
+	this.show = function(){
+		//$('#' + elementId).css('display', 'block');
+		$('#' + elementId).window('open');
+	}
+
+	this.hide = function(){
+		//$('#' + elementId).css('display', 'none');
+		$('#' + elementId).window('close');
+	}
+
+	this.destroy = function(){
+		$('#' + elementId).window('destroy');
+		$('#' + elementId).remove();
+		delete _this;
+	}
+
+	var loadImage = function(path, width, height, target) {
+		$('<img src="'+ path +'">').load(function() {
+			$(this).width(width).height(height).appendTo(target);
+		});
+	}
+
+	//loadImage(options.imageUrl, '50%', '','#' + elementId);
 }

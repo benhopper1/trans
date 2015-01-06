@@ -496,6 +496,28 @@ body
 
 			this.importGridRefresh = function(){
 				_this.importGridClear();
+				//- $.messager.progress(
+				//- 	{
+				//- 			title:"<img style='float: left; height:40px' src='public/images/ui/email.png'/>" + "Importing Contacts",
+				//- 			msg:'Please wait while import progresses!!',
+				//- 			showType:'slide',
+				//- 			height:'300px',
+				//- 			style:
+				//- 				{
+				//- 					right:'',
+				//- 					top:document.body.scrollTop+document.documentElement.scrollTop,
+				//- 					bottom:''
+				//- 				},
+				//- 			interval:600
+
+				//- 	}
+				//- ); 
+				var waitPanel = new WaitPanel(
+					{
+						//imageUrl:'/public/images/ui/register.png'
+					}
+				);
+				waitPanel.show();
 				_this.getAllPhoneContacts(function(inImportArray){
 					//alert(JSON.stringify(inImportArray));
 					console.log('inImportArray');
@@ -510,6 +532,7 @@ body
 							}
 						}
 					}
+					waitPanel.hide();
 				});
 			}
 
@@ -784,7 +807,7 @@ body
 							}
 							async.eachSeries(checkedRowsArray, function(theRow, next){
 								var imageUrl = nameToImageUrlHash[theRow.name];
-								alert("imageUrl" + imageUrl)
+								//alert("imageUrl" + imageUrl)
 								$postAjax(
 									{
 										url:'database/addContact',
@@ -901,17 +924,17 @@ body
 					for(var inDeviceArrayIndex in inDeviceArray){
 						deviceHashOfContacts[inDeviceArray[inDeviceArrayIndex].name] = inDeviceArray[inDeviceArrayIndex].type;
 					}
-					alert("DEVICE:" + JSON.stringify(deviceHashOfContacts));
+					//alert("DEVICE:" + JSON.stringify(deviceHashOfContacts));
 					_this.loadAllContactsFromDatabase(function(inRows){
 						//alert(JSON.stringify(inRows));
 						for(var inRowsIndex in inRows){
 							databaseHashOfContacts[inRows[inRowsIndex].name] = inRows[inRowsIndex].type;
 						}
-						alert("DATABASE:" + JSON.stringify(databaseHashOfContacts));
+						//alert("DATABASE:" + JSON.stringify(databaseHashOfContacts));
 						//alert("DIFF:" + JSON.stringify(diff(databaseHashOfContacts, deviceHashOfContacts)));
 						//--- put device back together for possibility------
 						var diffHash = diff(databaseHashOfContacts, deviceHashOfContacts);
-						alert("DIFF:" + JSON.stringify(diffHash));
+						//alert("DIFF:" + JSON.stringify(diffHash));
 						var arrayOfPossibilities = [];
 						for(var diffHashIndex in diffHash){
 							for(var inRowsIndex in inRows){

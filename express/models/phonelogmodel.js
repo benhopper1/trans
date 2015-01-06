@@ -14,12 +14,15 @@ var Model = function(){
 
 	this.getLast = function(inParams, inPostFunction){
 		console.log('-----getLast-----------------------------------------------------');
+		console.dir(inParams);
 		var fieldData = 
 			{
 				userId:false,
 				limit:'1000',
 				queryOption:'everyday',
-				status:'%'
+				status:'%',
+				name:'%',
+				type:'%'
 			}
 		fieldData = extend(fieldData, inParams);
 		if(!(fieldData.userId)){
@@ -37,10 +40,12 @@ var Model = function(){
 			if(fieldData.queryOption == 'everyday'){
 				sqlString = 
 					"SELECT (SELECT COUNT(*) AS phoneNoteCount FROM tb_phoneNotes WHERE userId = t1.userId AND phoneLog_guid = t1.guid) AS noteCount, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) AS entryDateTime, LEFT(callDate, 10) AS epochEntry,TIMESTAMPDIFF(WEEK, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS weeksOld,TIMESTAMPDIFF(DAY, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS daysOld,TIMESTAMPDIFF(MINUTE, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS minutesOld,TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS secondsOld,(DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = CURDATE())AS today,(DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = DATE_SUB(CURDATE(),INTERVAL 1 DAY))AS yesterday,t1.*,t2.name,t2.emailAddress,t2.companyName,t2.title,t2.department,t2.ext,t2.imageUrl, CONVERT(phoneLogId, UNSIGNED INTEGER) AS sortOrder FROM tb_phoneLog AS t1"	+ " " +
-						"LEFT JOIN tb_storedContacts as t2 ON t1.phoneNumber = t2.phoneNumber AND t1.userId = t2.userId"		+ " " +
+						"LEFT JOIN tb_storedContacts as t2 ON t1.phoneNumber = t2.phoneNumber AND t1.userId = t2.userId AND t1.name = t2.name AND t1.type = t2.type"		+ " " +
 							"WHERE t1.userId = " + connection.escape(parseInt(fieldData.userId))								+ " " +
 							"AND t1.phoneNumber = " + connection.escape(fieldData.phoneNumber) 									+ " " +
 							"AND t1.status LIKE " + connection.escape(fieldData.status) 										+ " " +
+							"AND t1.name LIKE " + connection.escape(fieldData.name) 											+ " " +
+							"AND t1.type LIKE " + connection.escape(fieldData.type) 											+ " " +
 							"ORDER BY t1.callDate DESC"																			+ " " +
 					"LIMIT " + connection.escape(parseInt(fieldData.limit))														+ " "
 				;
@@ -48,11 +53,13 @@ var Model = function(){
 			if(fieldData.queryOption == 'today'){
 				sqlString = 
 					"SELECT (SELECT COUNT(*) AS phoneNoteCount FROM tb_phoneNotes WHERE userId = t1.userId AND phoneLog_guid = t1.guid) AS noteCount, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) AS entryDateTime, LEFT(callDate, 10) AS epochEntry,TIMESTAMPDIFF(WEEK, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS weeksOld,TIMESTAMPDIFF(DAY, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS daysOld,TIMESTAMPDIFF(MINUTE, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS minutesOld,TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS secondsOld,(DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = CURDATE())AS today,(DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = DATE_SUB(CURDATE(),INTERVAL 1 DAY))AS yesterday,t1.*,t2.name,t2.emailAddress,t2.companyName,t2.title,t2.department,t2.ext,t2.imageUrl, CONVERT(phoneLogId, UNSIGNED INTEGER) AS sortOrder FROM tb_phoneLog AS t1"	+ " " +
-						"LEFT JOIN tb_storedContacts as t2 ON t1.phoneNumber = t2.phoneNumber AND t1.userId = t2.userId"		+ " " +
+						"LEFT JOIN tb_storedContacts as t2 ON t1.phoneNumber = t2.phoneNumber AND t1.userId = t2.userId AND t1.name = t2.name AND t1.type = t2.type"	+ " " +
 							"WHERE t1.userId = " + connection.escape(parseInt(fieldData.userId))								+ " " +
 							"AND t1.phoneNumber = " + connection.escape(fieldData.phoneNumber) 									+ " " +
 							"AND (DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = CURDATE()) = 1"	+ " " +
 							"AND t1.status LIKE " + connection.escape(fieldData.status) 										+ " " +
+							"AND t1.name LIKE " + connection.escape(fieldData.name) 											+ " " +
+							"AND t1.type LIKE " + connection.escape(fieldData.type) 											+ " " +
 							"ORDER BY t1.callDate DESC"																			+ " " +
 					"LIMIT " + connection.escape(parseInt(fieldData.limit))														+ " "
 				;
@@ -60,11 +67,13 @@ var Model = function(){
 			if(fieldData.queryOption == 'yesterday'){
 				sqlString = 
 					"SELECT (SELECT COUNT(*) AS phoneNoteCount FROM tb_phoneNotes WHERE userId = t1.userId AND phoneLog_guid = t1.guid) AS noteCount, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) AS entryDateTime, LEFT(callDate, 10) AS epochEntry,TIMESTAMPDIFF(WEEK, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS weeksOld,TIMESTAMPDIFF(DAY, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS daysOld,TIMESTAMPDIFF(MINUTE, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS minutesOld,TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS secondsOld,(DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = CURDATE())AS today,(DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = DATE_SUB(CURDATE(),INTERVAL 1 DAY))AS yesterday,t1.*,t2.name,t2.emailAddress,t2.companyName,t2.title,t2.department,t2.ext,t2.imageUrl, CONVERT(phoneLogId, UNSIGNED INTEGER) AS sortOrder FROM tb_phoneLog AS t1"	+ " " +
-						"LEFT JOIN tb_storedContacts as t2 ON t1.phoneNumber = t2.phoneNumber AND t1.userId = t2.userId"								+ " " +
+						"LEFT JOIN tb_storedContacts as t2 ON t1.phoneNumber = t2.phoneNumber AND t1.userId = t2.userId AND t1.name = t2.name AND t1.type = t2.type"	+ " " +
 							"WHERE t1.userId = " + connection.escape(parseInt(fieldData.userId))														+ " " +
 							"AND t1.phoneNumber = " + connection.escape(fieldData.phoneNumber) 															+ " " +
 							"AND (DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = DATE_SUB(CURDATE(),INTERVAL 1 DAY)) = 1"	+ " " +
-							"AND t1.status LIKE " + connection.escape(fieldData.status) 										+ " " +
+							"AND t1.status LIKE " + connection.escape(fieldData.status) 																+ " " +
+							"AND t1.name LIKE " + connection.escape(fieldData.name) 																	+ " " +
+							"AND t1.type LIKE " + connection.escape(fieldData.type) 																	+ " " +
 							"ORDER BY t1.callDate DESC"																									+ " " +
 					"LIMIT " + connection.escape(parseInt(fieldData.limit))																				+ " "
 				;
@@ -78,7 +87,7 @@ var Model = function(){
 			if(fieldData.queryOption == 'everyday'){
 				sqlString = 
 					"SELECT (SELECT COUNT(*) AS phoneNoteCount FROM tb_phoneNotes WHERE userId = t1.userId AND phoneLog_guid = t1.guid) AS noteCount, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) AS entryDateTime, LEFT(callDate, 10) AS epochEntry,TIMESTAMPDIFF(WEEK, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS weeksOld,TIMESTAMPDIFF(DAY, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS daysOld,TIMESTAMPDIFF(MINUTE, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS minutesOld,TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS secondsOld,(DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = CURDATE())AS today,(DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = DATE_SUB(CURDATE(),INTERVAL 1 DAY))AS yesterday,t1.*,t2.name,t2.emailAddress,t2.companyName,t2.title,t2.department,t2.ext,t2.imageUrl, CONVERT(phoneLogId, UNSIGNED INTEGER) AS sortOrder FROM tb_phoneLog AS t1"	+ " " +
-						"LEFT JOIN tb_storedContacts as t2 ON t1.phoneNumber = t2.phoneNumber AND t1.userId = t2.userId"		+ " " +
+						"LEFT JOIN tb_storedContacts as t2 ON t1.phoneNumber = t2.phoneNumber AND t1.userId = t2.userId AND t1.name = t2.name AND t1.type = t2.type"	+ " " +
 							"WHERE t1.userId = " + connection.escape(parseInt(fieldData.userId))								+ " " +
 							"AND t1.status LIKE " + connection.escape(fieldData.status) 										+ " " +
 							"ORDER BY t1.callDate DESC"																			+ " " +
@@ -88,7 +97,7 @@ var Model = function(){
 			if(fieldData.queryOption == 'today'){
 				sqlString = 
 					"SELECT (SELECT COUNT(*) AS phoneNoteCount FROM tb_phoneNotes WHERE userId = t1.userId AND phoneLog_guid = t1.guid) AS noteCount, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) AS entryDateTime, LEFT(callDate, 10) AS epochEntry,TIMESTAMPDIFF(WEEK, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS weeksOld,TIMESTAMPDIFF(DAY, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS daysOld,TIMESTAMPDIFF(MINUTE, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS minutesOld,TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS secondsOld,(DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = CURDATE())AS today,(DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = DATE_SUB(CURDATE(),INTERVAL 1 DAY))AS yesterday,t1.*,t2.name,t2.emailAddress,t2.companyName,t2.title,t2.department,t2.ext,t2.imageUrl, CONVERT(phoneLogId, UNSIGNED INTEGER) AS sortOrder FROM tb_phoneLog AS t1"	+ " " +
-						"LEFT JOIN tb_storedContacts as t2 ON t1.phoneNumber = t2.phoneNumber AND t1.userId = t2.userId"		+ " " +
+						"LEFT JOIN tb_storedContacts as t2 ON t1.phoneNumber = t2.phoneNumber AND t1.userId = t2.userId AND t1.name = t2.name AND t1.type = t2.type"	+ " " +
 							"WHERE t1.userId = " + connection.escape(parseInt(fieldData.userId))								+ " " +
 							"AND (DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = CURDATE()) = 1"	+ " " +
 							"AND t1.status LIKE " + connection.escape(fieldData.status) 										+ " " +
@@ -99,7 +108,7 @@ var Model = function(){
 			if(fieldData.queryOption == 'yesterday'){
 				sqlString = 
 					"SELECT (SELECT COUNT(*) AS phoneNoteCount FROM tb_phoneNotes WHERE userId = t1.userId AND phoneLog_guid = t1.guid) AS noteCount, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) AS entryDateTime, LEFT(callDate, 10) AS epochEntry,TIMESTAMPDIFF(WEEK, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS weeksOld,TIMESTAMPDIFF(DAY, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS daysOld,TIMESTAMPDIFF(MINUTE, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS minutesOld,TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)),NOW()) AS secondsOld,(DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = CURDATE())AS today,(DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = DATE_SUB(CURDATE(),INTERVAL 1 DAY))AS yesterday,t1.*,t2.name,t2.emailAddress,t2.companyName,t2.title,t2.department,t2.ext,t2.imageUrl, CONVERT(phoneLogId, UNSIGNED INTEGER) AS sortOrder FROM tb_phoneLog AS t1"	+ " " +
-						"LEFT JOIN tb_storedContacts as t2 ON t1.phoneNumber = t2.phoneNumber AND t1.userId = t2.userId"								+ " " +
+						"LEFT JOIN tb_storedContacts as t2 ON t1.phoneNumber = t2.phoneNumber AND t1.userId = t2.userId AND t1.name = t2.name AND t1.type = t2.type"	+ " " +
 							"WHERE t1.userId = " + connection.escape(parseInt(fieldData.userId))														+ " " +
 							"AND (DATE(FROM_UNIXTIME(CONVERT(  LEFT(callDate , 10)   , UNSIGNED INTEGER)) ) = DATE_SUB(CURDATE(),INTERVAL 1 DAY)) = 1"	+ " " +
 							"AND t1.status LIKE " + connection.escape(fieldData.status) 																+ " " +
@@ -201,7 +210,9 @@ var Model = function(){
 				id:"",
 				phoneNumber:"",
 				status: inParams.id,
-				userId:false
+				userId:false,
+				name:'',
+				type:''
 			}
 		fieldData = extend(fieldData, inParams);
 
@@ -213,7 +224,7 @@ var Model = function(){
 		}
 
 		var sqlString = 
-			"INSERT INTO `tb_phoneLog` ( callDate, callDayTime, callDuration, deviceId, phoneLogId, phoneNumber, status, userId) VALUES " + 
+			"INSERT INTO `tb_phoneLog` ( callDate, callDayTime, callDuration, deviceId, phoneLogId, phoneNumber, status, name, type, userId) VALUES " + 
 				"(" 																				  +
 					connection.escape(fieldData.callDate) 										+ "," +
 					connection.escape(fieldData.callDayTime)									+ "," +
@@ -222,6 +233,8 @@ var Model = function(){
 					connection.escape(fieldData.id) 											+ "," +
 					connection.escape(cleanPhoneNumber(fieldData.phoneNumber)) 					+ "," +
 					connection.escape(fieldData.status) 										+ "," +
+					connection.escape(fieldData.name) 											+ "," +
+					connection.escape(fieldData.type) 											+ "," +
 					connection.escape(fieldData.userId) 											  +
 				" );"
 		;
