@@ -7,7 +7,7 @@ head
 body(style="")
 
 	script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
-
+	//script(type='text/javascript', src='/public/js/jquery/v2.1.3/jquery.min.js')
 	script(type='text/javascript', src='/js/clientutil/clientutil.js')
 
 	//https://github.com/jackncoke/jquery-mmenu/blob/master/source/jquery.mmenu.js
@@ -312,7 +312,7 @@ body(style="")
 								newElementId:'smsContactId__' + inRows[inRowsIndex].id,
 								actionRequest:
 									{
-										request:'smsConatctSelect'
+										request:'smsContactSelect',
 										data:'fsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd'
 									},
 								html:masterMenu.getHtmlTemplate(

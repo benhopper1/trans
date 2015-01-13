@@ -1,1 +1,162 @@
-h1 COMING SOON!!!!! MAYBE TONIGHT
+head 
+	meta(charset="UTF-8")
+	meta(name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+//background-image: url('public/images/ui/beach_background.jpg')      background-color: #00ff00;
+body(style="background-image: url('/public/images/ui/cracked_bkg.png')")
+	script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
+	
+	script(type='text/javascript', src='/js/clientutil/clientutil.js')
+
+
+	script(type='text/javascript', src='/public/js/easyui/jquery.easyui.min.js')
+	script(type='text/javascript', src='/public/js/easyui/hopper/easyui.extention.js')
+	link(rel='stylesheet', href='/public/js/easyui/themes/ui-sunny/easyui.css')
+	link(rel='stylesheet', href='/public/js/easyui/themes/default/icon.css')
+
+	
+	script(type='text/javascript', src='/public/js/hashofarray/v002/hashofarrayobject.js')
+	script(src="/public/js/eventorigin/eventorigin.js" type="text/javascript")
+
+	//script(type='text/javascript', src='public/js/async/async.js')
+
+	//script(type='text/javascript', src='/public/js/reportview/reportview.js')
+
+
+	script.
+		var getUserId =function(){return '#{userId}';}
+		var getDeviceId = function(){return '#{deviceId}';}
+		var getURL = function(){return '#{URL}';}
+		var getDefaultUserImageUrl = function(){return '#{defaultUserImageUrl}';}
+		var getDefaultMemberImageUrl = function(){return '#{defaultMemberImageUrl}';}
+
+	style.
+		.mm-menu
+			{
+				background: rgba( 0, 0, 0, 0.6 );
+				box-shadow: none !important;
+				text-align: center;
+				color: #fff;
+			}
+		.logo{
+				border: 1px solid #fff;
+				line-height: 40px;
+				display: inline-block;
+				width: 40px;
+				height: 80px;
+				margin: 0x 0 0 0;
+		}
+		.imgAndData{
+			font-size: 13px;
+			font-style: normal;
+			font-weight: normal;
+			padding-left: 5px;
+			LINE-HEIGHT:15px;
+			background-color: #eee;
+
+		}
+
+		.magicCirc{
+			padding:4px;
+			display:inline-block;
+			font:12px/14px Arial, Helvetica, sans-serif;
+			color:#666;
+			border:1px solid #999;
+			background-color:#eee;
+			-moz-border-radius:10px;
+			-webkit-border-radius: 150px;
+			-moz-box-shadow:#999 2px 0px 3px;
+			-webkit-box-shadow:#999 2px 0px 3px;
+			margin-bottom:4px;
+		}
+
+		.magicSquare{
+			padding:4px;
+			display:inline-block;
+			font:12px/14px Arial, Helvetica, sans-serif;
+			color:#666;
+			border:1px solid #999;
+			background-color:#eee;
+			-moz-border-radius:00px;
+			-webkit-border-radius: 15px;
+			-moz-box-shadow:#999 2px 0px 3px;
+			-webkit-box-shadow:#999 2px 0px 3px;
+			margin-bottom:4px;
+		}
+
+		.magicCircPnt{
+			padding:4px;
+			display:inline-block;
+			cursor:pointer;
+			font:12px/14px Arial, Helvetica, sans-serif;
+			color:#666;
+			border:1px solid #999;
+			background-color:#eee;
+			-moz-border-radius:10px;
+			-webkit-border-radius: 150px;
+			-moz-box-shadow:#999 2px 0px 3px;
+			-webkit-box-shadow:#999 2px 0px 3px;
+			margin-bottom:4px;
+		}
+
+		.center{
+			margin-left: auto;
+			margin-right: auto;
+			width: 70%;
+			background-color: #b0e0e6;
+		}
+
+
+		@-webkit-keyframes spaceboots {
+			0% { -webkit-transform: translate(2px, 1px) rotate(0deg); }
+			10% { -webkit-transform: translate(-1px, -2px) rotate(-40deg); }
+			20% { -webkit-transform: translate(-3px, 0px) rotate(40deg); }
+			30% { -webkit-transform: translate(0px, 2px) rotate(0deg); }
+			40% { -webkit-transform: translate(1px, -1px) rotate(1deg); }
+			50% { -webkit-transform: translate(-1px, 2px) rotate(-1deg); }
+			60% { -webkit-transform: translate(-3px, 1px) rotate(0deg); }
+			70% { -webkit-transform: translate(2px, 1px) rotate(-1deg); }
+			80% { -webkit-transform: translate(-1px, -1px) rotate(1deg); }
+			90% { -webkit-transform: translate(2px, 2px) rotate(0deg); }
+			100% { -webkit-transform: translate(1px, -2px) rotate(-1deg); }
+		}
+		.shake {
+			-webkit-animation-name: spaceboots;
+			-webkit-animation-duration: 0.8s;
+			-webkit-transform-origin:50% 50%;
+			-webkit-animation-iteration-count: 15;//infinite;
+			-webkit-animation-timing-function: linear;
+		}
+		.magicShadow{
+			-moz-box-shadow:10px 10px 5px #000000;
+			-webkit-box-shadow:10px 10px 5px #000000;
+			box-shadow:10px 10px 5px #000000;
+		}
+
+		.magicPointer{
+			cursor:pointer;
+		}
+
+		.textWrap {
+			align:left;
+			margin-right:20px;
+		}
+		.textWidthA{
+			width:300px;
+		}
+
+		//==================================================================
+		// H T M L
+		//==================================================================
+
+
+
+	center
+		img(src="/public/images/ui/arfsync_logo.png")
+
+	header
+		h1 dasdasdasdadasdasdasdasdasdasd
+		
+		div(style="width:55%;")
+			img(align="left" class="textWrap magicSquare magicShadow" style="width:400px" src="/public/images/information/login_shot.png") 
+			p I noticed a problem concerning communication between phone devices and web applications(browser). I could find nothing
+			| that would enable real time communication between phones and browsers. So I set out to create a communication stack or libraries that would be reusable for these purposes. I gave it a pretty nice interface for javascript and java. I created a node js server that that would route my protocol between devices and with lots of other features including security. The demo is not to show off ui features of the browser but to demonstrate the real-time communication achieved. The demo has interactive resume(mine). You can select a section of the resume on the phone and the browser will nav and zoom to that section, in real-time. I also included a console that has images that you can zoom, replace and nav with images off your phone. Pretty neat, You should give it a try.
