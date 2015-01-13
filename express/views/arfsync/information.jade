@@ -187,10 +187,10 @@ body
 					h1(class="lAlign") Why would I create a complete communication stack and protocols?
 					p(class="lAlign")
 						|	I noticed a problem concerning communication between phone devices and web applications(browser). I could find nothing
-						|	that would enable real time communication between phones and browsers. So I set out to create a communication stack or libraries that would be reusable for these purposes. I gave it a pretty nice interface for javascript and java. I created a node js server that that would route my protocol between devices and with lots of other features including security.
+						|	that would enable real time communication between phones and browsers. So I set out to create a communication stack or libraries that would be reusable for these purposes. I gave it a pretty nice interface for javascript and java. I created a node js server that would route my protocol between devices and with lots of other features including security.
+						|	I will soon be extending the communication stack to include c/c++ library for IOS and Android native. I think I will use QT for this. It's a pretty nice cross platform framework.
 
-
-					h1(class="lAlign") How are we able to communicate?
+					h1(class="lAlign") Will I have to login again?
 
 					//div(style="width:200px; max-width: 80%;")
 					img(align="left" class="textWrap magicSquare magicShadow" style="width:400px; max-width: 100%;" src="/public/images/information/login_shot.png") 
@@ -198,7 +198,19 @@ body
 						| I created a few ways to log into the server. We can use the common user name and password, but why would I want the user to have to log in twice and then again per each device. I'm guessing in most cases the phone is personal and should be able to store credentials without many concerns. Then the browser is just the opposite. It might be shared between co-workers, hotel residents or other shopping consumers etc.. We might never know the software installed and running along side the browser. It could be key logging or anything. While writing the communication I decided to give the browser a login that uses scannable codes. This way the browser or the computer the browser is running on will never have your user name and password enter into its keyboard cache or into its memory. I do this by using a random GUID that gets shared between browser and the server. When the phone scans this code off the browser screen it then ask the server to login that particular browser session via my communication. The phone then provides its credentials for that particular GUID. The login then happens. It gets a little more complicated handling the session stuff. I will not share that part of the login for security reasons.
 
 
+					h1(class="lAlign") How are we able to communicate?
+					p(class="lAlign")
+						|	After many failed attempts using polling, php sockets, apache hacks, I discovered nodejs. Nodejs was able to provide a nice place to house a websocket server. From that I had to build a full protocol for transferring data and several different transfer styles. I kept the protocol simple. It has three layers. Transport layer, routing layer and data layer. There are three styles of transferring data. Filter,  transaction and transaction series. The filter style is best used for realtime transfer. It is a one way transmit or send and forget. The transaction is like a query or expects a return from the receiving end to complete. This is great for asynchronous callbacks. The callbacks get the data requested then they can execute based on that data. Then there is the more complicated style, transaction series. It is very similar to the transaction except it uses an iterator. This is same as buffer sized transmits. I had found some limitations to json parsers and needed a way to break the size up into parsable fragments. 
+						br
+						br
+						|	Then each device has a GUID and the server uses a hashlookup for the connection. The server also relates devices to the user account. I call this relation family devices. When a device logs in or out a broadcast is made to each of the family devices. They receive detailed information about this change. The devices store the other devices GUID's and basically send data using one of the communication styles. Press a button or take an action on the phone, then the browser is notified or asked to take a specific action and vise versa.
 
 
-
+					h1(class="lAlign") Can I send sms and receive on my browser?
+					img(align="left" class="textWrap magicSquare magicShadow" style="width:400px; max-width: 100%;" src="/public/images/information/smsonly.png") 
+					p(class="lAlign")
+						//|	After many failed attempts using polling, php sockets, apache hacks, I discovered nodejs. Nodejs was able to provide a nice place to house a websocket server. From that I had to build a full protocol for transferring data and several different transfer styles. I kept the protocol simple. It has three layers. Transport layer, routing layer and data layer. There are three styles of transferring data. Filter,  transaction and transaction series. The filter style is best used for realtime transfer. It is a one way transmit or send and forget. The transaction is like a query or expects a return from the receiving end to complete. This is great for asynchronous callbacks. The callbacks get the data requested then they can execute based on that data. Then there is the more complicated style, transaction series. It is very similar to the transaction except it uses an iterator. This is same as buffer sized transmits. I had found some limitations to json parsers and needed a way to break the size up into parsable fragments. 
+						//br
+						//br
+						//|	Then each device has a GUID and the server uses a hashlookup for the connection. The server also relates devices to the user account. I call this relation family devices. When a device logs in or out a broadcast is made to each of the family devices. They receive detailed information about this change. The devices store the other devices GUID's and basically send data using one of the communication styles. Press a button or take an action on the phone, then the browser is notified or asked to take a specific action and vise versa.
 
