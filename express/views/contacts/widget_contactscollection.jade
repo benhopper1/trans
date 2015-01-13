@@ -6,7 +6,7 @@ body
 
 	
 	#cookieTest
-	button(onclick="widgetContactsCollectionScript.postTest();") postTest
+	//button(onclick="widgetContactsCollectionScript.postTest();") postTest
 
 
 
@@ -44,7 +44,7 @@ body
 								table(id="widgetContactsImportGrid" class="easyui-datagrid" title="" style="" data-options="fit:true,singleSelect:true,collapsible:true")
 									thead
 										tr
-							div(data-options="region:'south',split:true" style="height:33")
+							div(data-options="region:'south',split:true" style="height:38")
 								button(id="bt_importImport" class="easyui-linkbutton") Import
 								button(id="bt_refreshImport" class="easyui-linkbutton") Refresh
 
@@ -56,7 +56,7 @@ body
 								table(id="widgetContactsExportGrid" class="easyui-datagrid" title="" style="" data-options="fit:true,singleSelect:true,collapsible:true")
 									thead
 										tr
-							div(data-options="region:'south',split:true" style="height:33")
+							div(data-options="region:'south',split:true" style="height:38")
 								button(id="bt_exportExport" class="easyui-linkbutton") Export
 								button(id="bt_refreshExport" class="easyui-linkbutton") Refresh
 
@@ -106,9 +106,23 @@ body
 					maximizable:false,
 					onBeforeClose: function(){},
 					onOpen:function(){
-						_this.menuChangeToContacts();
+						//_this.menuChangeToContacts(); // got focus call
+						WindowStateObject.setState('mainMenu_contacts', true);
+						eventObject.reportOn('onOpenCloseToRemote',
+							{
+								open:true,
+								id:'mainMenu_contacts'
+							}
+						);
 					},
 					onClose:function(){
+						WindowStateObject.setState('mainMenu_contacts', false);
+						eventObject.reportOn('onOpenCloseToRemote',
+							{
+								open:false,
+								id:'mainMenu_contacts'
+							}
+						);
 						_this.destroy();
 					}
 				});
@@ -175,6 +189,49 @@ body
 						width:80
 					}
 				);
+
+				//import/export buttons
+				//bt_refreshImport
+				//bt_refreshExport
+				//bt_importImport
+				//bt_exportExport
+				$('#bt_refreshImport').linkbutton(
+					{
+						text:'Refresh',
+						iconCls:'icon-send',
+						iconAlign:'left',
+						width:80
+					}
+				);
+
+				$('#bt_refreshExport').linkbutton(
+					{
+						text:'Refresh',
+						iconCls:'icon-send',
+						iconAlign:'left',
+						width:80
+					}
+				);
+
+				$('#bt_importImport').linkbutton(
+					{
+						text:'Import',
+						iconCls:'icon-send',
+						iconAlign:'left',
+						width:80
+					}
+				);
+
+				$('#bt_exportExport').linkbutton(
+					{
+						text:'Export',
+						iconCls:'icon-send',
+						iconAlign:'left',
+						width:80
+					}
+				);
+
+
 
 				$('#widgetContactsCollection_buttonCancel').linkbutton(
 					{
@@ -354,31 +411,102 @@ body
 							text:'Delete Contact',
 							iconCls:'icon-clear',
 							handler:function(){
-								if(_this.getSelectedRowIndexFromGrid() == -1){console.log('nothing selected!!'); return false;};
-								$.messager.confirm('About to delete', 'Are you sure you want to delete contact?', function(result){
-									if (result){
-										$postAjax(
-											{
-												url:'database/deleteContact',
-												send:
-													{
-														id:$('#widgetContactsCollectionDataGrid').datagrid('getSelected').id
-													},
-												onAjaxSuccess:function(inResponseText){
-													inResponseText = JSON.parse(inResponseText);
-													console.dir(inResponseText);
-													_this.gridDeleteRow(_this.getSelectedRowIndexFromGrid());
-													_this.gridSelectFirstRow();
-												}
-											}
-										);
-									}
-								});
+								_this.deleteSelectedContactConfirm();
 							}
 						}
 					]
 
 				});
+
+				//=================================================================
+				// EVENTS ---------------------------------------------------------
+				//=================================================================
+				eventObject.setOn('onPanelOpenClose', function(inData){
+
+					//--------ADD   -------------------------------------------------------
+					if(inData.id == 'subMenu_contacts_add' && inData.command == 'open'){
+						_this.addContact();
+					}
+					if(inData.id == 'subMenu_contacts_add' && inData.command == 'close'){
+						Widget_contactsFormScript.close();
+					}
+
+					//--------  EDIT-------------------------------------------------------
+					if(inData.id == 'subMenu_contacts_edit' && inData.command == 'open'){
+						_this.editContact()
+					}
+					if(inData.id == 'subMenu_contacts_edit' && inData.command == 'close'){
+						//Widget_contactsFormScript.close();
+					}
+
+					//--------DELETE-------------------------------------------------------
+					if(inData.id == 'subMenu_contacts_delete' && inData.command == 'open'){
+						_this.deleteSelectedContactConfirm();
+					}
+					if(inData.id == 'subMenu_contacts_delete' && inData.command == 'close'){
+						$.messager.close();
+						//Widget_contactsFormScript.close();
+						//alert('atempting to close delete thingy!!');
+						//- eventObject.reportOn('onOpenCloseToRemote',
+						//- 	{
+						//- 		open:false,
+						//- 		id:'subMenu_contacts_delete'
+						//- 	}
+						//- );
+					}
+				});
+				
+				//panel-tool-close
+				eventObject.setOn('subMenu_contacts_add_delete_yes', function(inData){
+					$.messager.close();
+					_this.deleteSelectedContact();
+					eventObject.reportOn('onOpenCloseToRemote',
+						{
+							open:true,
+							id:'mainMenu_contacts'
+						}
+					);
+				});
+
+				eventObject.setOn('subMenu_contacts_add_delete_no', function(inData){
+					$.messager.close();
+
+					eventObject.reportOn('onOpenCloseToRemote',
+						{
+							open:true,
+							id:'mainMenu_contacts'
+						}
+					);
+
+				});
+
+				//----open import / export tabs
+				eventObject.setOn('subMenu_contacts_tab_import', function(inData){
+					console.log('subMenu_contacts_tab_import commanded to be clicked');
+					$('#tab_import').trigger('click');
+				});
+
+				eventObject.setOn('subMenu_contacts_tab_export', function(inData){
+					$('#tab_export').trigger('click');
+				});
+
+
+
+
+
+				//- $.messager.onClose(function(inNothing){
+				//- 	alert('xxx close xxxx');
+				//- });
+
+				//- //$.messager.confirm
+				//- $.extend($.fn.messager.confirm.methods, {
+				//- 	closeHopper: function(jq, newposition){
+				//- 		return jq.each(function(){
+				//- 			$(this).messager.confirm('move', newposition);
+				//- 		});
+				//- 	}
+				//- });
+
 
 				_this.clearGrid();
 				_this.loadAllContactsFromService(function(err){
@@ -389,7 +517,13 @@ body
 
 				//event od send sms---
 				$('#widgetContactsCollectionDiv').focus(function(){
-					_this.menuChangeToContacts()
+					//_this.menuChangeToContacts()
+					eventObject.reportOn('onOpenCloseToRemote',
+						{
+							open:true,
+							id:'mainMenu_contacts'
+						}
+					);
 				});
 
 				$('#bt_webMenu_addContact').click(function(){
@@ -552,7 +686,47 @@ body
 				$('#widgetContactsExportGrid').datagrid('appendRow',inRowData);
 			}
 
+			this.deleteSelectedContactConfirm = function(){
+				if(_this.getSelectedRowIndexFromGrid() == -1){console.log('nothing selected!!'); return false;};
+				//-->update the remote menu-------------------
+				eventObject.reportOn('onOpenCloseToRemote',
+					{
+						open:true,
+						id:'subMenu_contacts_delete'
+					}
+				);
+				$.messager.confirm('About to delete', 'Are you sure you want to delete contact?', function(result){
+					//-->update the remote menu-------------------
+					eventObject.reportOn('onOpenCloseToRemote',
+						{
+							open:false,
+							id:'subMenu_contacts_delete'
+						}
+					);
+					if(result){
+						_this.deleteSelectedContact();
+					}
+				});
+			}
 
+			this.deleteSelectedContact = function(){
+				$postAjax(
+					{
+						url:'database/deleteContact',
+						send:
+							{
+								id:$('#widgetContactsCollectionDataGrid').datagrid('getSelected').id
+							},
+						onAjaxSuccess:function(inResponseText){
+							inResponseText = JSON.parse(inResponseText);
+							console.dir(inResponseText);
+							_this.gridDeleteRow(_this.getSelectedRowIndexFromGrid());
+							_this.gridSelectFirstRow();
+							eventObject.reportOn('refreshOnRemote', '');
+						}
+					}
+				);
+			}
 
 			this.saveContact = function(inContact, inPostFunction){
 
@@ -621,6 +795,10 @@ body
 				$('#widgetContactsCollectionDiv').window('open');
 			}
 			this.hide = function(){
+				$('#widgetContactsCollectionDiv').window('close');
+			}
+
+			this.close = function(){
 				$('#widgetContactsCollectionDiv').window('close');
 			}
 
@@ -841,8 +1019,10 @@ body
 
 
 							},function(err){
-								// DONE
-								//console.log('Error');
+								//=====================================
+								// ASYNC DONE
+								//=====================================
+
 								_this.importGridRefresh();
 								_this.gridSelectLastRow();
 								if(inPostFunction){
@@ -1028,27 +1208,30 @@ body
 				);
 			}
 
-			this.menuChangeToContacts = function(){
-				commManager.transactionToDeviceToken(
-					{
-						routing:
-							{
-								command:'webMenu',
-								action:'openContactsMenu'
-							},
-						data:
-							{
-								url:"/webmenu/contactsmenu"
-							},
+			//- this.menuChangeToContacts = function(){
+			//- 	commManager.transactionToDeviceToken(
+			//- 		{
+			//- 			routing:
+			//- 				{
+			//- 					command:'webMenu',
+			//- 					action:'openClosePanel'
+			//- 				},
+			//- 			data:
+			//- 				{
+			//- 					//url:"/webmenu/contactsmenu"
+			//- 					id:'mainMenu_contacts',
+			//- 					command:'open'
+			//- 				},
 
-						onComplete:function(inDataLayer, inTransportLayer){
-							console.log('onComplete transactionToDeviceToken call back entered');
-						}
-					}
-				);
-			}
+			//- 			onComplete:function(inDataLayer, inTransportLayer){
+			//- 				console.log('onComplete transactionToDeviceToken call back entered');
+			//- 			}
+			//- 		}
+			//- 	);
+			//- }
 
 			this.destroy = function(){
+				//openedState = false;
 				delete window.widgetContactsCollectionScript;
 				$('#widgetContactsCollectionScriptDiv').unbind();
 				$('#widgetContactsCollectionScriptDiv').remove();

@@ -90,6 +90,11 @@ module.exports.controller = function(app) {
 		res.render('users/checkemail.jade',req.body);
 	});
 
+	app.post('/users/checkemail', function(req, res){
+		console.log("/users/checkemail post");
+		res.render('users/checkemail.jade',req.body);
+	});
+
 	app.post('/user/database/addUser', function(req, res){
 		console.log("/database/addUser post");
 		if(!(req.body)){return false;}

@@ -41,7 +41,7 @@ div(id="widgetSmsMessageWindowDiv" class="easyui-window" title="Window Layout" d
 
 
 
-	script.
+	script(id="widgetSmsMessageWindowScriptDiv").
 
 		var widgetSmsMessageWindowScript = new function(){
 			var _this = this;
@@ -57,6 +57,20 @@ div(id="widgetSmsMessageWindowDiv" class="easyui-window" title="Window Layout" d
 				$('#widgetSmsMessageWindowDiv').window('open');
 			}
 
+			this.close = function(){
+				$('#widgetSmsMessageWindowDiv').window('close');
+			}
+
+			this.destroy = function(){
+				delete window.widgetSmsMessageWindowScript;
+				$('#widgetSmsMessageWindowScriptDiv').unbind();
+				$('#widgetSmsMessageWindowScriptDiv').remove();
+
+				$('#widgetSmsMessageWindowDiv').unbind();
+				$('#widgetSmsMessageWindowDiv').remove();
+				delete window.widgetSmsMessageWindowDiv;
+			}
+
 
 			this.load = function(){
 				$('#widgetSmsMessageWindowDiv').window({
@@ -67,7 +81,27 @@ div(id="widgetSmsMessageWindowDiv" class="easyui-window" title="Window Layout" d
 					modal:false,
 					minimizable:false,
 					maximizable:false,
-					onBeforeClose: function(){}
+					onBeforeClose: function(){},
+					onOpen:function(){
+						//_this.menuChangeToContacts(); // got focus call
+						WindowStateObject.setState('mainMenu_sms', true);
+						eventObject.reportOn('onOpenCloseToRemote',
+							{
+								open:true,
+								id:'mainMenu_sms'
+							}
+						);
+					},
+					onClose:function(){
+						WindowStateObject.setState('mainMenu_sms', false);
+						eventObject.reportOn('onOpenCloseToRemote',
+							{
+								open:false,
+								id:'mainMenu_sms'
+							}
+						);
+						_this.destroy();
+					}
 				});
 
 

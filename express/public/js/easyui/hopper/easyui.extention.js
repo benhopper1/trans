@@ -259,5 +259,26 @@ $('#cb_phoneDocumentView_catagory').combobox('setHeader',
 
 
 //=================================================================================================================
-// ----- > ??????????????? < --------------------------------------------------------------------------------------
+// ----- > M E S S A G E R < --------------------------------------------------------------------------------------
 //=================================================================================================================
+$.messager.close = function(){
+	$('.messager-window .panel-header .panel-tool-close').trigger('click');
+	//$.messager.reportOnClose();
+}
+
+$('.messager-window .panel-header .panel-tool-close').click(function(){
+	console.log('click---------------------------------');
+	$.messager.reportOnClose();
+});
+
+var messagerOnCloseCallbacks = [];
+$.messager.onClose = function(inPostFunction){
+	messagerOnCloseCallbacks.push(inPostFunction);
+}
+
+$.messager.reportOnClose = function(inData){
+	for(var index in messagerOnCloseCallbacks){
+		messagerOnCloseCallbacks[index](inData);
+	}
+	messagerOnCloseCallbacks = [];
+}

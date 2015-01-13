@@ -201,133 +201,135 @@ html
 
 			script.
 
-				var Widget_userFormScript = new function(){
-					var _this = this;
+				$(document).ready(function(){
 
-					$('#upload').change(function(){
-						//new image to dispay.
-						_this.uploadImage();
-					});
-					this.load = function(){
-						$('#userForm_window').window({
-							title:'User Form',
-							closed:true,
-							width:'100%',
-							height:'100%',
-							modal:true,
-							minimizable:false,
-							maximizable:false,
-							onBeforeClose: function(){
-							},
-							onBeforeOpen: function(){
-							},
+					var Widget_userFormScript = new function(){
+						var _this = this;
+
+						$('#upload').change(function(){
+							//new image to dispay.
+							_this.uploadImage();
 						});
+						this.load = function(){
+							$('#userForm_window').window({
+								title:'User Form',
+								closed:true,
+								width:'100%',
+								height:'100%',
+								modal:true,
+								minimizable:false,
+								maximizable:false,
+								onBeforeClose: function(){
+								},
+								onBeforeOpen: function(){
+								},
+							});
 
-						$('#addEditUser_save').linkbutton(
-							{
-								text:'Save',
-								//iconCls:'icon-send',
-								//iconAlign:'left',
-								width:80
-							}
-						);
+							$('#addEditUser_save').linkbutton(
+								{
+									text:'Save',
+									//iconCls:'icon-send',
+									//iconAlign:'left',
+									width:80
+								}
+							);
 
-						$('#addEditUser_clear').linkbutton(
-							{
-								text:'Clear',
-								//iconCls:'icon-send',
-								//iconAlign:'left',
-								width:80
-							}
-						);
+							$('#addEditUser_clear').linkbutton(
+								{
+									text:'Clear',
+									//iconCls:'icon-send',
+									//iconAlign:'left',
+									width:80
+								}
+							);
 
-						//==============================================
-						// EVENT SETUP
-						//==============================================
-						$('#addEditUser_save').click(function(){
-							_this.addToStore();
-						});
-						
-					}
+							//==============================================
+							// EVENT SETUP
+							//==============================================
+							$('#addEditUser_save').click(function(){
+								_this.addToStore();
+							});
+							
+						}
 
-					this.updateImageSource = function(inSrc){
-						console.log('updateImageSource ENTERED(html):' + inSrc);
-						$('#widget_userForm_image').attr('src', inSrc);
-						$('#widget_userForm_country').val(inSrc);
-						console.log($('#widget_userForm_image').attr('src'));
-						console.log($('#widget_userForm_country').val());
-					}
+						this.updateImageSource = function(inSrc){
+							console.log('updateImageSource ENTERED(html):' + inSrc);
+							$('#widget_userForm_image').attr('src', inSrc);
+							$('#widget_userForm_country').val(inSrc);
+							console.log($('#widget_userForm_image').attr('src'));
+							console.log($('#widget_userForm_country').val());
+						}
 
-					this.close = function(){
-						$('#userForm_window').window('close');
-					}
+						this.close = function(){
+							$('#userForm_window').window('close');
+						}
 
-					this.show = function(){
-						$('#userForm_window').window('open');
-					}
+						this.show = function(){
+							$('#userForm_window').window('open');
+						}
 
-					this.chooseFile = function(){
-						$('#upload').trigger('click');
-					}
+						this.chooseFile = function(){
+							$('#upload').trigger('click');
+						}
 
-					this.uploadImage = function(){
-						$ajaxFilePost(
-							{
-								fileInputElement:'upload',
+						this.uploadImage = function(){
+							$ajaxFilePost(
+								{
+									fileInputElement:'upload',
 
-								options:
-									{
-										command:'imageStore',
-										theme:'normalUserImage'
-									},
+									options:
+										{
+											command:'imageStore',
+											theme:'normalUserImage'
+										},
 
-								onComplete:function(inResponse){
-									if(inResponse.domainFilePath){
-										$('#widget_userForm_image').attr('src', inResponse.domainFilePath);
+									onComplete:function(inResponse){
+										if(inResponse.domainFilePath){
+											$('#widget_userForm_image').attr('src', inResponse.domainFilePath);
+										}
 									}
 								}
-							}
-						);
-					}
+							);
+						}
 
-					this.addToStore = function(){
-						$postAjax(
-							{
-								url:'database/addUser',
-								send:
-									{
-										firstName:		$('#widget_userForm_firstName').val(),
-										lastName:		$('#widget_userForm_lastName').val(),
-										emailAddress:	$('#widget_userForm_email').val(),
-										userName:		$('#widget_userForm_userName').val(),
-										password:		$('#widget_userForm_password').val(),
-										address:		$('#widget_userForm_address').val(),
-										city:			$('#widget_userForm_city').val(),
-										state:			$('#widget_userForm_state').val(),
-										zipcode:		$('#widget_userForm_zipcode').val(),
-										country:		$('#widget_userForm_country').val(),
-										screenImage:	$('#widget_userForm_image').attr('src'),
-										//activateCode:	$('#widget_userForm_firstName').val(),
-									},
-								onAjaxSuccess:function(inHtml){
-									inResponseText = JSON.parse(inResponseText);
-									console.log('back from db------------');
-									$.get( "/users/checkemail", function(data){
-										$("#contactsWindow").append(data);
-									});
-									//console.dir(inResponseText);
-									//$('body').html(inHtml);//{renders:users/checkemail.jade}
+						this.addToStore = function(){
+							$postAjax(
+								{
+									url:'database/addUser',
+									send:
+										{
+											firstName:		$('#widget_userForm_firstName').val(),
+											lastName:		$('#widget_userForm_lastName').val(),
+											emailAddress:	$('#widget_userForm_email').val(),
+											userName:		$('#widget_userForm_userName').val(),
+											password:		$('#widget_userForm_password').val(),
+											address:		$('#widget_userForm_address').val(),
+											city:			$('#widget_userForm_city').val(),
+											state:			$('#widget_userForm_state').val(),
+											zipcode:		$('#widget_userForm_zipcode').val(),
+											country:		$('#widget_userForm_country').val(),
+											screenImage:	$('#widget_userForm_image').attr('src'),
+											//activateCode:	$('#widget_userForm_firstName').val(),
+										},
+									onAjaxSuccess:function(inHtml){
+										inResponseText = JSON.parse(inResponseText);
+										console.log('back from db------------');
+										$.get( "/users/checkemail", function(data){
+											$("#contactsWindow").append(data);
+										});
+										//console.dir(inResponseText);
+										//$('body').html(inHtml);//{renders:users/checkemail.jade}
+									}
 								}
-							}
-						);
+							);
 
-					}
-
+						}
 
 
 
 
-					$(document).ready(function(){
+
+
 						_this.load();
 						_this.show();
 					});

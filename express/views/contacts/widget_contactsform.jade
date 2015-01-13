@@ -114,6 +114,7 @@ script(id='Widget_contactsFormScriptDiv').
 							);
 							//reselect to cause event to propergate new info---
 							widgetContactsCollectionScript.gridSelectRow(widgetContactsCollectionScript.getSelectedRowIndexFromGrid());
+							eventObject.reportOn('refreshOnRemote', '');
 							_this.close();
 						}
 					}
@@ -159,6 +160,7 @@ script(id='Widget_contactsFormScriptDiv').
 
 							//select last,,,
 							widgetContactsCollectionScript.gridSelectLastRow();
+							eventObject.reportOn('refreshOnRemote', '');
 							_this.close();
 						}
 					}
@@ -215,12 +217,51 @@ script(id='Widget_contactsFormScriptDiv').
 				maximizable:false,
 				onBeforeClose: function(){
 				},
-				onBeforeOpen: function(){
+				onOpen:function(){
+						console.log('onOpen:' + (state == 'add')? 'subMenu_contacts_add' : 'subMenu_contacts_edit');
+							//_this.menuChangeToContacts(); // got focus call
+						eventObject.reportOn('onOpenCloseToRemote',
+							{
+								open:true,
+								id:(state == 'add')? 'subMenu_contacts_add' : 'subMenu_contacts_edit',
+							}
+						);
 				},
-				//destroy
 				onClose:function(){
 					_this.destroy();
-				}
+					eventObject.reportOn('onOpenCloseToRemote',
+						{
+							open:false,
+							id:(state == 'add')? 'subMenu_contacts_add' : 'subMenu_contacts_edit',
+						}
+					);
+					//_this.destroy();
+				},
+				//- onBeforeOpen: function(){
+				//- 	commManager.transactionToDeviceToken(
+				//- 		{
+				//- 			routing:
+				//- 				{
+				//- 					command:'webMenu',
+				//- 					action:'openClosePanel'
+				//- 				},
+				//- 			data:
+				//- 				{
+				//- 					//id:(state == 'add')? 'subMenu_contacts_add' : 'subMenu_contacts_edit',
+				//- 					id:'subMenu_contacts_add',
+				//- 					command:'open'
+				//- 				},
+
+				//- 			onComplete:function(inDataLayer, inTransportLayer){
+				//- 				console.log('onComplete transactionToDeviceToken call back entered');
+				//- 			}
+				//- 		}
+				//- 	);
+				//- },
+				//destroy
+				//- onClose:function(){
+				//- 	_this.destroy();
+				//- }
 			});
 
 			$('#widget_contactsForm_type').combobox({
@@ -319,6 +360,10 @@ script(id='Widget_contactsFormScriptDiv').
 
 
 			//events----------
+			//===========================================================================
+			// -- >  E V E N T S  < ----------------------------------------------------- 
+			//===========================================================================
+
 			$('#addEditContacts_save').click(function(){
 				_this.addToStore();
 			});
@@ -327,6 +372,18 @@ script(id='Widget_contactsFormScriptDiv').
 			});
 			$('#addEditContacts_close').click(function(){
 				$('#addContactForm').window('close');
+			});
+
+			// remoteMenu mesh
+			eventObject.setOn('subMenu_contacts_add_save', function(inData){
+				_this.addToStore();
+			});
+			eventObject.setOn('subMenu_contacts_add_clear', function(inData){
+				_this.clearForm();
+			});
+			eventObject.setOn('subMenu_contacts_add_close', function(inData){
+				//$('#addContactForm').window('close');
+				_this.close();
 			});
 
 			//- $('#addEditUser_close').linkbutton(

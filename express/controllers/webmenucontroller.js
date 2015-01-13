@@ -124,9 +124,55 @@ module.exports.controller = function(app){
 	});
 
 
+ //=== > AUTO MENU < ===================================================================
 
 
+	app.get('/webMenu/automenu', function(req, res){
+		console.log("/webMenu/automenu post");
 
+		var menu_json = fs.readFileSync(path.dirname(require.main.filename) + '/public/json/menu.json', 'utf8');
+		menu_json = JSON.parse(menu_json);
+
+		var options = 
+			{
+				userId:req.cookies.userId,
+				deviceId:"815",//req.cookies.deviceId,
+				URL:configData.domain.address + ":" + configData.domain.port,
+				webSocketClient:configData.webSocketClient,
+				defaultUserImageUrl:configData.defaultUserImageUrl,
+				defaultMemberImageUrl:configData.defaultMemberImageUrl,
+				data:
+					{
+					},
+				menuData:{},
+				isGet:true
+			}
+		options = extend(options, menu_json);
+		res.render('webmenu/automenu.jade', options);
+	});
+
+	app.post('/webMenu/automenu', function(req, res){
+		console.log("/webMenu/automenu");
+		var menu_json = fs.readFileSync(path.dirname(require.main.filename) + '/public/json/menu.json', 'utf8');
+		menu_json = JSON.parse(menu_json);
+		var options = 
+			{
+				userId:req.cookies.userId,
+				deviceId:"815",//req.cookies.deviceId,
+				URL:configData.domain.address + ":" + configData.domain.port,
+				webSocketClient:configData.webSocketClient,
+				defaultUserImageUrl:configData.defaultUserImageUrl,
+				defaultMemberImageUrl:configData.defaultMemberImageUrl,
+				data:
+					{
+					},
+				menuData:{},
+				isGet:false
+			}
+		//options = extend(options, req.body);
+		options = extend(options, menu_json);
+		res.render('webmenu/automenu.jade', options);
+	});
 
 
 

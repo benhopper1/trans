@@ -1,6 +1,8 @@
 head 
 	meta(charset="UTF-8")
 	meta(name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+
+	script(src="/public/js/webmenu/webmenu.js" type="text/javascript")
 //background-image: url('public/images/ui/background_crack.jpg')
 body(style="")
 	//script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
@@ -198,15 +200,40 @@ body(style="")
 
 
 			li()
-				a(id="bt_webMenu_addContact" onclick="console.log('add contact clciky')" href="#") Add Contact
+				span(id="bt_webMenu_contact_add_save" onclick="console.log('add contact clciky')" href="#javascript:console.log('xxadd contact clciky')") Save Contact
+				//span(id="bt_webMenu_addContact" onclick="console.log('bt_webMenu_addContact Click')") Add Contact
+					//a(id="bt_webMenu_contact_add_save" onclick="console.log('add contact clciky')" href="#") Save Contact
+				script.
+					/*$('#bt_webMenu_contact_add_save').click( function(){
+						console.log("testing klkjlkjlkjlkjlkjl");
+					});*/
+				ul
+					li
+						a(id="bt_webMenu_contact_add_save" onclick="console.log('add contact clciky')" href="#") Save Contact
+					li
+						a(id="bt_webMenu_contact_add_clear" onclick="console.log('add contact clciky')" href="#") Clear Information
+					li
+						a(id="bt_webMenu_contact_add_close" onclick="console.log('add contact clciky')" href="#") Close Window
 
-			li()
-				a(id="bt_webMenu_editContact" href="#") Edit Contact
+
+				//a(id="bt_webMenu_addContact" onclick="console.log('add contact clciky')" href="#") Add Contact
+
+			//- li()
+			//- 	a(id="bt_webMenu_editContact" href="#") Edit Contact
+
+			li
+				span Edit Contact
+				ul(id="bt_webMenu_editContact")
+					li(id="bt_webMenu_editContact_addToDiv")
+
 			li()
 				a(id="bt_webMenu_deletContact" href="#") Delete Contact
 
-			li()
-				a(id="bt_webMenu_openContactSlider" href="#") Open Slider
+			li
+				span Contact Transition2
+				ul(id="dxdx_0")
+			//- ul(id="dxdx_0")
+			//- 	a(id="bt_webMenu_openContactSlider" href="#") Open Slider
 				
 			
 
@@ -231,31 +258,95 @@ body(style="")
 					));
 				});
 				$('#bt_webMenu_editContact').click(function(){
-					Android.onMenuClick(JSON.stringify(
-						{
-							id:'bt_webMenu_editContact'
-						}
-					));
+					//- Android.onMenuClick(JSON.stringify(
+					//- 	{
+					//- 		id:'bt_webMenu_editContact'
+					//- 	}
+					//- ));
+					//- console.log('test1');
+					//- WebMenuObject.loadMenu(
+					//- 	{
+					//- 		url:'/webMenu/genericMenu',
+					//- 		menuDataArray:
+					//- 			[
+					//- 				{
+					//- 					id:'addEditContacts_save',
+					//- 					caption:'Save',
+					//- 					forceBack:true
+					//- 				},
+					//- 				{
+					//- 					id:'addEditContacts_clear',
+					//- 					caption:'Clear'
+					//- 				},
+					//- 				{
+					//- 					id:'addEditContacts_close',
+					//- 					caption:'Close',
+					//- 					forceBack:true
+					//- 				}
+					//- 			],
+					//- 		updateElementId:'bt_webMenu_editContact_addToDiv'
+					//- 	}
+					//- );
+
+					console.log('test2');
+
+
+					//- $postAjax(
+					//- 	{
+					//- 		url:'/webMenu/genericMenu',
+					//- 		send:
+					//- 			{
+					//- 				menuData:
+					//- 					[
+					//- 						{
+					//- 							id:'addEditContacts_save',
+					//- 							caption:'Save',
+					//- 							forceBack:true
+					//- 						},
+					//- 						{
+					//- 							id:'addEditContacts_clear',
+					//- 							caption:'Clear'
+					//- 						},
+					//- 						{
+					//- 							id:'addEditContacts_close',
+					//- 							caption:'Close',
+					//- 							forceBack:true
+					//- 						}
+					//- 					]
+					//- 			},
+					//- 		onAjaxSuccess:function(inHtml){
+					//- 			$('#dxdx_0').replaceWith(inHtml);
+					//- 			//- inResponseText = JSON.parse(inResponseText);
+					//- 			//- console.log('back from db------------');
+					//- 			//- $.get( "/users/checkemail", function(data){
+					//- 			//- 	$("#contactsWindow").append(data);
+					//- 			//- });
+					//- 			//console.dir(inResponseText);
+					//- 			//$('body').html(inHtml);//{renders:users/checkemail.jade}
+					//- 		}
+					//- 	}
+					//- );
 					//Android.reportOnEvent('myEvent', {someKey:'someValue'});
 
-					Android.openGenericMenu('/webMenu/genericMenu', JSON.stringify(
-						[
-							{
-								id:'addEditContacts_save',
-								caption:'Save',
-								forceBack:true
-							},
-							{
-								id:'addEditContacts_clear',
-								caption:'Clear'
-							},
-							{
-								id:'addEditContacts_close',
-								caption:'Close',
-								forceBack:true
-							}
-						]
-					));
+					//- Android.openGenericMenu('/webMenu/genericMenu', JSON.stringify(
+					//- 	[
+					//- 		{
+					//- 			id:'addEditContacts_save',
+					//- 			caption:'Save',
+					//- 			forceBack:true
+					//- 		},
+					//- 		{
+					//- 			id:'addEditContacts_clear',
+					//- 			caption:'Clear'
+					//- 		},
+					//- 		{
+					//- 			id:'addEditContacts_close',
+					//- 			caption:'Close',
+					//- 			forceBack:true
+					//- 		}
+					//- 	]
+					//- ));
+
 
 
 				});
@@ -395,7 +486,7 @@ body(style="")
 		}
 
 
-
+		//var webMenuObject;
 
 		$(document).ready(function() {
 			$("#my-menu").mmenu(
@@ -406,14 +497,26 @@ body(style="")
 					classes: "mm-fullscreen mm-light",
 					onClick:
 						{
-							blockUi:false
+							//blockUi:false,
+							//preventDefault:false
 						}
+				},{
+					//panelNodetype:"span"
 				}
 			);
 
-			WebMenu = new WebMenu();
-			WebMenu.load();
+			$('.mm-subopen mm-fullsubopen').click(function(){
+				console.log("testing klkjlkjlkjlkjlkjl");
+			});
 
+			webMenu = new WebMenu();
+
+			//webMenuObject = new WebMenuObject();
+
+
+			webMenu.load();
+
+			
 
 
 

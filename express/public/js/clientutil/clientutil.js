@@ -316,6 +316,19 @@ var array_unique = function(inArray){
 }
 
 
+//debugTool
+console.d = function(inArray){
+	var resultString = '';
+	for(index in inArray){
+		resultString += (inArray[index] + '\n');
+	}
+
+	alert(resultString);
+}
+
+
+
+
 //opposite of extend,  recursive difference...
 // returns anything that is in obj1 that is not in obj2....
 var diff = function(obj1, obj2){
@@ -339,6 +352,111 @@ var diff = function(obj1, obj2){
 
 	return delta;
 }
+
+//format strings
+//sprintf('Latitude: %s, Longitude: %s', 41.847, -87.661)
+var sprintf = function(format, etc){
+	var arg = arguments;
+	var i = 1;
+	return format.replace(/%((%)|s)/g, function (m) { return m[2] || arg[i++] })
+}
+
+//###################################### JS UTILITY ###############################################
+//--------------------- > Type Test < -------------------------------------------------------------
+//#################################################################################################
+
+var $json = new function(){
+	var _this = this;
+	this.isArray = function(inObject){
+		return inObject.constructor === Array;
+	}
+
+	this.isObject = function(inObject){
+		return inObject.constructor === {}.constructor
+	}
+
+	this.fieldExist = function(inJsonStruct, field){
+		return inJsonStruct.hasOwnProperty(field);
+	}
+
+	this.isString = function(inObject){
+		return inObject.constructor === "xx".constructor
+	}
+
+	// return fields and values for anything NOT: object or array!!!
+	this.getSingleLayer = function(inObject){
+		var result = {};
+		for(var inObjectIndex in inObject){
+			if(!(_this.isArray(inObject[inObjectIndex])) && !(_this.isObject(inObject[inObjectIndex]))){
+				result[inObjectIndex] = inObject[inObjectIndex];
+			}
+		}
+		return result;
+	}
+
+	this.mapJson = function(inJsonStruct, inKeyOfInterest){
+		//return JSON.stringify(inJsonStruct);
+		var jsonAsString = JSON.stringify(inJsonStruct);
+		return jsonAsString.split('"id":');
+	}
+
+	this.getAllKeys = function(inJsonStruct){
+		var result = {};
+		function recurse (cur, prop){
+			if(Object(cur) !== cur){
+				result[prop] = cur;
+			}
+			else if(Array.isArray(cur)){
+				for(var i=0, l=cur.length; i<l; i++)
+					//console.log('cur:' + cur);
+					//console.dir(cur);
+					recurse(cur[i], prop + "[" + i + "]");
+					if(l == 0)
+						result[prop] = [];
+			}else{
+				var isEmpty = true;
+				for (var p in cur){
+					isEmpty = false;
+					recurse(cur[p], prop ? prop+"."+p : p);
+				}
+				if(isEmpty && prop)
+					result[prop] = {};
+			}
+		}
+		recurse(inJsonStruct, "");
+		return Object.keys(result);
+	}
+	this.toFlatHash = function(inJsonStruct){
+		var result = {};
+		function recurse (cur, prop){
+			if(Object(cur) !== cur){
+				result[prop] = cur;
+			}
+			else if(Array.isArray(cur)){
+				for(var i=0, l=cur.length; i<l; i++)
+					//console.log('cur:' + cur);
+					//console.dir(cur);
+					recurse(cur[i], prop + "[" + i + "]");
+					if(l == 0)
+						result[prop] = [];
+			}else{
+				var isEmpty = true;
+				for (var p in cur){
+					isEmpty = false;
+					recurse(cur[p], prop ? prop+"."+p : p);
+				}
+				if(isEmpty && prop)
+					result[prop] = {};
+			}
+		}
+		recurse(inJsonStruct, "");
+		return result;
+	}
+
+
+
+}();
+
 
 
 
@@ -569,17 +687,26 @@ var StorageObject = function(){
 //###################################### OBJECT ###############################################
 //--------------------- > Backstack < -----------------------------------
 //#############################################################################################
+
+
 var Backstack = function(inJsonStruct){
 	var _this = this;
 	if(typeof inJsonStruct.limit === 'undefined'){inJsonStruct.limit = 1000000;}
 	var limit = inJsonStruct.limit;
 	var stack = [];
 
+	var options = 
+		{
+			//- @@ overWriteOnPush:true same element moves to new position OR :false stays stored various positions for every push..
+			overWriteOnPush:true
+		}
+	inJsonStruct = $.extend(options, inJsonStruct);
+
 	this.push = function(inData){
 		if(!(inData)){return false;}
 
 		var existVal = exist(inData);
-		if(existVal == -1){
+		if(existVal == -1 || !(inJsonStruct.overWriteOnPush)){
 			stack.push(inData);
 			if(inJsonStruct.onPush){
 				inJsonStruct.onPush(inData);
@@ -609,6 +736,21 @@ var Backstack = function(inJsonStruct){
 	this.top = function(){
 		if(!(stack.length > 0)){ return false;}
 		return stack[stack.length - 1];
+	}
+
+	this.peek = function(index){
+		if(!(stack.length > (0 + index))){ return false;}
+		return stack[stack.length - (1 + index)];
+	}
+
+	this.pop = function(){
+		if(!(stack.length > 0)){ return false;}
+		if(stack.length == 1){
+			return _this.top();
+		}else{
+			remove(stack.length - 1);
+			return _this.top();
+		}
 	}
 
 	var exist = function(inItem){
@@ -734,3 +876,67 @@ var WaitPanel = function(inJsonStruct){
 
 	//loadImage(options.imageUrl, '50%', '','#' + elementId);
 }
+
+//###################################### OBJECT ###############################################
+//--------------------- > JSON Pathify Object< ------------------------------------------------
+//#############################################################################################
+var JsonPathifyObject = function(inJson, inKeyOfInterest){
+	var _this = this;
+	var originalJson = inJson;
+	var theJsonKeys = [];
+	$json.getAllKeys(inJson).forEach(function(entry){
+		if(entry.indexOf(inKeyOfInterest) != -1){
+			theJsonKeys.push(entry);
+		}
+	});
+
+	var pathHashByKeyOfInterest = {};
+	var pathHashByPath = {};
+	var tmpData = $json.toFlatHash(originalJson);
+	for(var theJsonKeysIndex in theJsonKeys){
+		pathHashByKeyOfInterest[tmpData[theJsonKeys[theJsonKeysIndex]]] = theJsonKeys[theJsonKeysIndex];
+		pathHashByPath[theJsonKeys[theJsonKeysIndex]] = tmpData[theJsonKeys[theJsonKeysIndex]];
+	}
+
+	this.getArrayOfInterestKeys = function(){
+		return theJsonKeys;
+	}
+
+	var pathalizeArray = function(inArray){
+		var newArray = [];
+		var tmp = '';
+		for(inArrayIndex in inArray){
+			if(inArrayIndex == 0){
+				tmp = inArray[inArrayIndex];
+				newArray.push(inArray[inArrayIndex]);
+			}else{
+				tmp = tmp + '.' + inArray[inArrayIndex];
+				newArray.push(tmp);
+			}
+		}
+		return newArray;
+	}
+
+	this.getParentPath = function(inKey){
+		var currentPathArray = pathHashByKeyOfInterest[inKey].split('.');
+		var pathArray = pathalizeArray(currentPathArray);
+		if((pathArray.length -3) > -1){
+			return pathArray[pathArray.length -3];
+		}else{
+			return pathArray[0];
+		}
+	}
+
+	this.getParentJsonById = function(inKey){
+		var execString = sprintf('originalJson.%s', pathHashByKeyOfInterest[_this.getParrentId(inKey)].replace("." + inKeyOfInterest,"") );
+		var theVal = eval(execString);
+		return theVal;
+	}
+
+	this.getParrentId = function(inKey){
+		return pathHashByPath[_this.getParentPath(inKey) + '.' + inKeyOfInterest];
+	}
+
+
+}
+

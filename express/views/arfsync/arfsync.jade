@@ -132,42 +132,61 @@ body(style="background-image: url('public/images/ui/beach_background4.jpg')")
 
 
 
-	h1 arfsync
-	a(id="open_main_menu" href="#my-menu") Open the menu
-	nav(id="my-menu" style="width:80px;z-index: 10000;")
-		ul()
-			li()
-				center
-					span(class="logo")
-						img(id="memberImage" class="magicCirc" style="width:100%;")
+	//h1 arfsync
+	//a(id="open_main_menu" href="#my-menu") Open the menu
+	//nav(id="my-menu" style="width:80px;z-index: 10000;")
+	//	ul()
+	//		li()
+	//			center
+	//				span(class="logo")
+	//					img(id="memberImage" class="magicCirc" style="width:100%;")
+	//		li()
+	//			a(id="bt_menu_home" href="#") Home
+	//		li()
+	//			a(id="bt_webMenu_contacts" href="#") Contacts
+	//		li()
+	//			a(id="bt_webMenu_sms" href="#") Sms
+	//		li()
+	//			a(id="bt_webMenu_phone" href="#") Phone
+	//		li()
+	//			span About us
+	//			ul 
+	//				li 
+	//					a(id="bt_history" href="#") History
+	//				li 
+	//					a(href="/about/team") The team
+	//				li 
+	//					a(href="/about/address") Our address
+	//				li 
+	//					a(id="bt_menu_close" href="#") Close
+	//		li()
+	//			a(href="/contact/") Contact ArfSync
+	//			button(onclick="location.reload();")
+	#fff(style="position:absolute; top:10%; bottom:0; left:0; width:50px; ")
+		span(id="contactManagerDiv" class="magicCircPnt" style="margin-left:20px; display:inline-block; height:30px; width:200px;")
+			img(id="videoImage" class="" style="" src="public/images/ui/userconfig.png" height="50px" )
+			#caption0(style="float:right; vertical-align:middle; margin-left:10px; margin-right:10px; line-height: 30px;") Contact Manager
 
-			li()
-				a(id="bt_menu_home" href="#") Home
-
-
-			li()
-				a(id="bt_webMenu_contacts" href="#") Contacts
-			li()
-				a(id="bt_webMenu_sms" href="#") Sms
-			li()
-				a(id="bt_webMenu_phone" href="#") Phone
-
-
-			li()
-				span About us
-				ul 
-					li 
-						a(id="bt_history" href="#") History
-					li 
-						a(href="/about/team") The team
-					li 
-						a(href="/about/address") Our address
-					li 
-						a(id="bt_menu_close" href="#") Close
-						
-			li()
-				a(href="/contact/") Contact ArfSync
-				button(onclick="location.reload();")
+		br
+		br
+		span(id="smsManagerDiv" class="magicCircPnt" style="margin-left:20px; display:inline-block; height:30px; width:200px;")
+			img(id="downloadAndroidImage" class="" style="" src="public/images/ui/mobile-sms.png" height="50px" )
+			#caption0(style="float:right; vertical-align:middle; margin-left:10px; margin-right:10px; line-height: 30px;") Sms Manager
+		br
+		br
+		span(id="handsetControllerDiv" class="magicCircPnt" style="margin-left:20px; display:inline-block; height:30px;   width:200px; ")
+			img(id="downloadAndroidImage2" class="" style="" src="public/images/ui/androidPhoneImg.png" height="50px" )
+			#caption0(style="float:right; vertical-align:middle; margin-left:10px; margin-right:10px; line-height: 30px;") Handset Controller
+		br
+		br
+		br
+		br
+		br
+		br
+		span(id="downloaddiv" class="magicCircPnt" style="margin-left:20px; display:inline-block; height:30px; width:200px;")
+			img(id="downloadAndroidImage" class="" style="" src="public/images/ui/download_android_app_button.png" height="50px" )
+			#caption0(style="float:right; vertical-align:middle; margin-left:10px; margin-right:10px; line-height: 30px;") Download Android App
+		
 
 	center
 		img(src="public/images/ui/arfsync_logo.png")
@@ -184,10 +203,10 @@ body(style="background-image: url('public/images/ui/beach_background4.jpg')")
 							img(id="loginUserImage" src="")
 							h1(id="loginUserFullName") unknown
 
-			#smsWindowDiv
-			#contactsWindow
-			#testHandset
-			#welcome_phoneWindowDiv
+		#smsWindowDiv
+		#contactsWindow
+		#testHandset
+		#welcome_phoneWindowDiv
 			//center
 			//	#phoneContactDiv
 			//	a(class="magicCircPnt" id="downloadLinkApp" href="public/download/androidapp/QrReader.apk" download) download app
@@ -275,64 +294,60 @@ body(style="background-image: url('public/images/ui/beach_background4.jpg')")
 		}
 		$( document ).ready(function(){
 
-			//-----EVENTS- BINDING --------------
-			$('#bt_webMenu_contacts').click(function(){
-				console.log('bt_webMenu_contacts CLICKED');
+			$('#contactManagerDiv').click(function(){
 				loadContactsWindow();
 			});
-			$('#bt_webMenu_sms').click(function(){
+			$('#smsManagerDiv').click(function(){
 				loadSmsWindow();
 			});
-			$('#bt_webMenu_phone').click(function(){
+			$('#handsetControllerDiv').click(function(){
 				openHandset();
 			});
-			$('#bt_history').click(function(){
-				//Android.showToast('Hello ben');";
-				console.log('testttttt');
-				Android.onMenuClick('Hello ben');
+			$('#downloaddiv').click(function(){
+				alert('not implemented , no click here yet!! on TODO');
 			});
 
-			$('#bt_menu_home').click(function(){
-				//Android.showToast('Hello ben');";
-				console.log('CLICK bt_menu_home');
-				commManager.transactionToDeviceToken(
-					{
-						routing:
-							{
-								command:'webMenu',
-								action:'openWebMenuActivity'
-							},
-						data:
-							{
-								url:"/webmenu/normalmenu"
-							},
+			//- $('#bt_menu_home').click(function(){
+			//- 	//Android.showToast('Hello ben');";
+			//- 	console.log('CLICK bt_menu_home');
+			//- 	commManager.transactionToDeviceToken(
+			//- 		{
+			//- 			routing:
+			//- 				{
+			//- 					command:'webMenu',
+			//- 					action:'openWebMenuActivity'
+			//- 				},
+			//- 			data:
+			//- 				{
+			//- 					url:"/webmenu/normalmenu"
+			//- 				},
 
-						onComplete:function(inDataLayer, inTransportLayer){
-							console.log('onComplete transactionToDeviceToken call back entered');
-						}
-					}
-				);
+			//- 			onComplete:function(inDataLayer, inTransportLayer){
+			//- 				console.log('onComplete transactionToDeviceToken call back entered');
+			//- 			}
+			//- 		}
+			//- 	);
 
-			});
+			//- });
 
-			$('#bt_menu_close').click(function(){
-				//Android.showToast('Hello ben');";
-				console.log('CLICK bt_menu_home');
-				commManager.transactionToDeviceToken(
-					{
-						routing:
-							{
-								command:'webMenu',
-								action:'openWebMenuActivity'
-							},
+			//- $('#bt_menu_close').click(function(){
+			//- 	//Android.showToast('Hello ben');";
+			//- 	console.log('CLICK bt_menu_home');
+			//- 	commManager.transactionToDeviceToken(
+			//- 		{
+			//- 			routing:
+			//- 				{
+			//- 					command:'webMenu',
+			//- 					action:'openWebMenuActivity'
+			//- 				},
 
-						onComplete:function(inDataLayer, inTransportLayer){
-							console.log('onComplete transactionToDeviceToken call back entered');
-						}
-					}
-				);
+			//- 			onComplete:function(inDataLayer, inTransportLayer){
+			//- 				console.log('onComplete transactionToDeviceToken call back entered');
+			//- 			}
+			//- 		}
+			//- 	);
 
-			});
+			//- });
 
 
 
@@ -864,9 +879,10 @@ body(style="background-image: url('public/images/ui/beach_background4.jpg')")
 			//var filterObj_webMenu = new commManager.FilterObject();
 			filterObj.add('webMenu', function(inMsg, inLocal, inTransportLayer_json, inRefObj){
 				console.log('FILTER == webMenu'  );
-				if(inTransportLayer_json.dataLayer.action == 'buttonClick'){
+				if(inTransportLayer_json.dataLayer.action == 'menuClick'){
 					console.log('ID == ' + inTransportLayer_json.dataLayer.id);
-					$('#' + inTransportLayer_json.dataLayer.id).trigger('click');
+					//$('#' + inTransportLayer_json.dataLayer.id).trigger('click');
+					eventObject.reportOn(inTransportLayer_json.dataLayer.id, inTransportLayer_json.dataLayer);
 				}
 
 				if(inTransportLayer_json.dataLayer.action == 'actionRequest'){
@@ -874,12 +890,93 @@ body(style="background-image: url('public/images/ui/beach_background4.jpg')")
 					eventObject.reportOn(inTransportLayer_json.dataLayer.request, inTransportLayer_json.dataLayer.data);
 				}
 
+				if(inTransportLayer_json.dataLayer.action == 'onPanelOpenClose'){
+					console.log('action onPanelOpenClose entering event bus');
+					eventObject.reportOn('onPanelOpenClose', inTransportLayer_json.dataLayer);
+				}
 
 			});
 
 
 
+
+
+
+
+
+			//=========================================================
+			// EVENT OBJECT LOADING WINDOWS HERE
+			//=========================================================
+			eventObject.setOn('onPanelOpenClose', function(inData){
+				console.log('----EVENT OBJECT--------------------');
+				console.log('mainMenu_phone');
+				console.dir(inData);
+
+				//=============================================
+				// WINDOW OPEN & CLOSE by remote
+				//============================================
+				//=========CONTACTS===========================
+					//==========OPEN==========================
+				if(inData.id == 'mainMenu_contacts' && inData.command == 'open'){
+					if(!(WindowStateObject.getState('mainMenu_contacts'))){
+						loadContactsWindow();
+					}else{
+						console.log('ALREADY OPEN:' + 'mainMenu_contacts');
+					}
+				}
+
+				//==========CLOSE==========================
+				if(inData.id == 'mainMenu_contacts' && inData.command == 'close'){
+					//if(!(WindowStateObject.getState('mainMenu_contacts'))){
+						//console.log('NOT LOADED:' + 'mainMenu_contacts');
+					//}else{
+						console.log('CLOSEING mainMenu_contacts requested by remote');
+						//---problems here
+						widgetContactsCollectionScript.close();
+					//}
+				}
+
+
+
+
+
+				//=========SMS========================
+					//==========OPEN==================
+				if(inData.id == 'mainMenu_sms' && inData.command == 'open'){
+					if(!(WindowStateObject.getState('mainMenu_sms'))){
+						loadSmsWindow();
+					}else{
+						console.log('ALREADY OPEN:' + 'mainMenu_sms');
+					}
+				}
+					//==========CLOSE==================
+				if(inData.id == 'mainMenu_sms' && inData.command == 'close'){
+					if(!(WindowStateObject.getState('mainMenu_sms'))){
+						//loadSmsWindow();
+					}else{
+						//console.log('ALREADY OPEN:' + 'mainMenu_sms');
+					}
+					widgetSmsMessageWindowScript.close();
+				}
+
+				if(inData.id == 'mainMenu_phone' && inData.command == 'open'){
+					openHandset();
+				}
+			});
+
 		}
+
+
+
+
+
+
+
+
+
+
+
+
 
 		var doClick = function(){
 			console.log('doClick');
@@ -1087,6 +1184,8 @@ body(style="background-image: url('public/images/ui/beach_background4.jpg')")
 		}
 
 
+
+
 		//- var getAllPhoneContacts = function(inPostFunction){
 		//- 	var theArray;
 		//- 	commManager.sendTransactionSeries(
@@ -1127,5 +1226,113 @@ body(style="background-image: url('public/images/ui/beach_background4.jpg')")
 		//- 		}
 		//- 	);
 		//- }
-	//script(type="text/javascript" src="/public/js/perspective/PerspectivePageViewNavigation/js/classie.js")
-	//script(type="text/javascript" src="/public/js/perspective/PerspectivePageViewNavigation/js/menu.js")
+		//script(type="text/javascript" src="/public/js/perspective/PerspectivePageViewNavigation/js/classie.js")
+		//script(type="text/javascript" src="/public/js/perspective/PerspectivePageViewNavigation/js/menu.js")
+
+		//- //######################################################
+		//- //--- > R E M O T E   M E N U <-------------------------
+		//- //######################################################
+
+		//- var RemoteMenu = new function(){
+		//- 	var _this = this;
+		//- 	this.reportOnOpen = function(inId){
+		//- 		_this.updateRemote(inId, 'open');
+		//- 	}
+
+		//- 	this.reportOnClose = function(inId){
+		//- 		_this.updateRemote(inId, 'close');
+		//- 	}
+
+		//- 	this.updateRemote = function(inId, inCloseOrOpen){
+		//- 		commManager.transactionToDeviceToken(
+		//- 			{
+		//- 				routing:
+		//- 					{
+		//- 						command:'webMenu',
+		//- 						action:'openClosePanel'
+		//- 					},
+		//- 				data:
+		//- 					{
+		//- 						id:'mainMenu_contacts',
+		//- 						command:'open'
+		//- 					},
+
+		//- 				onComplete:function(inDataLayer, inTransportLayer){
+		//- 					console.log('onComplete transactionToDeviceToken call back entered');
+		//- 				}
+		//- 			}
+		//- 		);
+		//- 	}
+		//- 	}
+		//- }();
+
+		//--outward
+		eventObject.setOn('onOpenCloseToRemote', function(inData){
+			console.log('----EVENT OBJECT--------------------');
+			console.log('onOpenCloseToRemote');
+			console.dir(inData);
+			var openOrClose = (inData.open)? 'open' : 'close';
+			commManager.transactionToDeviceToken(
+				{
+					routing:
+						{
+							command:'webMenu',
+							action:'openClosePanel'
+						},
+					data:
+						{
+							id:inData.id,
+							command:openOrClose
+						},
+			onComplete:function(inDataLayer, inTransportLayer){
+						console.log('onComplete transactionToDeviceToken call back entered');
+					}
+				}
+			);
+		});
+
+		//REQUEST REMOTE MENU TO REFRESH ITS CONTENTS-----------------------------------
+		eventObject.setOn('refreshOnRemote', function(inData){
+			console.log('----EVENT OBJECT--------------------');
+			console.log('onOpenCloseToRemote');
+			console.dir(inData);
+			commManager.transactionToDeviceToken(
+				{
+					routing:
+						{
+							command:'webMenu',
+							action:'requestRefresh'
+						},
+					data:
+						{
+
+						},
+			onComplete:function(inDataLayer, inTransportLayer){
+						console.log('onComplete transactionToDeviceToken call back entered');
+					}
+				}
+			);
+		});
+
+		//=========================================================
+		// WINDOW STATES Object
+		//=========================================================
+		var WindowStateObject = new function(){
+			var windowStateHash = {};
+			var _this = this;
+
+			this.setState = function(inKey, inState){
+				windowStateHash[inKey] = inState;
+			}
+
+			this.getState = function(inKey){
+				var state = windowStateHash[inKey];
+				if(state){
+					console.log('xSTATE==' + state);
+					return state;
+				}else{
+					console.log('STATE==false');
+					return false;
+				}
+			}
+		}();

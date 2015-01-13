@@ -41,7 +41,7 @@ module.exports.controller = function(app){
 
 	app.post('/contacts/widget_contacts_slider', function(req, res){
 		console.log('----------------------POST--------------------');
-		console.log('/slider GET');
+		console.log('/slider post');
 		var options =
 			{
 				URL:configData.domain.address + ":" + configData.domain.port,
