@@ -23,35 +23,46 @@
 				"properties":
 					[
 						{
-							"id":"subject",
-							"name":"Subject",
-							"value":"enter me nimble",
-							"group":"Attributes3",
+							"id":"PO",
+							"name":"PO",
+							"value":"",
+							"group":"Purchasing",
+							"editor":"text"
+						},
+						{
+							"id":"checkNumber",
+							"name":"Check Number",
+							"value":"",
+							"group":"Purchasing",
 							"editor":"text"
 						},
 						{
 							"id":"importance",
-							"name":"Importance 0 : 10",
-							"value":"2",
-							"group":"Bevs Group",
+							"name":"Shipping Type",
+							"value":"UPS Express Critical",
+							"group":"Shipping Information",
 							"editor":
 								{"type":"combobox","options":
 										{"valueField":"id", "textField":"text", "data":
 											[
-												{"id":"0", "text":"0"},
-												{"id":"1", "text":"1"},
-												{"id":"2", "text":"2"},
-												{"id":"3", "text":"3"},
-												{"id":"4", "text":"4"},
-												{"id":"5", "text":"5"},
-												{"id":"6", "text":"6"},
-												{"id":"7", "text":"7"},
-												{"id":"8", "text":"8"},
-												{"id":"9", "text":"9"},
-												{"id":"10", "text":"10"}
+												{"id":"0", "text":"UPS Express Critical"},
+												{"id":"1", "text":"UPS Next Day Air Early A.M."},
+												{"id":"2", "text":"UPS Next Day Air"},
+												{"id":"3", "text":"UPS Next Day Air Saver"},
+												{"id":"4", "text":"UPS 2nd Day Air A.M."},
+												{"id":"5", "text":"UPS 2nd Day Air"},
+												{"id":"6", "text":"UPS 3 Day Select"},
+												{"id":"7", "text":"UPS Ground"}
 											]
 										}
 								}
+						},
+						{
+							"id":"trackingNumber",
+							"name":"Tracking Number",
+							"value":"",
+							"group":"Shipping Information",
+							"editor":"text"
 						}
 					]
 			},
