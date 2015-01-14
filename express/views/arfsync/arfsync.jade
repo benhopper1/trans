@@ -164,18 +164,18 @@ body(style="background-image: url('public/images/ui/beach_background4.jpg')")
 	//			button(onclick="location.reload();")
 	#fff(style="position:absolute; top:10%; bottom:0; left:0; width:50px; ")
 		span(id="contactManagerDiv" class="magicCircPnt" style="margin-left:20px; display:inline-block; height:30px; width:200px;")
-			img(id="videoImage" class="" style="" src="public/images/ui/userconfig.png" height="50px" )
+			img(id="contactManagerImage" class="" style="" src="public/images/ui/userconfig.png" height="50px" )
 			#caption0(style="float:right; vertical-align:middle; margin-left:10px; margin-right:10px; line-height: 30px;") Contact Manager
 
 		br
 		br
 		span(id="smsManagerDiv" class="magicCircPnt" style="margin-left:20px; display:inline-block; height:30px; width:200px;")
-			img(id="downloadAndroidImage" class="" style="" src="public/images/ui/mobile-sms.png" height="50px" )
+			img(id="smsManagerImage" class="" style="" src="public/images/ui/mobile-sms.png" height="50px" )
 			#caption0(style="float:right; vertical-align:middle; margin-left:10px; margin-right:10px; line-height: 30px;") Sms Manager
 		br
 		br
 		span(id="handsetControllerDiv" class="magicCircPnt" style="margin-left:20px; display:inline-block; height:30px;   width:200px; ")
-			img(id="downloadAndroidImage2" class="" style="" src="public/images/ui/androidPhoneImg.png" height="50px" )
+			img(id="handsetControllerImage" class="" style="" src="public/images/ui/androidPhoneImg.png" height="50px" )
 			#caption0(style="float:right; vertical-align:middle; margin-left:10px; margin-right:10px; line-height: 30px;") Handset Controller
 		br
 		br
@@ -304,7 +304,8 @@ body(style="background-image: url('public/images/ui/beach_background4.jpg')")
 				openHandset();
 			});
 			$('#downloaddiv').click(function(){
-				alert('not implemented , no click here yet!! on TODO');
+				window.location.href = "/public/download/androidapp/v002/Qr_Proj_3.apk";
+				//alert('not implemented , no click here yet!! on TODO');
 			});
 
 			//- $('#bt_menu_home').click(function(){
