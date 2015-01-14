@@ -6,47 +6,75 @@ html
 		meta(name="description", content="")
 		meta(name="keywords", content="")
 		meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
-		script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
-		script(type='text/javascript', src='public/js/easyui/jquery.easyui.min.js')
-		link(rel='stylesheet', href='public/js/easyui/themes/default/easyui.css')
-		link(rel='stylesheet', href='public/js/easyui/themes/default/icon.css')
 
+		//script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+		//script(type='text/javascript', src='public/js/easyui/jquery.easyui.min.js')
+		//link(rel='stylesheet', href='public/js/easyui/themes/default/easyui.css')
+		//link(rel='stylesheet', href='public/js/easyui/themes/default/icon.css')
+		link(rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css")
+		script(src="http://code.jquery.com/jquery-1.11.1.min.js")
+		script(src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js")
 		script(type='text/javascript', src='/js/clientutil/clientutil.js')
 
-	body(style="background-color: #000000; color: #ffffff;")
-		center
-			h4
-				p Mobile login Screen
 
-				table(cellpadding="5")
-					tr
-						td User name:
-						td
-							input(id="mobileLogin_username" class="easyui-textbox" type="text" value="be" name="userName" data-options="required:true")
-					tr
-						td Password:
-						td
-							input(id="mobileLogin_password" class="easyui-textbox" type="password" value="4747" name="password" data-options="required:true")
+	//body(style="background-color: #000000; color: #ffffff;")
+	body
+		style.
+			img{
+				max-width: 100%;
+			}
 
-				//button(onclick="Android.loadReadEmailIntent('do email man!!');") OK
-				button(onclick="login();") OK
-				br
-				br
-				br
-				a(id="addEditContacts_clear" href="javascript:void(0)" onclick="Android.surfTo_SameDomain('/user/widget_userForm')" class="easyui-linkbutton") Create Account
+			.ui-page {
+				background: transparent;
+			}
+			.ui-content{
+				background: transparent;
+			}
+			body {
+				background: url(/public/images/ui/accountbkg.png);
+				background-repeat:repeat-y;
+				background-position:center center;
+				background-attachment:scroll;
+				background-size:100% 100%;
+			}
+
+		div(id="page_mobileLogin" data-role="page" data-theme="b" style="")
+			center
+				img(src="/public/images/ui/arfsync_logo.png")
+			div(id="contactsWindow" data-role="main" class="ui-content")
+				form(method="post" id="userForm")
+					div(class="ui-field-contain")
+						input(tabindex="0" type="text" id="widget_userForm_userName" 	name="userName" 	placeholder="User Name...")
+						input(tabindex="1" type="password" id="widget_userForm_password" 	name="password" 	placeholder="Password...")
+
+						//a(id="addEditContacts_clear" href="javascript:void(0)" onclick="Android.surfTo_SameDomain('/user/widget_userForm')" class="easyui-linkbutton") Create Account
+						input(id="bt_login" data-icon="action" type="button" value="Login")
+						br
+						br
+						br
+						input(id="a_createAccount" data-icon="action" type="button" value="Create Account")
+						//a(id="a_createAccount" href="user/widget_userForm" value="Create Account") fff
+
+
 
 
 
 
 	script.
+		$('#bt_login').click(function(){
+			login();
+		});
+		$('#a_createAccount').click(function(){
+			window.location = "/user/widget_userForm";
+		});
 		var login = function(){
 			$postAjax(
 				{
 					url:'/user/mobileLogin',
 					send:
 						{
-							userName:$('#mobileLogin_username').val(),
-							password:$('#mobileLogin_password').val(),
+							userName:$('#widget_userForm_userName').val(),
+							password:$('#widget_userForm_password').val(),
 							deviceId:0,
 							agent:navigator.userAgent,
 							deviceNumber:'na',
@@ -56,13 +84,14 @@ html
 						inResponseText = JSON.parse(inResponseText);
 						if(inResponseText){
 							if(inResponseText.result){
-								inResponseText.result.password = $('#mobileLogin_password').val();
-								alert(JSON.stringify(inResponseText));
+								inResponseText.result.password = $('#widget_userForm_password').val();
+								//alert(JSON.stringify(inResponseText));
 								Android.reportOnComplete(JSON.stringify(inResponseText));
 							}else{
 								//problem--
-								inResponseText.hadError = true;
-								Android.reportOnComplete(JSON.stringify(inResponseText));
+								//inResponseText.hadError = true;
+								//Android.reportOnComplete(JSON.stringify(inResponseText));
+								window.location = "/user/widget_userForm";
 							}
 						}
 						

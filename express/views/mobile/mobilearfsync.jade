@@ -52,8 +52,9 @@ head
 
 
 
-
-body(style="background-color: #b8b6b4;")
+//background-color: #b8b6b4;
+//body(style="background-image: url('public/images/ui/beach_background4.jpg')")
+body(style="background-color: #000000;")
 	script.
 		var getURL = function(){return '#{URL}';}
 		var getDefaultUserImageUrl = function(){return '#{defaultUserImageUrl}';}
@@ -73,8 +74,8 @@ body(style="background-color: #b8b6b4;")
 	//==========================================================================
 	
 	div(id="perspective" class="perspective effect-airbnb")
-		div(class="container")
-			div(class="wrapper")
+		div(class="container" style="background-image: url('/public/images/ui/accountbkg.png'); background-size: 100%;")
+			div(class="wrapper" )
 				header(class="codrops-header")
 						img(src="/public/images/ui/arfsync_logo.png")
 						//img(style="width:100%;" src="/public/images/wings/main/mainheader.jpg")

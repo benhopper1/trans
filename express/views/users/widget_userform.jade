@@ -1,17 +1,18 @@
 doctype html
 html
 	head(lang="en")
-		title ${1:title name}
+		title Account
 		meta(http-equiv="content-type", content="text/html; charset=UTF-8")
 		meta(name="description", content="")
 		meta(name="keywords", content="")
 		meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
 		// if lt IE 9
-		script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
-		//script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
-		//script(type='text/javascript', src='/js/qrcode/qrcode.js')
 
-		//script(type='text/javascript', src='/js/commmanager/commmanager.js')
+		link(rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css")
+		script(src="http://code.jquery.com/jquery-1.11.1.min.js")
+		script(src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js")
+
+		//script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
 		script(type='text/javascript', src='/js/clientutil/clientutil.js')
 
 
@@ -19,8 +20,8 @@ html
 		link(rel='stylesheet', href='/public/js/easyui/themes/default/easyui.css')
 		link(rel='stylesheet', href='/public/js/easyui/themes/default/icon.css')
 
-
-		body(style="background-color: #000000; color: #ffffff;")
+		//background-color: #000000
+		body(style="")
 
 			style.
 				.imgAndData{
@@ -69,6 +70,22 @@ html
 					background-color: #b0e0e6;
 				}
 
+				.magicSquarePnt{
+					cursor:pointer;
+					padding:4px;
+					display:inline-block;
+					font:12px/14px Arial, Helvetica, sans-serif;
+					color:#666;
+					border:1px solid #999;
+					background-color:#eee;
+					-moz-border-radius:00px;
+					-webkit-border-radius: 15px;
+					-moz-box-shadow:#999 2px 0px 3px;
+					-webkit-box-shadow:#999 2px 0px 3px;
+					margin-bottom:4px;
+				}
+
+
 				//- @-webkit-keyframes thumb {
 				//- 	0% { -webkit-transform: scale(1); }
 				//- 	50% { -webkit-transform: scale(0.5); }
@@ -104,98 +121,59 @@ html
 					-webkit-animation-timing-function: linear;
 				}
 
+				img{
+					max-width: 100%;
+				}
+
+				.ui-page {
+					background: transparent;
+				}
+				.ui-content{
+					background: transparent;
+				}
+				body {
+					background: url(/public/images/ui/accountbkg.png);
+					background-repeat:repeat-y;
+					background-position:center center;
+					background-attachment:scroll;
+					background-size:100% 100%;
+				}
 
 
 			form(action="/upload", method="post", enctype="multipart/form-data")
 				input(id="upload" type="file" name="uploadedFile" style="display: none;" onchange="console.log('changed!!!')")
 
-			//div(id="userForm_window" class="easyui-window" title="Window Layout" data-options="iconCls:'icon-save', fit:true" style="width:100%;height:100%;")
-			div(id="userForm_Area"  style="padding:10px 10px 20px 10px")
-				form(id="userForm" method="post")
-					table(cellpadding="5")
-						tr
-							td First Name:
-							td
-								input(id="widget_userForm_firstName" class="easyui-textbox" type="text" name="name" data-options="required:true")
+			//background-color:black
+			div(id="page_userForm" data-role="page" data-theme="b" style="")
+				//div(data-role="header")
+					//a(href="index.html" data-icon="delete") Cancel
+					//h1 Create User Account
+				center
+					img(src="/public/images/ui/arfsync_logo.png")
+					//a(href="index.html" data-icon="check") Save
 
-						tr
-							td Last Name:
-							td
-								input(id="widget_userForm_lastName" class="easyui-textbox" type="text" name="name" data-options="required:true")
-
-						tr
-							td Phone:
-							td
-								input(id="widget_userForm_phone" class="easyui-textbox" type="text" name="name" data-options="required:true")
-
-						tr
-							td Email:
-							td
-								input(id="widget_userForm_email" class="easyui-textbox" type="text" name="email" data-options="required:true,validType:'email'")
-
-						tr
-							td User Name:
-							td
-								input(id="widget_userForm_userName" class="easyui-textbox" type="text" name="name" data-options="required:true")
-
-						tr
-							td Password:
-							td
-								input(id="widget_userForm_password" class="easyui-textbox" type="text" name="name" data-options="required:true")
-
-						tr
-							td Verify:
-							td
-								input(id="widget_userForm_password2" class="easyui-textbox" type="text" name="name" data-options="required:true")
-
-						tr
-							td Address:
-							td
-								input(id="widget_userForm_address" class="easyui-textbox" type="text" name="name" data-options="required:true")
-
-						tr
-							td City:
-							td
-								input(id="widget_userForm_city" class="easyui-textbox" type="text" name="name" data-options="required:true")
-
-						tr
-							td State:
-							td
-								input(id="widget_userForm_state" class="easyui-textbox" type="text" name="name" data-options="required:true")
-
-						tr
-							td Zipcode:
-							td
-								input(id="widget_userForm_zipcode" class="easyui-textbox" type="text" name="name" data-options="required:true")
-
-						tr
-							td Country:
-							td
-								input(id="widget_userForm_country" class="easyui-textbox" type="text" name="name" data-options="required:true")
-
-
-
-
-						tr
-							td Image:
-							td
-								a(id="tt_0" title="Click to select a local image."  class="easyui-tooltip")
-									center
-										img(id="widget_userForm_image" class="magicCircPnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" onclick="Widget_userFormScript.chooseFile();")
-										//img(id="widget_userForm_image" class="magicCircPnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" onclick="Android.fileChooser();")
-
-
-						tr
-							td
-								a(id="addEditUser_save" href="javascript:void(0)" class="easyui-linkbutton" ) Save
-							td
-								a(id="addEditUser_clear" href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()") Clear
-
-				//- div(id="addContactBottomArea"  style="text-align:center;padding:5px")
-				//- 	a(id="addEditUser_save" href="javascript:void(0)" class="easyui-linkbutton" onclick="Widget_userFormScript.addToStore()") Save
-				//- 	a(id="addEditUser_clear" href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()") Clear
-
-
+				div(id="contactsWindow" data-role="main" class="ui-content")
+					form(method="post" id="userForm")
+						div(class="ui-field-contain")
+							//label(for="fname" class="ui-hidden-accessible") Firstname
+							input(tabindex="1" type="text" id="widget_userForm_firstName" 	name="fname" 		placeholder="First Name...")
+							input(tabindex="2" type="text" id="widget_userForm_lastName" 	name="lName" 		placeholder="Last Name...")
+							input(tabindex="3" type="text" id="widget_userForm_phone" 		name="phoneNumber" 	placeholder="Phone Number...")
+							input(tabindex="4" type="email" id="widget_userForm_email" 		name="email" 		placeholder="Email Address...")
+							input(tabindex="5" type="text" id="widget_userForm_userName" 	name="userName" 	placeholder="User Name...")
+							input(tabindex="6" type="password" id="widget_userForm_password" 	name="password" 	placeholder="Password...")
+							input(tabindex="7" type="password" id="widget_userForm_password2" 	name="password2" 	placeholder="Password Again (sorry!!)...")
+							input(tabindex="8" type="text" id="widget_userForm_address" 		name="address" 		placeholder="Address...")
+							input(tabindex="9" type="text" id="widget_userForm_city" 		name="city" 		placeholder="City...")
+							input(tabindex="10" type="text" id="widget_userForm_state" 		name="state" 		placeholder="State...")
+							input(tabindex="11" type="text" id="widget_userForm_zipcode" 		name="zip" 			placeholder="Zip Code...")
+							input(tabindex="12" type="text" id="widget_userForm_country" 		name="country" 		placeholder="Country...")
+							center
+								h6 (click to change)
+								img(id="widget_userForm_image" name="uImg" class="magicSquarePnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" onclick="Widget_userFormScript.chooseFile();")
+								h5 This is you 
+							input(data-icon="action" id="addEditUser_save" 	type="button" value="Save")
+							input(data-icon="back" id="addEditUser_clear" 	type="button" value="Cancel")
 
 
 
@@ -225,23 +203,23 @@ html
 								},
 							});
 
-							$('#addEditUser_save').linkbutton(
-								{
-									text:'Save',
-									//iconCls:'icon-send',
-									//iconAlign:'left',
-									width:80
-								}
-							);
+							//- $('#addEditUser_save').linkbutton(
+							//- 	{
+							//- 		text:'Save',
+							//- 		//iconCls:'icon-send',
+							//- 		//iconAlign:'left',
+							//- 		width:80
+							//- 	}
+							//- );
 
-							$('#addEditUser_clear').linkbutton(
-								{
-									text:'Clear',
-									//iconCls:'icon-send',
-									//iconAlign:'left',
-									width:80
-								}
-							);
+							//- $('#addEditUser_clear').linkbutton(
+							//- 	{
+							//- 		text:'Clear',
+							//- 		//iconCls:'icon-send',
+							//- 		//iconAlign:'left',
+							//- 		width:80
+							//- 	}
+							//- );
 
 							//==============================================
 							// EVENT SETUP
@@ -249,15 +227,25 @@ html
 							$('#addEditUser_save').click(function(){
 								_this.addToStore();
 							});
+							$('#addEditUser_clear').click(function(){
+								//- $.get( "/users/checkemail", function(data){
+								//- 	$("#contactsWindow").html(data);
+								//- });
+								_this.cancel();
+							});
 							
 						}
 
 						this.updateImageSource = function(inSrc){
-							console.log('updateImageSource ENTERED(html):' + inSrc);
+							//console.log('updateImageSource ENTERED(html):' + inSrc);
 							$('#widget_userForm_image').attr('src', inSrc);
-							$('#widget_userForm_country').val(inSrc);
-							console.log($('#widget_userForm_image').attr('src'));
-							console.log($('#widget_userForm_country').val());
+							//$('#widget_userForm_country').val(inSrc);
+							//console.log($('#widget_userForm_image').attr('src'));
+							//console.log($('#widget_userForm_country').val());
+						}
+
+						this.cancel = function(){
+							window.location = "/user/mobilelogin";
 						}
 
 						this.close = function(){
@@ -312,13 +300,15 @@ html
 											//activateCode:	$('#widget_userForm_firstName').val(),
 										},
 									onAjaxSuccess:function(inHtml){
-										inResponseText = JSON.parse(inResponseText);
+										inResponseText = JSON.parse(inHtml);
 										console.log('back from db------------');
-										$.get( "/users/checkemail", function(data){
-											$("#contactsWindow").append(data);
-										});
+										//- $.get( "/users/checkemail", function(data){
+										//- 	$("#contactsWindow").append(data);
+										//- });
+										//$.mobile.loadPage("/users/checkemail");
 										//console.dir(inResponseText);
 										//$('body').html(inHtml);//{renders:users/checkemail.jade}
+										$('#contactsWindow').load("/users/checkemail #form_checkMail");
 									}
 								}
 							);
@@ -333,5 +323,25 @@ html
 						_this.load();
 						_this.show();
 					}();
+
+					
+
+					//- $('#main').css({
+					//- 	'height': ($(document).height()) + 'px'
+					//- });
+
+					//- $(window).resize(function () {
+					//- 	$('#main').css({
+					//- 		'height': ($(document).height()) + 'px'
+					//- 	});
+					//- });
+					//if((Browser.Platform.ios) || (Browser.Platform.webos) || (Browser.Platform.android)) {
+						//For iPhone and Andriod To remove Address bar when viewing website on Safari Mobile
+						// When ready...
+						//window.addEventListener("load",function() {
+						// Set a timeout...
+						
+						//});
+					//}
 
 				});

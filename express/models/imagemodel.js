@@ -47,7 +47,7 @@ var Model = function(){
 		  	//----Testing purpose only------
 		  	.stroke("#ffffff")
 			.font("Helvetica.ttf", 9)
-			.drawText(5, 20, "Demo by Ben Hopper")
+			.drawText(5, 20, "arfSync by Ben Hopper")
 			//-------------------------------
 
 		  	.crop(configData.themes[inTheme].cropX, configData.themes[inTheme].cropY)
