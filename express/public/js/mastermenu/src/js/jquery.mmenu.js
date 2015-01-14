@@ -1471,6 +1471,7 @@ var MasterMenu = function(inJsonStruct){
 		var options = 
 			{
 				sliderDivId:'',
+				startPlay:false,
 				sliderUrl:'',
 				imageUrlArray:[],
 				informationArray:[],

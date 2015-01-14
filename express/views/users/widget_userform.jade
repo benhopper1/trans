@@ -181,8 +181,8 @@ html
 							td
 								a(id="tt_0" title="Click to select a local image."  class="easyui-tooltip")
 									center
-										//img(id="widget_userForm_image" class="magicCircPnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" onclick="Widget_userFormScript.chooseFile();")
-										img(id="widget_userForm_image" class="magicCircPnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" onclick="Android.fileChooser();")
+										img(id="widget_userForm_image" class="magicCircPnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" onclick="Widget_userFormScript.chooseFile();")
+										//img(id="widget_userForm_image" class="magicCircPnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" onclick="Android.fileChooser();")
 
 
 						tr
@@ -200,10 +200,10 @@ html
 
 
 			script.
-
+				var Widget_userFormScript;
 				$(document).ready(function(){
 
-					var Widget_userFormScript = new function(){
+					Widget_userFormScript = new function(){
 						var _this = this;
 
 						$('#upload').change(function(){
@@ -332,6 +332,6 @@ html
 
 						_this.load();
 						_this.show();
-					});
+					}();
 
-				}
+				});

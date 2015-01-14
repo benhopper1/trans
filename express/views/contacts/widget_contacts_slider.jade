@@ -227,18 +227,30 @@ html(lang="en")
 		//Jssor Slider End
 
 		script.
+			
+			/*if(startPlay == true){
+				alert('startPlay == true');
+			}else{
+				alert('startPlay == false');
+			}*/
 			var ContactsSlider = new function(){
 				var _this = this;
 
 				this.autoSelectSwipe = false;
 				this.startAutoSlide = function(){
 					console.log("slide PAUSE");
+
+					//guard for fresh load
+					//setTimeout(function(){
 					jssor_slider2.$Play(true);
+					//}, 500);
 				}
 
 				this.stopAutoSlide = function(){
 					console.log("slide PAUSE");
+					//setTimeout(function(){
 					jssor_slider2.$Pause();
+					//}, 500);
 				}
 
 				this.startAutoSelectSwipe = function(){
@@ -255,3 +267,13 @@ html(lang="en")
 
 				
 			}();
+
+			$( document ).ready(function(){
+				var startPlay = !{JSON.stringify(startPlay)}
+				if(startPlay == true){
+					ContactsSlider.startAutoSlide();
+				}
+				if(startPlay == false){
+					ContactsSlider.stopAutoSelectSwipe();
+				}
+			});

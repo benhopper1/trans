@@ -48,6 +48,7 @@ module.exports.controller = function(app){
 				webSocketClient:configData.webSocketClient,
 				defaultUserImageUrl:configData.defaultUserImageUrl,
 				defaultMemberImageUrl:configData.defaultMemberImageUrl,
+				startPlay:false,
 				data:
 					{
 					},

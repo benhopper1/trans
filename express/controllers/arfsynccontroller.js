@@ -57,6 +57,24 @@ module.exports.controller = function(app){
 		);
 	});
 
+	app.get('/mobile/arfsync', function(req, res){
+		console.log("/mobile/arfsync");
+		res.render('mobile/mobilearfsync.jade',
+			{
+				userId:req.cookies.userId,
+				deviceId:"815",//req.cookies.deviceId,
+				URL:configData.domain.address + ":" + configData.domain.port,
+				androidAppRoute:configData.androidAppRoute,
+				webSocketClient:configData.webSocketClient,
+				defaultUserImageUrl:configData.defaultUserImageUrl,
+				defaultMemberImageUrl:configData.defaultMemberImageUrl,
+				data:
+					{
+					}
+			}
+		);
+	});
+
 
 
 
