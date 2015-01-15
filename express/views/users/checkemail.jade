@@ -32,26 +32,31 @@ html
 				background-attachment:scroll;
 				background-size:100% 100%;
 			}
+			
+					
 
+		//#remoteLoadHereDiv
 		div(id="page_checkMail" data-role="page" data-theme="b" style="")
-			div(id="contactsWindow" data-role="main" class="ui-content")
-				form(id="form_checkMail" method="post" id="userForm")
-					center(id="checkMailDiv")
-						h3
-							p You will be sent an email that includes a link to activate your account.
-							| After you activate your account just click the button  below or restart 
-							| this app at any time to
-							| login to arfSync.
+			#remoteLoadHereDiv
+				//div(id="checkmaildivaa" data-role="main" class="ui-content")
+				//form(id="form_checkMail" method="post" )
+				center(id="checkMailDiv")
+					h3
+						p You will be sent an email that includes a link to activate your account.
+						| After you activate your account just click the button  below or restart 
+						| this app at any time to
+						| login to arfSync.
 
 
-						//a(href="mailto:someone@example.com?Subject=Hello%20again") linkkkkk
-					br
-					br
-					br
-					input(id="bt_login_postMail" data-icon="action" type="button" value="Login")
-					//button(id="widgetContactsCollection_buttonOk" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" href="javascript:AndroidFunction.save('actionName');" onclick="AndroidFunction.save('actionName');" style="width:80px") Ok
-					//button(onclick="Android.showBase();") showBase
-					//button(onclick="Android.reportOnEvent('do email man!!', {});") email
+				//a(href="mailto:someone@example.com?Subject=Hello%20again") linkkkkk
+				br
+				br
+				br
+				input(data-icon="action" id="bt_login_postMail" 	type="button" value="Login" style="")
+
+				//button(id="widgetContactsCollection_buttonOk" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" href="javascript:AndroidFunction.save('actionName');" onclick="AndroidFunction.save('actionName');" style="width:80px") Ok
+				//button(onclick="Android.showBase();") showBase
+				//button(onclick="Android.reportOnEvent('do email man!!', {});") email
 
 
 

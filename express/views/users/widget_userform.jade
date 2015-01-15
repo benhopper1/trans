@@ -142,7 +142,7 @@ html
 						div(class="ui-field-contain")
 							input(tabindex="1" type="text" id="widget_userForm_firstName" 	name="fname" 		placeholder="First Name...")
 							input(tabindex="2" type="text" id="widget_userForm_lastName" 	name="lName" 		placeholder="Last Name...")
-							input(tabindex="3" type="text" id="widget_userForm_phone" 		name="phoneNumber" 	placeholder="Phone Number...")
+							input(tabindex="3" type="tel" id="widget_userForm_phone" 		name="phoneNumber" 	placeholder="Phone Number...")
 							input(tabindex="4" type="email" id="widget_userForm_email" 		name="email" 		placeholder="Email Address...")
 							input(tabindex="5" type="text" id="widget_userForm_userName" 	name="userName" 	placeholder="User Name...")
 							input(tabindex="6" type="password" id="widget_userForm_password" 	name="password" 	placeholder="Password...")
@@ -159,11 +159,16 @@ html
 							input(data-icon="action" id="addEditUser_save" 	type="button" value="Save")
 							input(data-icon="back" id="addEditUser_clear" 	type="button" value="Cancel")
 
-
+			div(id="page_userForm2" data-role="page" data-dialog="true" data-theme="b" style="" class=".center-me")
+			#xxxxx
+				input(data-icon="action" id="bt_login_postMail" 	type="button" value="Login" style="")
 
 			script.
 				var Widget_userFormScript;
 				$(document).ready(function(){
+
+					//$("div").data("test", { first: 16, last: "pizza!" });
+					//alert($('div').data('test').first);
 
 					Widget_userFormScript = new function(){
 						var _this = this;
@@ -195,8 +200,8 @@ html
 								_this.addToStore();
 							});
 							$('#addEditUser_clear').click(function(){
-								//_this.cancel();
-								alert($("#widget_userForm_phone").cleanPhoneNumber());
+								_this.cancel();
+								//alert($("#widget_userForm_phone").cleanPhoneNumber());
 							});
 							
 						}
@@ -262,7 +267,10 @@ html
 										},
 									onAjaxSuccess:function(inHtml){
 										inResponseText = JSON.parse(inHtml);
-										$('#contactsWindow').load("/users/checkemail #form_checkMail");
+										console.log('loading');
+										$('#xxxxx').load("/users/checkemail #remoteLoadHereDiv");
+										//$('#page_checkMail').trigger('click');
+										$.mobile.changePage("#xxxxx");
 									}
 								}
 							);
@@ -272,5 +280,13 @@ html
 						_this.load();
 						_this.show();
 					}();
+
+				});
+
+				//
+
+				$('#widget_userForm_phone').blur(function(){
+					//alert('blured!!!');
+					$(this).val('tttttt');
 
 				});
