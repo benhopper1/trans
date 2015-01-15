@@ -6,13 +6,13 @@ html
 		meta(name="description", content="")
 		meta(name="keywords", content="")
 		meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
-		// if lt IE 9
+
 
 		link(rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css")
 		script(src="http://code.jquery.com/jquery-1.11.1.min.js")
 		script(src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js")
+		script(src="/public/js/jquery/hopper/jquery.hopper.extention.js")
 
-		//script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
 		script(type='text/javascript', src='/js/clientutil/clientutil.js')
 
 
@@ -20,7 +20,6 @@ html
 		link(rel='stylesheet', href='/public/js/easyui/themes/default/easyui.css')
 		link(rel='stylesheet', href='/public/js/easyui/themes/default/icon.css')
 
-		//background-color: #000000
 		body(style="")
 
 			style.
@@ -86,20 +85,6 @@ html
 				}
 
 
-				//- @-webkit-keyframes thumb {
-				//- 	0% { -webkit-transform: scale(1); }
-				//- 	50% { -webkit-transform: scale(0.5); }
-				//- 	100% { -webkit-transform: scale(1); }
-				//- }
-
-				//- .backbutton img:hover{
-				//- 	-webkit-animation-name: thumb;
-				//- 	-webkit-animation-duration: 200ms;
-				//- 	-webkit-transform-origin:50% 50%;
-				//- 	-webkit-animation-iteration-count: 2;
-				//- 	-webkit-animation-timing-function: linear;
-				//- }
-
 				@-webkit-keyframes spaceboots {
 					0% { -webkit-transform: translate(2px, 1px) rotate(0deg); }
 					10% { -webkit-transform: translate(-1px, -2px) rotate(-40deg); }
@@ -117,7 +102,7 @@ html
 					-webkit-animation-name: spaceboots;
 					-webkit-animation-duration: 0.8s;
 					-webkit-transform-origin:50% 50%;
-					-webkit-animation-iteration-count: 15;//infinite;
+					-webkit-animation-iteration-count: 15;
 					-webkit-animation-timing-function: linear;
 				}
 
@@ -127,10 +112,15 @@ html
 
 				.ui-page {
 					background: transparent;
+					//max-width: 400px;
 				}
 				.ui-content{
 					background: transparent;
 				}
+				.center-me {
+					//margin: 0 auto !important;
+				}
+
 				body {
 					background: url(/public/images/ui/accountbkg.png);
 					background-repeat:repeat-y;
@@ -143,19 +133,13 @@ html
 			form(action="/upload", method="post", enctype="multipart/form-data")
 				input(id="upload" type="file" name="uploadedFile" style="display: none;" onchange="console.log('changed!!!')")
 
-			//background-color:black
-			div(id="page_userForm" data-role="page" data-theme="b" style="")
-				//div(data-role="header")
-					//a(href="index.html" data-icon="delete") Cancel
-					//h1 Create User Account
+			div(id="page_userForm" data-role="page" data-dialog="true" data-theme="b" style="" class=".center-me")
 				center
 					img(src="/public/images/ui/arfsync_logo.png")
-					//a(href="index.html" data-icon="check") Save
 
-				div(id="contactsWindow" data-role="main" class="ui-content")
+				div(id="contactsWindow" data-role="main"  class="ui-content" style="")
 					form(method="post" id="userForm")
 						div(class="ui-field-contain")
-							//label(for="fname" class="ui-hidden-accessible") Firstname
 							input(tabindex="1" type="text" id="widget_userForm_firstName" 	name="fname" 		placeholder="First Name...")
 							input(tabindex="2" type="text" id="widget_userForm_lastName" 	name="lName" 		placeholder="Last Name...")
 							input(tabindex="3" type="text" id="widget_userForm_phone" 		name="phoneNumber" 	placeholder="Phone Number...")
@@ -203,23 +187,6 @@ html
 								},
 							});
 
-							//- $('#addEditUser_save').linkbutton(
-							//- 	{
-							//- 		text:'Save',
-							//- 		//iconCls:'icon-send',
-							//- 		//iconAlign:'left',
-							//- 		width:80
-							//- 	}
-							//- );
-
-							//- $('#addEditUser_clear').linkbutton(
-							//- 	{
-							//- 		text:'Clear',
-							//- 		//iconCls:'icon-send',
-							//- 		//iconAlign:'left',
-							//- 		width:80
-							//- 	}
-							//- );
 
 							//==============================================
 							// EVENT SETUP
@@ -228,20 +195,14 @@ html
 								_this.addToStore();
 							});
 							$('#addEditUser_clear').click(function(){
-								//- $.get( "/users/checkemail", function(data){
-								//- 	$("#contactsWindow").html(data);
-								//- });
-								_this.cancel();
+								//_this.cancel();
+								alert($("#widget_userForm_phone").cleanPhoneNumber());
 							});
 							
 						}
 
 						this.updateImageSource = function(inSrc){
-							//console.log('updateImageSource ENTERED(html):' + inSrc);
 							$('#widget_userForm_image').attr('src', inSrc);
-							//$('#widget_userForm_country').val(inSrc);
-							//console.log($('#widget_userForm_image').attr('src'));
-							//console.log($('#widget_userForm_country').val());
 						}
 
 						this.cancel = function(){
@@ -288,6 +249,7 @@ html
 										{
 											firstName:		$('#widget_userForm_firstName').val(),
 											lastName:		$('#widget_userForm_lastName').val(),
+											phoneNumber:	$('#widget_userForm_phone').val(),
 											emailAddress:	$('#widget_userForm_email').val(),
 											userName:		$('#widget_userForm_userName').val(),
 											password:		$('#widget_userForm_password').val(),
@@ -297,17 +259,9 @@ html
 											zipcode:		$('#widget_userForm_zipcode').val(),
 											country:		$('#widget_userForm_country').val(),
 											screenImage:	$('#widget_userForm_image').attr('src'),
-											//activateCode:	$('#widget_userForm_firstName').val(),
 										},
 									onAjaxSuccess:function(inHtml){
 										inResponseText = JSON.parse(inHtml);
-										console.log('back from db------------');
-										//- $.get( "/users/checkemail", function(data){
-										//- 	$("#contactsWindow").append(data);
-										//- });
-										//$.mobile.loadPage("/users/checkemail");
-										//console.dir(inResponseText);
-										//$('body').html(inHtml);//{renders:users/checkemail.jade}
 										$('#contactsWindow').load("/users/checkemail #form_checkMail");
 									}
 								}
@@ -315,33 +269,8 @@ html
 
 						}
 
-
-
-
-
-
 						_this.load();
 						_this.show();
 					}();
-
-					
-
-					//- $('#main').css({
-					//- 	'height': ($(document).height()) + 'px'
-					//- });
-
-					//- $(window).resize(function () {
-					//- 	$('#main').css({
-					//- 		'height': ($(document).height()) + 'px'
-					//- 	});
-					//- });
-					//if((Browser.Platform.ios) || (Browser.Platform.webos) || (Browser.Platform.android)) {
-						//For iPhone and Andriod To remove Address bar when viewing website on Safari Mobile
-						// When ready...
-						//window.addEventListener("load",function() {
-						// Set a timeout...
-						
-						//});
-					//}
 
 				});
