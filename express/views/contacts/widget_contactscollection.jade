@@ -1,4 +1,13 @@
+
+style.
+	.roundCorner{
+		-webkit-border-radius: 23px 27px 25px 24px;	-moz-border-radius: 23px 27px 25px 24px;border-radius: 23px 27px 25px 24px;background:rgba(227,162,11,0.9);-webkit-box-shadow: #B3B3B3 22px 22px 22px;-moz-box-shadow: #B3B3B3 22px 22px 22px; box-shadow: #B3B3B3 22px 22px 22px;
+	}
 body
+
+	
+
+
 	#hiddenDiv(style="display: none;")
 		a(id="bt_webMenu_addContact" href="#")
 		a(id="bt_webMenu_editContact" href="#")
@@ -10,7 +19,7 @@ body
 
 
 
-	div(id="widgetContactsCollectionDiv" class="easyui-window" title="Window Layout" data-options="iconCls:'icon-save'" style="width:80%;height:80%;padding:5px;")
+	div(id="widgetContactsCollectionDiv" class="easyui-window roundCorner" title="Window Layout" data-options="iconCls:'icon-save'" style="width:80%;height:80%;padding:5px;")
 		div(id="widgetContactsCollection_layout_0" class="easyui-layout" data-options="fit:true")
 			div(data-options="region:'east',split:true" style="width:50%")
 
@@ -104,6 +113,8 @@ body
 					modal:false,
 					minimizable:false,
 					maximizable:false,
+					shadow:true,
+					bodyCls:'magicCirc',
 					onBeforeClose: function(){},
 					onOpen:function(){
 						//_this.menuChangeToContacts(); // got focus call

@@ -14,6 +14,7 @@ body(style="")
 	link(rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css")
 	script(src="http://code.jquery.com/jquery-1.11.1.min.js")
 	script(src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js")
+	
 	script(src="/public/js/jquery/hopper/jquery.hopper.extention.js")
 
 	script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
@@ -25,10 +26,10 @@ body(style="")
 
 
 
-	script(type='text/javascript', src='/public/js/easyui/jquery.easyui.min.js')
-	script(type='text/javascript', src='/public/js/easyui/hopper/easyui.extention.js')
-	link(rel='stylesheet', href='/public/js/easyui/themes/ui-sunny/easyui.css')
-	link(rel='stylesheet', href='/public/js/easyui/themes/default/icon.css')
+	//script(type='text/javascript', src='/public/js/easyui/jquery.easyui.min.js')
+	//script(type='text/javascript', src='/public/js/easyui/hopper/easyui.extention.js')
+	//link(rel='stylesheet', href='/public/js/easyui/themes/ui-sunny/easyui.css')
+	//link(rel='stylesheet', href='/public/js/easyui/themes/default/icon.css')
 
 
 
@@ -47,12 +48,12 @@ body(style="")
 
 	style.
 		.mm-menu
-				{
-					background: rgba( 0, 0, 0, 0.6 );
-					box-shadow: none !important;
-					text-align: center;
-					color: #fff;
-				}
+			{
+				background: rgba( 0, 0, 0, 0.6 );
+				box-shadow: none !important;
+				text-align: center;
+				color: #fff;
+			}
 		.logo{
 				border: 1px solid #fff;
 				line-height: 40px;
@@ -137,6 +138,19 @@ body(style="")
 		.magicPointer{
 			cursor:pointer;
 		}
+		.magicSquare{
+			padding:4px;
+			display:inline-block;
+			font:12px/14px Arial, Helvetica, sans-serif;
+			color:#666;
+			border:1px solid #999;
+			background-color:#eee;
+			-moz-border-radius:00px;
+			-webkit-border-radius: 15px;
+			-moz-box-shadow:#999 2px 0px 3px;
+			-webkit-box-shadow:#999 2px 0px 3px;
+			margin-bottom:4px;
+		}
 
 		body {
 			background: url(public/images/ui/beach_background4.jpg);
@@ -168,14 +182,38 @@ body(style="")
 		//- .ui-li-has-thumb .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li-has-thumb{
 		//- 	min-height: 68px !important;
 		//- }
-		#mainmenu li{
-			//background-color: transparent !important;
+		/* this changes the actual div*/
+		#mainmenu li a{
+			background-color: transparent !important;
 			//background-image: url('') !important;
 			//background: rgb(0, 0, 0);
 			//background: rgba(0, 0, 0, 0.6);
 		}
+		#mainmenu li a:hover { 
+			background-color:#feeebd !important;
+		}
+		#mainmenu li a:active { 
+			background-color:#817865 !important;
+		}
+
+		#mainmenu li a img { 
+			height:80px;
+		}
+
+		/* Place on a div */
+		.listViewMenu{
+			background-color: transparent !important;
+		}
+		.listViewMenu:hover { 
+				background-color:#feeebd !important;
+		}
+		.listViewMenu:active { 
+				background-color:#817865 !important;
+		}
+
 
 		.menu_li{
+			//background-color:black !important;
 			background-color: transparent !important;
 			//background: rgb(0, 0, 0);
 			//background: rgba(0, 0, 0, 0.6);
@@ -183,7 +221,7 @@ body(style="")
 		}
 		.ui-listview li {
 			width: 100% !important;
-			margin: 1% !important;
+			margin: 0% !important;
 			float: left;
 			border: 1px solid #ccc !important;
 			box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
@@ -193,120 +231,141 @@ body(style="")
 			no-repeat left top; 
 		}
 
+		.transparent{
+			background-color: transparent !important;
+		}
+
+		/*collapsable css fix padding for inset*/
+		.ui-collapsible div ul {
+			margin: -0.6em 0 !important;
+		}
+
+		.ui-collapsible div ul .ui-corner-top, .ui-collapsible div ul .ui-corner-bottom {
+		    border-radius: 0;
+		}
+
+		.ui-collapsible div ul li.ui-li-divider {
+			padding: 0.5em 15px 0.5em 12px !important;
+		}
+
+
+
+	div(id="pg_contactManager" data-role="page" style="")
+		div(data-role="header" data-position="fixed")
+			h1 jQuery Mobile Example
+
+		div(class="ui-grid-c" style="")
+			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid A @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+			div(class="ui-block-a" style="width:25%")
+				div(data-role="collapsible" class="" data-content-theme="d" data-inset="false" data-collapsed="false" data-mini="true" data-iconpos="right" style="padding: 0px 0px 0.5em 12px !important;width:100%; height:100%;border: 0px")
+					h3(style="margin-top: 0px !important;margin-bottom: 0px !important;") my heading
+					div(class="ui-content" data-position-to="window" style="width:90%; ")
+						a(href="#contactPanel_0" data-ajax="false" style="")
+						ul(data-role="listview" id="contactsMenu" class=""   data-inset="false" style="width:100%; ")
+
+			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+			div(class="ui-block-b" style="width:75%;")
+
+				input(data-icon="back" id="bt_contactEdit_cancel" 	data-mini="true" type="button" value="Cancel")
+				#harry2
 
 
 
 
-	div(id="page_userForm" data-role="page"  data-fullscreen="true" data-theme="a"  class=".center-me" )
-		center
-			img(src="/public/images/ui/arfsync_logo.png")
+			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+			div(class="ui-block-c" style="width:0%") 
+			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+			div(class="ui-block-d" style="width:0%") 
+		div(data-role="footer" data-position="fixed")
+			h6 footer
 
-		div(id="menuPanel" class="easyui-panel" title="My Panel" style="width:500px;height:150px;padding:10px;background:#fafafa;" data-options="iconCls:'icon-save',closable:true, collapsible:true,minimizable:true,maximizable:true")
-			ul(data-role="listview" id="mainmenu" class=""  data-inset="true")
-				li(id="contactManagerDiv" class="menu_li")
-					a("/hjhjhjh") Contact Manager
-						img(src="/public/images/ui/userconfig.png" height="50px")
-				//br
-				li(id="smsManagerDiv" class="menu_li")
-					a("/hjhjhjh") Sms Manager
-						img(src="/public/images/ui/mobile-sms.png" height="50px")
-				//br
-				li(id="handsetControllerDiv" class="menu_li")
-					a("/hjhjhjh") Handset Controller
-						img(src="/public/images/ui/androidPhoneImg.png" height="50px")
-				//br
-				li(id="downloaddiv" class="menu_li")
-					a("/hjhjhjh") Download Android App
-						img(src="/public/images/ui/download_android_app_button.png" height="50px")
-				//br
-				li(class="menu_li")
-					a("/hjhjhjh") XXXXXXXX
-						img(src="/public/images/ui/userconfig.png" height="50px")
+
+
+
+
+
+	script.
+		$(document).ready(function(){
+			setHeight();
+			$('#contactsMenu').ContactListView('create', 
+				{
+					test:'hopperTestrVal55'
+				}
+			);
+			$('#contactsMenu').ContactListView('loadData');
 
 			
-		//div(data-role="panel" id="mypanel" data-position="left" data-display="push" style="background-color: transparent !important;")
-			div(class="ui-field-contain" id="main_bg" style="width:300px; left:0px")
-				ul(data-role="listview" id="mainmenu" class=""  data-inset="true")
-					li(id="contactManagerDiv" class="menu_li")
-						a("/hjhjhjh") Contact Manager
-							img(src="/public/images/ui/userconfig.png" height="50px")
-					//br
-					li(id="smsManagerDiv" class="menu_li")
-						a("/hjhjhjh") Sms Manager
-							img(src="/public/images/ui/mobile-sms.png" height="50px")
-					//br
-					li(id="handsetControllerDiv" class="menu_li")
-						a("/hjhjhjh") Handset Controller
-							img(src="/public/images/ui/androidPhoneImg.png" height="50px")
-					//br
-					li(id="downloaddiv" class="menu_li")
-						a("/hjhjhjh") Download Android App
-							img(src="/public/images/ui/download_android_app_button.png" height="50px")
-					//br
-					li(class="menu_li")
-						a("/hjhjhjh") XXXXXXXX
-							img(src="/public/images/ui/userconfig.png" height="50px")
 
+			$('#tab_export').load("/jqm/contactexport ", function(){
+				console.log('loaded');
+				$('#tab_export').trigger('create');
 
+			});
 
-		#masterDiv(style="border:0px;")
-			#qrAccord(class="easyui-accordion center magicShadow" data-options="" style=" width:320px; ")
-				#lay1(title="Scan to login" data-options="iconCls:'icon-search',collapsed:false,collapsible:true" style="padding:10px;")
-					center
-						#qrCodeDiv(style="background-color: #ffffff;")
-				#lay2(title="Who" data-options="" style="padding:10px; background:-webkit-gradient(linear, 0% 24%, 0% 73%, from(#221AC4), to(#2779C3));")
-					center
-						#ffffff
-							img(id="loginUserImage" src="")
-							h1(id="loginUserFullName") unknown
+			$('#harry2').HorizontalRadioGroup('create',
+				{
+					id:'radioGrp_0',
+					class:'',
+					dataTheme:'a',
+					dataType:'horizontal',
+					legend:'',
+					radioArray:
+						[
+							{
+								caption:'[MOBILE]',
+								value:'on',
+								checked:true
+							},
+							{
+								caption:'[HOME]',
+								value:'other',
+								checked:false
+							},
+							{
+								caption:'[WORK]',
+								value:'other',
+								checked:false
+							},
+							{
+								caption:'[OTHER]',
+								value:'off',
+								checked:false
+							}
 
-		#smsWindowDiv
-		#contactsWindow
-		#testHandset
-		#welcome_phoneWindowDiv
+						],
+					onSelect:function(inCaption){
+						//alert(inCaption);
+					}
+				}
+			);
+			//$('#harry2').HorizontalRadioGroup('test');
+			$('#harry2').HorizontalRadioGroup('load');
+			//$('#harry2').HorizontalRadioGroup('setSelected', 2);
+			$('#harry2').HorizontalRadioGroup('setSelected', '[WORK]');
 
+			$('#bt_contactEdit_cancel').click(function(){
+				$('#harry2').HorizontalRadioGroup('getSelected');
+				console.log('seting');
+				$('#harry2').HorizontalRadioGroup('setSelected', '[OTHER]');
+			});
 
-
-	script.
-		//var theNewDiv = $(document.createElement('div'));
-		//theNewDiv.attr('id', 'validationRulesDiv'); //id = 'validationRulesDiv';
-		//alert(theNewDiv.attr('id'));
-		//$('body').append(theNewDiv);
-		////$("div").data("test", { first: 16, last: "pizza!" });
-		//$('#validationRulesDiv').data("test", { first: 16, last: "pizza!" });
-		//
-		//alert($('#validationRulesDiv').attr('id'));
-
-
-		$(document).ready(function(){
-
-
-		$('#menuPanel').panel({
-			width:500,
-			height:150,
-			title:'My Panel',
-			tools:
-				[{
-				iconCls:'icon-add',
-				handler:function(){alert('new')}
-				},{
-				iconCls:'icon-save',
-				handler:function(){alert('save')}
-			}]
-		}); 
-
-
-
-
-
-		//$( "#mypanel" ).trigger( "updatelayout" );
-		//$( "#mypanel" ).panel( "open" , {} );
-		//- 	var theNewDiv = $(document.createElement('div'));
-		//- theNewDiv.attr('id', 'validationRulesDiv'); //id = 'validationRulesDiv';
-		//- alert(theNewDiv.attr('id'));
-		//- $('body').append(theNewDiv);
-		//- //$("div").data("test", { first: 16, last: "pizza!" });
-		//- $('#validationRulesDiv').data("test", { first: 16, last: "pizza!" });
-
-		//- 	alert($('#validationRulesDiv').attr('id'));
 		});
+
+
+
+		var setHeight = function(){
+			var screen = $.mobile.getScreenHeight();
+			var header = $(".ui-header").hasClass("ui-header-fixed") ? $(".ui-header").outerHeight()  - 1 : $(".ui-header").outerHeight();
+			var footer = $(".ui-footer").hasClass("ui-footer-fixed") ? $(".ui-footer").outerHeight() - 1 : $(".ui-footer").outerHeight();
+			
+			/* content div has padding of 1em = 16px (32px top+bottom). This step
+				can be skipped by subtracting 32px from content var directly. 
+			*/
+			var contentCurrent = $(".ui-content").outerHeight() - $(".ui-content").height();
+
+			var content = screen - header - footer - contentCurrent;
+
+			$(".ui-content").height(content);
+		}
+
+

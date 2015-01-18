@@ -52,3 +52,38 @@ div(data-role="main" class="ui-content" syle="")
 			li(class="menu_li")
 				a("/hjhjhjh") XXXXXXXX
 					img(src="/public/images/ui/userconfig.png" )
+
+
+
+
+Also don't forget to call .listview( twice, first without refresh parameter, and 
+second time with a refresh parameter. Without it you will receive this error:
+cannot call methods on listview prior to initialization
+
+
+var appendList = function(){
+	var imageUrl = '/public/images/contacts/7887d790-94fe-11e4-8136-2de23de6a176.jpg';
+	var name = 'Pepper Hopper';
+	var number = '1(256)777-8888';
+	var type = '[WORK]';
+
+	var html = '' + 
+		'<li class="menu_li"  data-inset="true">' 													+ ' ' +
+			'<a "/hjhjhjh"> ' + name 										+ ' ' +
+				'<img src="' + imageUrl + '" class="magicCirc" height="50px"/>'				+ ' ' +
+				'<p>' + number + '</p>'											+ ' ' +
+				'<p>' + type + '</p>'											+ ' ' +
+			'</a>'																+ ' ' +
+		'</li>'
+	;
+
+	$('#mainmenu').append(html);
+	$('#mainmenu').listview().listview('refresh');
+}
+
+
+
+===================================================
+LEFT   OR    RIGHT   
+===================================================
+ui-btn-icon-left

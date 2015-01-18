@@ -1,0 +1,197 @@
+head 
+	meta(charset="UTF-8")
+	meta(name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+	title() arfSync
+body
+
+
+
+
+
+	//h1 contact export
+
+	div(data-role="navbar")
+		ul
+			li
+				a(href="#" id="contactExport_export" data-icon="arrow-r") Export To Phone
+			li
+				a(href="" id="contactExport_refresh" data-icon="refresh") Refresh List
+	div(data-role="main" class="ui-content")
+		//height:100%; overflow-y: scroll
+		form(id="theForm" style="background-color: transparent !important; ")
+			fieldset(id="formFieldSet_export" data-role="controlgroup" data-mini="true" style="background-color: transparent !important;")
+
+
+
+
+
+
+
+
+
+
+
+
+	script.
+		//========================================================
+		// EVENT ---------------------------------------
+		//========================================================
+		$('#contactExport_export').click(function(){
+			//$('#theForm').form_checkbox_clear();
+			alert('NEED TO IMPLEMENT');
+		});
+		$('#contactExport_refresh').click(function(){
+			//$('#theForm').form_checkbox_removeById('317');
+			$('#theForm').form_checkbox_clear();
+			contactExportObject.refresh();
+		});
+
+		var ContactExportObject = function(){
+			var _this = this;
+
+			this.test = function(){console.log('TEST OK');};
+			this.load = function(){}
+			this.refresh = function(){
+				_this.getExportPossibilities(function(inPossibilityArray){
+					if(inPossibilityArray){
+						for(var inPossibilityArrayIndex in inPossibilityArray){
+							//_this.exportGridDataAppendRow(inPossibilityArray[inPossibilityArrayIndex]);
+							// ui-controlgroup-controls
+							console.log('-----tets DTAD55555');
+							console.dir(inPossibilityArray[inPossibilityArrayIndex]);
+							var caption = phoneDisplayFormat(inPossibilityArray[inPossibilityArrayIndex].phoneNumber)+ ' &nbsp;&nbsp;&nbsp;&nbsp;  ' + inPossibilityArray[inPossibilityArrayIndex].name + '&nbsp;&nbsp;&nbsp;&nbsp;   ' + inPossibilityArray[inPossibilityArrayIndex].type;
+							$('#theForm').form_checkbox_add(
+								{
+									caption:caption,
+									data:inPossibilityArray[inPossibilityArrayIndex],
+									id:inPossibilityArray[inPossibilityArrayIndex].id,
+								}
+							);
+						}
+					}
+				});
+			}
+
+			//------------------------------------------------------------------
+			//
+			//------------------------------------------------------------------
+			this.getExportPossibilities = function(inPostFunction){
+				_this.getAllPhoneContacts(function(inDeviceArray){
+					var deviceHashOfContacts = {};
+					var databaseHashOfContacts = {};
+					for(var inDeviceArrayIndex in inDeviceArray){
+						deviceHashOfContacts[inDeviceArray[inDeviceArrayIndex].name] = inDeviceArray[inDeviceArrayIndex].type;
+					}
+					_this.loadAllContactsFromDatabase(function(inRows){
+						for(var inRowsIndex in inRows){
+							databaseHashOfContacts[inRows[inRowsIndex].name] = inRows[inRowsIndex].type;
+						}
+						//--- put device back together for possibility------
+						var diffHash = diff(databaseHashOfContacts, deviceHashOfContacts);
+						var arrayOfPossibilities = [];
+						for(var diffHashIndex in diffHash){
+							for(var inRowsIndex in inRows){
+								console.log('name==:' + diffHashIndex + '   '+ inRows[inRowsIndex].name);
+								console.log('type==:' + diffHash[diffHashIndex] + '   '+ inRows[inRowsIndex].type);
+								if(diffHashIndex == inRows[inRowsIndex].name && diffHash[diffHashIndex] == inRows[inRowsIndex].type){
+									arrayOfPossibilities.push(inRows[inRowsIndex]);
+									break;
+								}
+							}
+						}
+						if(inPostFunction){inPostFunction(arrayOfPossibilities);}
+					});
+				});
+			}
+
+			//------------------------------------------------------------------
+			//
+			//------------------------------------------------------------------
+			this.getAllPhoneContacts = function(inPostFunction){
+				var theArray;
+				commManager.sendTransactionSeries(
+					{
+						command:'getAllPhoneContacts',
+						data:
+							{
+								notUsed:'na'
+							},
+						onFirst:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+							console.log("CALBACK onFirst");
+							theArray = [];
+						},
+
+						onLast:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+							console.log("CALBACK onLast");
+							console.dir(theArray);
+						},
+
+						onAll:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+							console.log("CALBACK onAll");
+
+							if(inDataLayer_json.dataArray){
+								for(index in inDataLayer_json.dataArray){
+									theArray.push(inDataLayer_json.dataArray[index]);
+								}
+							}
+							next();
+						},
+						onComplete:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+							if(inDataLayer_json.dataArray){
+								for(index in inDataLayer_json.dataArray){
+									theArray.push(inDataLayer_json.dataArray[index]);
+								}
+							}
+							console.log("CALBACK onComplete");
+							console.dir(theArray);
+							if(inPostFunction){
+								inPostFunction(theArray);
+							}
+						}
+					}
+				);
+			}
+			//------------------------------------------------------------------
+			//
+			//------------------------------------------------------------------
+			this.loadAllContactsFromDatabase = function(inPostFunction){
+				$postAjax(
+					{
+						url:'/database/getContacts',
+						send:
+							{
+							},
+						onAjaxSuccess:function(inResponseText){
+							inResponseText = JSON.parse(inResponseText);
+							console.log('ajax callback------------------------');
+							console.dir(inResponseText);
+							if(inResponseText.hadError == false){
+								console.log('inResponseText.hadError == false');
+								if(inResponseText.rows){
+									if(inPostFunction){inPostFunction(inResponseText.rows);}
+								}
+							}
+						}
+					}
+
+				);
+			}
+		} // end of obj
+
+		$(document).ready(function(){
+			//- console.log('level 0 running');
+			contactExportObject = new ContactExportObject();
+			eventObject.setOn('loginReady', function(inData){
+				$('#theForm').form_checkbox_clear();
+				contactExportObject.refresh();
+			});
+			//$('#theForm').form_checkbox_clear();
+			//contactExportObject.refresh();
+		});
+
+
+
+
+
+
+

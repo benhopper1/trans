@@ -219,7 +219,7 @@ body
 				h1(class="lAlign") Will I have to login again?
 
 				//div(style="width:200px; max-width: 80%;")
-				img(align="left" class="textWrap magicSquare magicShadow" style="width:400px; max-width: 100%;" src="/public/images/information/login_shot.png") 
+				img(align="left" class="textWrap magicSquare magicShadow" style="width:400px; max-width: 100%;" src="/public/images/information/login_shot2.png") 
 				p(class="lAlign")
 					| I created a few ways to log into the server. We can use the common user name and password, but why would I want the user to have to log in twice and then again per each device. I'm guessing in most cases the phone is personal and should be able to store credentials without many concerns. Then the browser is just the opposite. It might be shared between co-workers, hotel residents or other shopping consumers etc.. We might never know the software installed and running along side the browser. It could be key logging or anything. While writing the communication I decided to give the browser a login that uses scannable codes. This way the browser or the computer the browser is running on will never have your user name and password entered into its keyboard cache or into its memory. I do this by using a random GUID that gets shared between the browser and the server. When the phone scans this code off the browser screen it then ask the server to login that particular browser session via my communication. The phone then provides its credentials for that particular GUID. The login then happens. It gets a little more complicated handling the session stuff. I will not share that part of the login for security reasons.
 

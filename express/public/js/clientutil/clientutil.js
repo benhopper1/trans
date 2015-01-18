@@ -649,7 +649,7 @@ var StorageObject = function(){
 	}
 
 	this.addManyPhoneLog = function(inTheArray, inPostFunction){
-		$.messager.progress(
+		/*$.messager.progress(
 			{
 					title:"<img style='float: left; height:40px' src='public/images/ui/email.png'/>" + "Loading Device Call log into database",
 					msg:'Name:',
@@ -664,7 +664,7 @@ var StorageObject = function(){
 					interval:600
 
 			}
-		); 
+		); */
 
 		$postAjax(//addManyPhoneLog
 			{
@@ -675,7 +675,7 @@ var StorageObject = function(){
 					},
 				onAjaxSuccess:function(inResponseText){
 					inResponseText = JSON.parse(inResponseText);
-					$.messager.progress('close');
+					//$.messager.progress('close');
 					if(inPostFunction){inPostFunction(inResponseText);}
 				}
 			}

@@ -1,0 +1,90 @@
+head
+	meta(charset="UTF-8")
+	meta(name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+	title() arfSync
+body
+	form(action="/upload", method="post", enctype="multipart/form-data" style="display: none;")
+		input(id="upload" type="file" name="uploadedFile" style="display: none;" onchange="console.log('changed!!!')")
+
+	div(id="contactsWindow" data-role="main"  class="ui-content" style="")
+		form(method="post" id="userForm" data-mini="true" style="")
+			div(class="ui-field-contain" style="" )
+				div(class="ui-grid-a" style="")
+					div(class="ui-block-a" style="width:25%")
+						center(style="height:150px;")
+							//h6 (click to change)
+							img(id="widget_userForm_image" name="uImg" class="magicSquarePnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" onclick="Widget_userFormScript.chooseFile();")
+							h5 Click Image To Change 
+
+					div(class="ui-block-b" style="width:75%;")
+						#contactEdit_type
+						input(tabindex="1" type="text" 	id="contactEdit_name" 	data-mini="true" name="name" placeholder="Full Name..." style="background-color: transparent !important;")
+						input(tabindex="3" type="email" id="contactEdit_emailAddress" 	data-mini="true" name="emailAddress" placeholder="Email Address...")
+
+
+
+				div(class="ui-grid-a" style="")
+					div(class="ui-block-a" style="width:70%")
+						input(tabindex="2" type="tel" 	id="contactEdit_phoneNumber" 	data-mini="true" name="phoneNumber" placeholder="Phone Number...")
+					div(class="ui-block-b" style="width:30%")
+						input(tabindex="8" type="text" 	id="contactEdit_ext" 			data-mini="true" name="ext" 		placeholder="Extension...")
+
+				input(tabindex="4" type="text"  id="contactEdit_companyName" 	data-mini="true" name="companyName" placeholder="Company Name...")
+				input(tabindex="5" type="text" 	id="contactEdit_department" 	data-mini="true" name="department" 	placeholder="Department...")
+				input(tabindex="6" type="text" 	id="contactEdit_title" 			data-mini="true" name="title" 		placeholder="title...")
+				input(tabindex="7" type="text" 	id="contactEdit_ref" 			data-mini="true" name="ref" 		placeholder="Reference Number...")
+
+
+				input(data-icon="action" id="bt_contactEdit_save" 	data-mini="true" type="button" value="Save")
+				input(data-icon="back" id="bt_contactEdit_cancel" 	data-mini="true" type="button" value="Cancel")
+
+
+
+
+script.
+	//=========================================================
+	// JQM EXTENSION HorizontalRadioGroup
+	//=========================================================
+	$('#contactEdit_type').HorizontalRadioGroup('create',
+		{
+			id:'radioGrp_0',
+			class:'',
+			dataTheme:'a',
+			dataType:'horizontal',
+			legend:'',
+			radioArray:
+				[
+					{
+						caption:'MOBILE',
+						value:'on',
+						checked:true
+					},
+					{
+						caption:'HOME',
+						value:'other',
+						checked:false
+					},
+					{
+						caption:'WORK',
+						value:'other',
+						checked:false
+					},
+					{
+						caption:'OTHER',
+						value:'off',
+						checked:false
+					},
+
+				],
+			onSelect:function(inCaption){
+				//alert(inCaption);
+			}
+		}
+	);
+	//$('#harry2').HorizontalRadioGroup('test');
+	$('#contactEdit_type').HorizontalRadioGroup('load');
+	setTimeout(function(){
+		$('#contactEdit_type').HorizontalRadioGroup('getSelected');
+		$('#contactEdit_type').HorizontalRadioGroup('setSelected', 'OTHER');
+	}, 5000)
+	//$('#contactEdit_type').HorizontalRadioGroup('setSelected', 'OTHER');

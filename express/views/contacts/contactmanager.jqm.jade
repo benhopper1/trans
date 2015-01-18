@@ -1,0 +1,70 @@
+
+//=================================================================================================================================================================================
+//-)--> PAGE 1---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//=================================================================================================================================================================================
+
+div(id="pg_contactManager" data-role="page")
+	div(data-role="header")
+		h1 jQuery Mobile Example
+	//@@@@@@@@@@@ PANEL 
+	//div(data-role="panel" id="contactPanel_0" data-position-fixed="true" data-display="push")
+		//ul(data-role="listview" id="contactsMenu" class=""   data-inset="false" style="width:300px;height:100%; position: absolute;overflow: auto; ")
+
+	div(role="main" class="ui-content")
+		div(data-role="tabs" id="tabs")
+			div(data-role="navbar")
+				ul
+					li
+						a(href="#one" data-ajax="false") one
+					li
+						a(href="#two" data-ajax="false") two
+					li
+						a(href="#three" data-ajax="false") three
+
+			//@@@@@@  TAB ---1--------------------------------------------
+			div(id="one" class="ui-content")
+				h1 First tab contents
+
+				div(class="ui-grid-c")
+					//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid A @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+					div(class="ui-block-a")
+						a(href="#contactPanel_0" data-ajax="false") one
+					//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+					div(class="ui-block-b") two
+					//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+					div(class="ui-block-c") three
+					//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+					div(class="ui-block-d") three
+
+
+			//@@@@@@  TAB --2--------------------------------------------
+			div(id="two" class="ui-content")
+				h1 two tab contents
+			//@@@@@@  TAB --2--------------------------------------------
+			div(id="three" class="ui-content")
+				h1 trhee tab contents
+
+	div(data-role="footer" data-position="fixed" data-tap-toggle="false" class="jqm-footer")
+	p jQuery Mobile Demos version 
+		span(class="jqm-version")
+	p Copyright 2014 The jQuery Foundation
+
+
+
+
+
+	script.
+		$(document).ready(function(){
+			//alert('ready');
+			$('#contactsMenu').ContactListView('create', 
+				{
+					test:'hopperTestrVal55'
+				}
+			);
+
+
+			//$('#contactsMenu').ContactListView('loadData');
+			//$('#contactPanel_0').panel();
+			//$('#contactPanel_0').panel("open");
+		});
+

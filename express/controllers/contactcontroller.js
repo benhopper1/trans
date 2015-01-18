@@ -22,9 +22,95 @@ module.exports.controller = function(app){
 		res.render('contacts/widget_contactscollection.jade',req.body);
 	});
 
+	app.get('/jqm/contactmanager', function(req, res){
+		if(req.cookies.userId){
+			console.log("/jqm/contactmangaer");
+			res.render('contacts/contactmanager.jqm.jade',
+				{
+					userId:req.cookies.userId,
+					deviceId:"815",//req.cookies.deviceId,
+					URL:configData.domain.address + ":" + configData.domain.port,
+					androidAppRoute:configData.androidAppRoute,
+					webSocketClient:configData.webSocketClient,
+					defaultUserImageUrl:configData.defaultUserImageUrl,
+					defaultMemberImageUrl:configData.defaultMemberImageUrl,
+					data:
+						{
+						}
+				}
+			);
+		}else{
+			//============================================================
+			//YOUR NOT LOGED IN ------------------------------------------
+			//============================================================
+			console.log("/jqm/contactmangaer    YOUR NOT LOGED IN????");
+			/*res.render('contacts/widget_contactscollection.jade',
+				{
 
+				}
+			);*/
+		}
+	});
 
+	app.get('/jqm/contactexport', function(req, res){
+		if(req.cookies.userId){
+			console.log("/jqm/contactexport");
+			res.render('contacts/contactexport.jqm.jade',
+				{
+					userId:req.cookies.userId,
+					deviceId:"815",//req.cookies.deviceId,
+					URL:configData.domain.address + ":" + configData.domain.port,
+					androidAppRoute:configData.androidAppRoute,
+					webSocketClient:configData.webSocketClient,
+					defaultUserImageUrl:configData.defaultUserImageUrl,
+					defaultMemberImageUrl:configData.defaultMemberImageUrl,
+					data:
+						{
+						}
+				}
+			);
+		}else{
+			//============================================================
+			//YOUR NOT LOGED IN ------------------------------------------
+			//============================================================
+			console.log("/jqm/contactmangaer    YOUR NOT LOGED IN????");
+			/*res.render('contacts/widget_contactscollection.jade',
+				{
 
+				}
+			);*/
+		}
+	});
+
+	app.get('/jqm/contactedit', function(req, res){
+		if(req.cookies.userId){
+			console.log("/jqm/contactedit");
+			res.render('contacts/contactedit.jqm.jade',
+				{
+					userId:req.cookies.userId,
+					deviceId:"815",//req.cookies.deviceId,
+					URL:configData.domain.address + ":" + configData.domain.port,
+					androidAppRoute:configData.androidAppRoute,
+					webSocketClient:configData.webSocketClient,
+					defaultUserImageUrl:configData.defaultUserImageUrl,
+					defaultMemberImageUrl:configData.defaultMemberImageUrl,
+					data:
+						{
+						}
+				}
+			);
+		}else{
+			//============================================================
+			//YOUR NOT LOGED IN ------------------------------------------
+			//============================================================
+			console.log("/jqm/contactedit    YOUR NOT LOGED IN????");
+			/*res.render('contacts/widget_contactscollection.jade',
+				{
+
+				}
+			);*/
+		}
+	});
 
 
 
