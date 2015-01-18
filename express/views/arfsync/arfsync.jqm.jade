@@ -228,6 +228,22 @@ body
 			height:80px;
 		}
 
+
+		
+		.ui-collapsible-content li a:hover { 
+			background-color:#feeebd !important;
+		}
+		.ui-collapsible-content li a:active { 
+			background-color:#817865 !important;
+		}
+
+		.ui-collapsible-content li a img { 
+			height:80px;
+		}
+
+
+
+
 		/* Place on a div */
 		.listViewMenu{
 			background-color: transparent !important;
@@ -390,7 +406,7 @@ body
 
 		div(class="ui-grid-c" style="")
 			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid A @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-			//contact listView
+			//CONTACT LIST VIEW
 			div(class="ui-block-a" style="width:25%")
 				div(data-role="collapsible" class="" data-content-theme="d" data-inset="false" data-collapsed="false" data-mini="true" data-iconpos="right" style="padding: 0px 0px 0.5em 12px !important;width:100%; height:100%;border: 0px")
 					h3(style="margin-top: 0px !important;margin-bottom: 0px !important;") my heading
@@ -494,14 +510,47 @@ body
 			$('#contactsMenu').ContactListView('create', 
 				{
 					test:'hopperTestrVal55',
-					useCheckbox:true,
+					useCheckbox:false,
 					onClick:function(inContactId, inData, inElementId){
 						console.log('conId:' + inContactId);
 						console.dir(inData);
+
+						//loading selected data into edit form....
+						$('#widget_userForm_image').attr('src', inData.imageUrl);
+						$('#contactEdit_type').HorizontalRadioGroup('setSelected', inData.type.replace('[', '').replace(']', ''));
+						$('#contactEdit_name').val(inData.name);
+						$('#contactEdit_emailAddress').val(inData.emailAddress);
+
+						$('#contactEdit_phoneNumber').val(inData.phoneNumber).formatPhoneNumber();
+						$('#contactEdit_ext').val(inData.ext);
+						$('#contactEdit_companyName').val(inData.companyName);
+						$('#contactEdit_department').val(inData.department);
+						$('#contactEdit_title').val(inData.title);
+						$('#contactEdit_ref').val(inData.refNumber);
+
+
+
 					}
 				}
 			);
+
+
+
+
 			$('#contactsMenu').ContactListView('loadData');
+
+
+
+			eventObject.setOn('contactSliderSelected', function(inData){
+				console.dir(inData);
+				//alert("eventObject");
+				console.log('name(frm phone):' + inData.name);
+				//widgetContactsCollectionScript.gridDataSelectByName(inData.name, inData.type);
+				$('#contactsMenu').ContactListView('setSelectedByNameAndType', inData);
+			});
+
+
+
 			//=================================================================
 			// JQM LOADS-------------------------------------------------------
 			//=================================================================
@@ -514,6 +563,10 @@ body
 				console.log('loaded');
 				$('#tab_editContact').trigger('create');
 
+			});
+			$('#btBar_contactManager_back').click(function(){
+				history.back();
+				return false;
 			});
 
 		});
@@ -551,10 +604,10 @@ body
 				});
 			});
 
-			$('#btBar_contactManager_back').click(function(){
-				//$('#contactsMenu').ContactListView('getSelectedData');
-				alert(JSON.stringify($('#contactsMenu').ContactListView('getSelected')  ));
-			});
+			//- $('#btBar_contactManager_back').click(function(){
+			//- 	//$('#contactsMenu').ContactListView('getSelectedData');
+			//- 	alert(JSON.stringify($('#contactsMenu').ContactListView('getSelected')  ));
+			//- });
 			$('#btBar_contactManager_back2').click(function(){
 				$('#contactsMenu').ContactListView('remove', '276');
 				alert(JSON.stringify($('#contactsMenu').ContactListView('getSelected')  ));
@@ -594,7 +647,10 @@ body
 				}*/
 			);
 
-			//$("#my-menu").mmenu();
+
+
+
+
 		});
 
 
@@ -668,7 +724,8 @@ body
 		$( document ).ready(function(){
 
 			$('#contactManagerDiv').click(function(){
-				loadContactsWindow();
+				loadContactManager();
+				//$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_2', {transition:'turn', reverse:'true'});
 			});
 			$('#smsManagerDiv').click(function(){
 				loadSmsWindow();
@@ -895,7 +952,30 @@ body
 							//- );
 						//}
 
-
+							//=====================================================================
+							// When Page changes by user catch here for remote menu purposes:
+							//=====================================================================
+							//@@@@@@@@@@@@@@@@@@@@@@@@@@@ PAGE ONE -> START SCREEN @@@@@@@@@@@@@@@
+							$(document).on("pageshow","#pg_page_0",function(){ // When entering pagetwo
+								eventObject.reportOn('onOpenCloseToRemote',
+									{
+											open:true,
+											id:'mm-m0-p0'
+										}
+									);
+							});
+							//@@@@@@@@@@@@@@@@@@@@@@@@@@@ PAGE TWO -> CONTACT MANAGER @@@@@@@@@@@@@@@
+							$(document).on("pageshow","#pg_page_2",function(){ // When entering pagetwo
+								eventObject.reportOn('onOpenCloseToRemote',
+									{
+											open:true,
+											id:'mainMenu_contacts'
+										}
+									);
+							});
+							$(document).on("pagehide","#pg_page_2",function(){ // When leaving pagetwo
+								//alert("pg_page_2 is now hidden");
+							});
 
 
 						});
@@ -1311,22 +1391,13 @@ body
 				//=========CONTACTS===========================
 					//==========OPEN==========================
 				if(inData.id == 'mainMenu_contacts' && inData.command == 'open'){
-					if(!(WindowStateObject.getState('mainMenu_contacts'))){
-						loadContactsWindow();
-					}else{
-						console.log('ALREADY OPEN:' + 'mainMenu_contacts');
-					}
+						loadContactManager();
 				}
 
 				//==========CLOSE==========================
 				if(inData.id == 'mainMenu_contacts' && inData.command == 'close'){
-					//if(!(WindowStateObject.getState('mainMenu_contacts'))){
-						//console.log('NOT LOADED:' + 'mainMenu_contacts');
-					//}else{
 						console.log('CLOSEING mainMenu_contacts requested by remote');
-						//---problems here
-						widgetContactsCollectionScript.close();
-					//}
+						$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_0', {transition:'turn', reverse:'true'});
 				}
 
 
@@ -1358,6 +1429,61 @@ body
 			});
 
 		}
+
+
+		
+
+
+
+
+
+		//- eventObject.setOn('onPageChange', function(inPageId){
+		//- 	if(inPageId == 'pg_page_0'){
+		//- 		eventObject.reportOn('onOpenCloseToRemote',
+		//- 			{
+		//- 				open:true,
+		//- 				id:'???????'
+		//- 			}
+		//- 		);
+		//- 	}
+
+		//- 	if(inPageId == 'pg_page_2'){
+		//- 		eventObject.reportOn('onOpenCloseToRemote',
+		//- 			{
+		//- 				open:true,
+		//- 				id:'mainMenu_contacts'
+		//- 			}
+		//- 		);
+		//- 	}
+
+		//- });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		//================================================================
+		// PAGE CHANGES REPORT TO EVENT OBJECT ---------------------------
+		//================================================================
+		$(document).on("pagechange",function(event, data){
+			console.log('id:' + $(data.toPage).attr('id'));
+			eventObject.reportOn('onPageChange', $(data.toPage).attr('id'));
+		});
+		//- $(document).on("pagechange",function(event, data){
+		//- 	console.log('id:' + $(data.toPage).attr('id'));
+		//- 	eventObject.reportOn('onPageChange', $(data.toPage).attr('id'));
+		//- });
 
 
 
@@ -1474,18 +1600,11 @@ body
 			//- });
 		}
 
-		var loadContactsWindow = function(){
-			$( "#contactsWindow" ).load( "/widget_contactscollection", function(){
-				//widgetContactsCollectionScript.loadWindow();
-				widgetContactsCollectionScript.load();
-				widgetContactsCollectionScript.show();
-
-			});
-
-			//- $.get( "/widget_contactscollection", function(data){
-			//- 	$("#contactsWindow").append(data);
-			//- });
+		var loadContactManager = function(){
+				$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_2', {transition:'turn', reverse:'true'});
 		}
+
+
 
 		var chunkArray;
 		var getAllSmsByNumber = function(){

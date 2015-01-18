@@ -223,10 +223,11 @@ var ContactListView = function(inJsonStruct){
 				type:'NO TYPE',
 			}
 		options = $.extend(options, inData);
-
+		//var style = ':hover {background-color:#feeebd ;}:active { background-color:#817865 ;}';
+		var style = '';
 		var html = '' + 
 			'<li id="' + uid + '_' + options.id + '" contactId="' + options.id + '" class="menu_li checkbox_click_' + uid + '_' + options.class + '"  data-icon="false" data-inset="true">' + ' ' +
-				'<a "/hjhjhjh" style="background-color: transparent !important;" > ' + options.name 													+ ' ' +
+				'<a "/hjhjhjh" style="background-color: transparent !important;' + style + '" > ' + options.name 													+ ' ' +
 					'<img src="' + options.imageUrl + '" style="margin: 15px 15px;" class="magicSquare" height="50px"/>'			+ ' ' +
 					'<p>' + options.number + '</p>'													+ ' ' +
 					'<p>' + options.type + '</p>'													+ ' ' +
@@ -262,6 +263,30 @@ var ContactListView = function(inJsonStruct){
 		options.state = inBool;
 	}
 
+	this.setSelectedByNameAndType = function(inJstruct){
+		console.log('setSelectedByNameAndType');
+		console.dir(inJstruct);
+		var options2 = 
+			{
+				name:'',
+				type:''
+			}
+		options2 = $.extend(options2, inJstruct);
+		var inName = options2.name;
+		var inType = options2.type;
+
+		for(var contactListViewHashIndex in contactListViewHash){
+			console.log('--------------------------------------------------------------------------');
+			console.log(inName + '<->' + contactListViewHash[contactListViewHashIndex].name);
+			console.log(inType + '<->' + contactListViewHash[contactListViewHashIndex].type);
+			if((inName == contactListViewHash[contactListViewHashIndex].name) && (inType == contactListViewHash[contactListViewHashIndex].type)){
+				//alert('MATCH');
+				$(options.divRef).trigger('click');
+				return ;
+			}
+		}
+
+	}
 
 
 
@@ -304,6 +329,11 @@ $.fn.ContactListView = function(inAction, inJsonStruct){
 		//inJsonStruct as single string '???'
 		return contactListView.remove(inJsonStruct);
 	}
+
+	if(inAction == 'setSelectedByNameAndType'){
+		return contactListView.setSelectedByNameAndType(inJsonStruct);
+	}
+	
 }
 
 
@@ -507,20 +537,20 @@ var HorizontalRadioGroup = function(inJsonStruct){
 
 	this.setSelected = function(inIndexOrCaption){
 		if($.isNumeric(inIndexOrCaption)){
-			console.log('isNumeric');
+			//console.log('isNumeric');
 			var theId = options.id + '_' + inIndexOrCaption;
 			//??? got to go twice
 			$('#' + theId).trigger('click');
 			$('#' + theId).trigger('click');
 		}else{
-			console.log('running' + options.id);
+			//console.log('running' + options.id);
 			//console.dir($("#" + options.id +' .ui-radio input'));
 			//$("#" + options.id +' .ui-radio input').each(function(){
 			//console.log('mainLookup:' + '#'  + $(this) +' .ui-radio input');
-			console.dir($(this).find(' .ui-radio input'));
+			//console.dir($(this).find(' .ui-radio input'));
 			$(theDivRef).find(' .ui-radio input').each(function(){
-				console.dir(this);
-				console.log(inIndexOrCaption +' <-> '+  $("label[for='"+$(this).attr('id')+"']").text());
+				//console.dir(this);
+				//console.log(inIndexOrCaption +' <-> '+  $("label[for='"+$(this).attr('id')+"']").text());
 				if(inIndexOrCaption == $("label[for='"+$(this).attr('id')+"']").text()){
 					$(this).trigger('click');
 					$(this).trigger('click');
