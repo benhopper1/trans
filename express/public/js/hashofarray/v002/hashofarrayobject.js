@@ -17,7 +17,7 @@ var HashOfArrayObject_v002 = function(inAllowDuplicates){
 	var _this = this;
 	var hash = {};
 	var allowDuplicates = inAllowDuplicates? true : false;
-	console.log('allowDuplicates:' + allowDuplicates);
+	//console.log('allowDuplicates:' + allowDuplicates);
 
 	this.exist = function(inKey){
 		inKey = inKey.toString();
@@ -30,21 +30,21 @@ var HashOfArrayObject_v002 = function(inAllowDuplicates){
 				hashCode:_this.Md5Hash.md5(inItem.toString()),//_this.Md5Hash.md5(JSON.stringify(inItem)),
 				storedItem:inItem
 			}
-			console.log('encoded code:' + encodedResult.hashCode);
-			console.dir(encodedResult.storedItem);
+			//console.log('encoded code:' + encodedResult.hashCode);
+			//console.dir(encodedResult.storedItem);
 		return encodedResult;
 	}
 
 	this.decodeItemEntry = function(inEncodedItem){
-		console.log('look at full inEncodedItem in .decodeItemEntry');
-		console.dir(inEncodedItem);
-		console.log('decodeing to ' + inEncodedItem.storedItem);
+		//console.log('look at full inEncodedItem in .decodeItemEntry');
+		//console.dir(inEncodedItem);
+		//console.log('decodeing to ' + inEncodedItem.storedItem);
 		return inEncodedItem.storedItem;
 	}
 
 	this.existForKey = function(inKey, inEncodedItem){
-		console.log('existForKey ENTERED');
-		console.dir(_this.getEncodedArrayFromHash(inKey));
+		//console.log('existForKey ENTERED');
+		//console.dir(_this.getEncodedArrayFromHash(inKey));
 		var theArrayForKey = _this.getEncodedArrayFromHash(inKey);
 		for(var theArrayForKeyIndex in theArrayForKey){
 			console.log('test MATC:' + theArrayForKey[theArrayForKeyIndex].hashCode + '/' + inEncodedItem.hashCode);
@@ -53,7 +53,7 @@ var HashOfArrayObject_v002 = function(inAllowDuplicates){
 				return true;
 			}
 		}
-		console.log('existForKey: FALSE');
+		//console.log('existForKey: FALSE');
 		return false;
 	}
 
@@ -175,10 +175,10 @@ var HashOfArrayObject_v002 = function(inAllowDuplicates){
 		inKey = inKey.toString();
 		var attemptValue = hash[inKey];
 		if(!(attemptValue)){
-			console.log('no key Found!!! in getArrayFromHash');
+			console.log('no key Found!!! in getArrayFromHash:' + inKey);
 			return false;
 		}
-		console.log('Key Found!!! in getArrayFromHash');
+		//console.log('Key Found!!! in getArrayFromHash');
 
 		//decode entire array here------
 		var decodedArray = [];

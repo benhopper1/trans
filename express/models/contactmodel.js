@@ -73,7 +73,8 @@ var Model = function(){
 				refNumber:'',
 				title:'',
 				userId:false,
-				type:'[MOBILE]'
+				type:'[MOBILE]',
+				ext:''
 			}
 		fieldData = extend(fieldData, inParams);
 
@@ -93,7 +94,8 @@ var Model = function(){
 			"phoneNumber = " + connection.escape(fieldData.phoneNumber) 		+ ", " +
 			"refNumber = " + connection.escape(fieldData.refNumber) 			+ ", " +
 			"type = " + connection.escape(fieldData.type) 						+ ", " +
-			"title = " + connection.escape(fieldData.title) 					+ " " +
+			"title = " + connection.escape(fieldData.title) 					+ "," +
+			"ext = " + connection.escape(fieldData.ext) 						+ " " +
 			"WHERE userId = " + connection.escape(parseInt(fieldData.userId))	+ " " + 
 			"AND"																+ " " + 
 			"id = " + connection.escape(fieldData.id)

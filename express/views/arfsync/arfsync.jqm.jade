@@ -426,11 +426,11 @@ body
 					li
 						a(href="#" id="btBar_contactManager_back2" data-icon="back") Back
 					li
-						a(href="#" id="btBar_contactManager_back3" data-icon="back") Back
+						a(href="#" id="btBar_contactManager_back3" data-icon="back") test popup
 					li
-						a(href="#" id="btBar_contactManager_back4" data-icon="back") Back
+						a(href="#" id="btBar_contactManager_back4" data-icon="back") test-setMark
 					li
-						a(href="#" id="btBar_contactManager_back5" data-icon="back") Back
+						a(href="#" id="btBar_contactManager_back5" data-icon="back") test save
 
 		div(class="ui-grid-c" style="")
 			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid A @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -550,17 +550,20 @@ body
 
 
 						//loading selected data into edit form....
-						$('#contactEdit_image').attr('src', inData.imageUrl);
-						$('#contactEdit_type').HorizontalRadioGroup('setSelected', inData.type.replace('[', '').replace(']', ''));
-						$('#contactEdit_name').val(inData.name);
-						$('#contactEdit_emailAddress').val(inData.emailAddress);
+						//- $('#contactEdit_id').val(inData.id);
+						//- $('#contactEdit_image').attr('src', inData.imageUrl);
+						//- $('#contactEdit_type').HorizontalRadioGroup('setSelected', inData.type.replace('[', '').replace(']', ''));
+						//- $('#contactEdit_name').val(inData.name);
+						//- $('#contactEdit_emailAddress').val(inData.emailAddress);
 
-						$('#contactEdit_phoneNumber').val(inData.phoneNumber).formatPhoneNumber();
-						$('#contactEdit_ext').val(inData.ext);
-						$('#contactEdit_companyName').val(inData.companyName);
-						$('#contactEdit_department').val(inData.department);
-						$('#contactEdit_title').val(inData.title);
-						$('#contactEdit_ref').val(inData.refNumber);
+						//- $('#contactEdit_phoneNumber').val(inData.phoneNumber).formatPhoneNumber();
+						//- $('#contactEdit_ext').val(inData.ext);
+						//- $('#contactEdit_companyName').val(inData.companyName);
+						//- $('#contactEdit_department').val(inData.department);
+						//- $('#contactEdit_title').val(inData.title);
+						//- $('#contactEdit_ref').val(inData.refNumber);
+
+						$('#contactsWindow').DataBinderObject('load', inData);
 
 
 

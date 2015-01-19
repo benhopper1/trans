@@ -9,6 +9,7 @@ body
 	div(id="contactsWindow" data-role="main"  class="ui-content" style="")
 		form(method="post" id="userForm" data-mini="true" style="")
 			div(class="ui-field-contain" style="" )
+				input(type="hidden"  id="contactEdit_id" name="id")
 				div(class="ui-grid-a" style="")
 					div(class="ui-block-a" style="width:25%")
 						center(style="height:150px;")
@@ -110,4 +111,121 @@ script.
 				}
 			}
 		);
+	});
+
+	//$(document).on("pageshow","#pg_page_2",function(){
+	//});
+
+
+	//=====================================================================================================================
+	//FORM DATA BINDER -----------------------
+	//=====================================================================================================================
+	$('#contactsWindow').DataBinderObject('create',
+		{
+			loadProcess:function(inData){
+				var params = 
+					{
+						id:false,
+						type:false,
+						imageUrl:false,
+						name:false,
+						emailAddress:false,
+						phoneNumber:false,
+						ext:false,
+						companyName:false,
+						department:false,
+						title:false,
+						refNumber:false,
+					}
+				params = $.extend(params, inData);
+
+				$('#contactEdit_id').val(params.id);
+				$('#contactEdit_type').HorizontalRadioGroup('setSelected', params.type.replace('[', '').replace(']', ''));
+				$('#contactEdit_image').attr('src', params.imageUrl);
+				$('#contactEdit_name').val(params.name);
+				$('#contactEdit_emailAddress').val(params.emailAddress);
+				$('#contactEdit_phoneNumber').val(params.phoneNumber).formatPhoneNumber();
+				$('#contactEdit_ext').val(params.ext);
+				$('#contactEdit_companyName').val(params.companyName);
+				$('#contactEdit_department').val(params.department);
+				$('#contactEdit_title').val(params.title);
+				$('#contactEdit_ref').val(params.refNumber);
+
+			},
+			serializeProcess:function(){
+				var data = 
+					{
+						id:$('#contactEdit_id').val(),
+						type:'[' + $('#contactEdit_type').HorizontalRadioGroup('getSelected') + ']',
+						imageUrl:$('#contactEdit_image').attr('src'),
+						name:$('#contactEdit_name').val(),
+						emailAddress:$('#contactEdit_emailAddress').val(),
+						phoneNumber:$('#contactEdit_phoneNumber').getCleanPhoneNumber(),
+						ext:$('#contactEdit_ext').val(),
+						companyName:$('#contactEdit_companyName').val(),
+						department:$('#contactEdit_department').val(),
+						title:$('#contactEdit_title').val(),
+						refNumber:$('#contactEdit_ref').val(),
+					}
+				return data;
+			},
+			clearProcess:function(){
+				$('#contactEdit_id').val('');
+				$('#contactEdit_type').HorizontalRadioGroup('setSelected', 0);
+				$('#contactEdit_image').attr('src',getDefaultMemberImageUrl());
+				$('#contactEdit_name').val('');
+				$('#contactEdit_emailAddress').val('');
+				$('#contactEdit_phoneNumber').val('');
+				$('#contactEdit_ext').val(''),
+				$('#contactEdit_companyName').val('');
+				$('#contactEdit_department').val('');
+				$('#contactEdit_title').val('');
+				$('#contactEdit_ref').val('');
+				return true;
+			},
+			saveProcess:function(inSerializedData, inSaveParams, next){
+				$postAjax(
+					{
+						url:'/database/editContact',
+						send:inSerializedData,
+						onAjaxSuccess:function(inResponseText){
+							inResponseText = JSON.parse(inResponseText);
+							next(inResponseText);
+						}
+					}
+				);
+				return true;
+			},
+			onSave:function(inData){
+				alert('Data Saved' + JSON.stringify(inData));
+			},
+			whenDirtyTransition:function(inData){
+
+			}
+
+		}
+	);//end binder------------
+
+
+	$('#btBar_contactManager_back3').click(function(){
+		//$('#contactsWindow').DataBinderObject('clear');
+		//$('#contactsWindow').DynamicPopup();
+		$.DynamicPopupYesNo(
+			{
+				message:'You have unsaved data. Would you like to save it before proceeding?',
+				subMessage:'My SubMessage',
+				yesCaption:'YES',
+				noCaption:'NO',
+				onYes:function(){alert('YES');},
+				onNo:function(){alert('NO');},
+			}
+		);
+	});
+
+	$('#btBar_contactManager_back4').click(function(){
+		$('#contactsWindow').DataBinderObject('setDirtyMark');
+	});
+
+	$('#btBar_contactManager_back5').click(function(){
+		console.log('isDirty :' + $('#contactsWindow').DataBinderObject('save'));
 	});
