@@ -13,7 +13,7 @@ body
 					div(class="ui-block-a" style="width:25%")
 						center(style="height:150px;")
 							//h6 (click to change)
-							img(id="widget_userForm_image" name="uImg" class="magicSquarePnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" onclick="Widget_userFormScript.chooseFile();")
+							img(id="contactEdit_image" name="uImg" class="magicSquarePnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" )
 							h5 Click Image To Change 
 
 					div(class="ui-block-b" style="width:75%;")
@@ -81,11 +81,33 @@ script.
 			}
 		}
 	);
-	//$('#harry2').HorizontalRadioGroup('test');
+
 	$('#contactEdit_type').HorizontalRadioGroup('load');
-	
-	//- setTimeout(function(){
-	//- 	$('#contactEdit_type').HorizontalRadioGroup('getSelected');
-	//- 	$('#contactEdit_type').HorizontalRadioGroup('setSelected', 'OTHER');
-	//- }, 5000)
-	//$('#contactEdit_type').HorizontalRadioGroup('setSelected', 'OTHER');
+
+	//===============================
+	// CHANGE IMAGE
+	//===============================
+
+	$('#upload').trigger('click');
+	$('#contactEdit_image').click(function(){
+		$('#upload').trigger('click');
+	});
+	$('#upload').change(function(){
+		$ajaxFilePost(
+			{
+				fileInputElement:'upload',
+
+				options:
+					{
+						command:'imageStore',
+						theme:'normalUserImage'
+					},
+
+				onComplete:function(inResponse){
+					if(inResponse.domainFilePath){
+						$('#contactEdit_image').attr('src', inResponse.domainFilePath);
+					}
+				}
+			}
+		);
+	});

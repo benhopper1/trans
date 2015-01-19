@@ -224,10 +224,11 @@ var ContactListView = function(inJsonStruct){
 			}
 		options = $.extend(options, inData);
 		//var style = ':hover {background-color:#feeebd ;}:active { background-color:#817865 ;}';
+		//var style = 'background-color: transparent !important;';
 		var style = '';
 		var html = '' + 
 			'<li id="' + uid + '_' + options.id + '" contactId="' + options.id + '" class="menu_li checkbox_click_' + uid + '_' + options.class + '"  data-icon="false" data-inset="true">' + ' ' +
-				'<a "/hjhjhjh" style="background-color: transparent !important;' + style + '" > ' + options.name 													+ ' ' +
+				'<a "/hjhjhjh" class="trans-bkg-a-hv" style="' + style + '" > ' + options.name 													+ ' ' +
 					'<img src="' + options.imageUrl + '" style="margin: 15px 15px;" class="magicSquare" height="50px"/>'			+ ' ' +
 					'<p>' + options.number + '</p>'													+ ' ' +
 					'<p>' + options.type + '</p>'													+ ' ' +
@@ -280,8 +281,9 @@ var ContactListView = function(inJsonStruct){
 			console.log(inName + '<->' + contactListViewHash[contactListViewHashIndex].name);
 			console.log(inType + '<->' + contactListViewHash[contactListViewHashIndex].type);
 			if((inName == contactListViewHash[contactListViewHashIndex].name) && (inType == contactListViewHash[contactListViewHashIndex].type)){
-				//alert('MATCH');
-				$(options.divRef).trigger('click');
+				console.dir(options.divRef);
+				//alert(options.divRef.id);
+				$('#' + $(options.divRef).attr('id') + '_' + contactListViewHash[contactListViewHashIndex].id).find('.trans-bkg-a-hv').trigger('click');
 				return ;
 			}
 		}

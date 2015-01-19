@@ -228,8 +228,36 @@ body
 			height:80px;
 		}
 
+		/*
+		======================================================
+			Contacts ListView CSS
+			transparent bkg
+			hover::feeebd
+			click::817865
+			lastSelected:3388cc
+		=======================================================
+		*/
+		.trans-bkg-a-hv{
+			background-color: transparent !important;
+		}
 
-		
+		.trans-bkg-a-hv:hover{
+			background-color:#feeebd !important;
+		}
+
+		.trans-bkg-a-hv:active { 
+			background-color:#817865 !important;
+		}
+
+		.trans-bkg-a-hv.lastSelected{
+			background-color:#3388cc !important;
+			text-shadow:0 0 0 !important;
+		}
+
+
+
+
+
 		.ui-collapsible-content li a:hover { 
 			background-color:#feeebd !important;
 		}
@@ -515,8 +543,14 @@ body
 						console.log('conId:' + inContactId);
 						console.dir(inData);
 
+						// CSS Last Selected------
+						//alert(inElementId);
+						$( '.trans-bkg-a-hv' ).removeClass( 'lastSelected' )
+						$( '#' + inElementId + ' a').addClass( 'lastSelected' );
+
+
 						//loading selected data into edit form....
-						$('#widget_userForm_image').attr('src', inData.imageUrl);
+						$('#contactEdit_image').attr('src', inData.imageUrl);
 						$('#contactEdit_type').HorizontalRadioGroup('setSelected', inData.type.replace('[', '').replace(']', ''));
 						$('#contactEdit_name').val(inData.name);
 						$('#contactEdit_emailAddress').val(inData.emailAddress);
