@@ -20,34 +20,14 @@ $.fn.cleanPhoneNumber = function (){
 }
 
 $.fn.getCleanPhoneNumber = function (){
+	console.log('getCleanPhoneNumber' + $(this).val());
 	var standardNo = $(this).val().replace(/[^\d]/g,'');
 	if(standardNo.charAt(0) != '1'){
 		standardNo = "1" + standardNo;
 	}
+	console.log('getCleanPhoneNumber' + standardNo.slice(0,11));
 	return standardNo.slice(0,11);
 }
-
-
-/*var theNewDiv = $(document.createElement('div'));
-theNewDiv.attr('id', 'validationRulesDiv'); //id = 'validationRulesDiv';
-alert(theNewDiv.attr('id'));
-$('body').append(theNewDiv);
-//$("div").data("test", { first: 16, last: "pizza!" });
-$('#validationRulesDiv').data("test", { first: 16, last: "pizza!" });
-
-alert($('#validationRulesDiv').attr('id'));
-*/
-
-/*(function(){
-	alert('function entered');
-	var theNewDiv = $(document.createElement('div'));
-	theNewDiv.attr('id', 'validationRulesDiv');
-	$('body').append(theNewDiv);
-	$('#validationRulesDiv').data("test", { first: 16, last: "pizza!" });
-	alert($('#validationRulesDiv').attr('id'));
-
-})(this);*/
-
 
 var constructor = new function(){
 	console.log('HOPPER JQUERY EXTENTION CONSTRUCTOR RUNNING');
@@ -178,47 +158,104 @@ var ContactListView = function(inJsonStruct){
 		return resultArray;
 	}
 
-	this.loadData = function(){
-		$postAjax(
-			{
-				url:'/database/getContacts',
-				send:
-					{
+	this.getLastSelected = function(){
+		var theId = $('.trans-bkg-a-hv.lastSelected').parent().attr('contactid');
+		if(theId){
+			return contactListViewHash[theId];
+		}else{
+			return false;
+		}
+	}
 
-					},
-				onAjaxSuccess:function(inResponseText){
-					inResponseText = JSON.parse(inResponseText).rows;
-					for(contactIndex in inResponseText){
-						var html = createHtml(
-							{
-								id:inResponseText[contactIndex].id,
-								class:'listViewClass',
-								imageUrl:inResponseText[contactIndex].imageUrl,
-								name:inResponseText[contactIndex].name,
-								number:formatPhoneNumber(inResponseText[contactIndex].phoneNumber),
-								type:inResponseText[contactIndex].type,
-							}
-						);
-						$(theDivRef).append(html);
-						inResponseText[contactIndex].jRef = $('#' + uid + '_' + inResponseText[contactIndex].id);
-						contactListViewHash[inResponseText[contactIndex].id] = inResponseText[contactIndex];
-						$('#' + uid + '_' + inResponseText[contactIndex].id).click(function(e){
-							var id = 
-							console.log('clcik list view AA3 :' + $(e.currentTarget).attr('contactid'));
-							console.dir(e);
-							if(options.onClick){
-								if(options.useCheckbox){
-									_this.toggleState($(e.currentTarget));
-								}
-								options.onClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
-							}
-						});
-
+	this.refresh = function(){
+		contactDataObject.select({}, function(inRecords){
+			for(contactIndex in inRecords){
+				var theRecord = contactListViewHash[inRecords[contactIndex].id];
+				if(!(theRecord)){
+					//need to add, it does not exist.....
+					alert('please add:');
+					console.dir(theRecord);
+				}else{
+					var inComingHashCode = $.getHash.md5(JSON.stringify(inRecords[contactIndex]));
+					if(inComingHashCode != theRecord.md5Hash){
+						//need to edit this record
+						alert('please edit:' );
+						console.dir(theRecord);
+						editHtml(inRecords[contactIndex].id, inRecords[contactIndex]);
+						contactListViewHash[inRecords[contactIndex].id] = inRecords[contactIndex];
+						contactListViewHash[inRecords[contactIndex].id].md5Hash = inComingHashCode;
+						$(theDivRef).listview().listview('refresh');
 					}
-					$(theDivRef).listview().listview('refresh');
 				}
 			}
+		});
+
+	}
+
+	this.loadData = function(){
+		contactDataObject.select({}, function(inRecords){
+			for(contactIndex in inRecords){
+				//md5 hashing!!!!
+				inRecords[contactIndex].md5Hash = $.getHash.md5(JSON.stringify(inRecords[contactIndex]));
+				var html = createHtml(
+					{
+						id:inRecords[contactIndex].id,
+						class:'listViewClass',
+						imageUrl:inRecords[contactIndex].imageUrl,
+						name:inRecords[contactIndex].name,
+						number:formatPhoneNumber(inRecords[contactIndex].phoneNumber),
+						type:inRecords[contactIndex].type,
+					}
+				);
+				$(theDivRef).append(html);
+				inRecords[contactIndex].jRef = $('#' + uid + '_' + inRecords[contactIndex].id);
+				contactListViewHash[inRecords[contactIndex].id] = inRecords[contactIndex];
+				$('#' + uid + '_' + inRecords[contactIndex].id).click(function(e){
+					var id = 
+					console.log('clcik list view AA3 :' + $(e.currentTarget).attr('contactid'));
+					console.dir(e);
+					if(options.onClick){
+						if(options.useCheckbox){
+							_this.toggleState($(e.currentTarget));
+						}
+						options.onClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
+					}
+				});
+
+			}
+			$(theDivRef).listview().listview('refresh');
+		});
+	}
+
+	this.getIdByNameAndType = function(inName, inType){
+		for(var contactListViewHashIndex in contactListViewHash){
+			if((inName == contactListViewHash[contactListViewHashIndex].name) && (inType == contactListViewHash[contactListViewHashIndex].type)){
+				return contactListViewHash[contactListViewHashIndex].id;
+			}
+		}
+		return false;
+	}
+
+	var editHtml = function(inId, inData){
+		var html = createHtml(
+			{
+				id:inId,
+				class:'listViewClass',
+				imageUrl:inData.imageUrl,
+				name:inData.name,
+				number:formatPhoneNumber(inData.phoneNumber),
+				type:inData.type,
+			}
 		);
+		$('#' + uid + '_' + inData.id).replaceWith(html);
+		$('#' + uid + '_' + inData.id).click(function(e){
+			if(options.onClick){
+				if(options.useCheckbox){
+					_this.toggleState($(e.currentTarget));
+				}
+				options.onClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
+			}
+		});
 	}
 
 	var createHtml = function(inData){
@@ -262,11 +299,6 @@ var ContactListView = function(inJsonStruct){
 	//---EVENT
 	//============================
 	this.initEvent = function(){
-		//$('checkbox_click_' + uid + ' a').click(function(e){
-		/*$(theDivRef).click(function(e){
-			console.log('clcik list view :');
-			console.dir(e);
-		});*/
 	}
 
 	this.setState = function(inBool){
@@ -291,12 +323,16 @@ var ContactListView = function(inJsonStruct){
 			console.log(inType + '<->' + contactListViewHash[contactListViewHashIndex].type);
 			if((inName == contactListViewHash[contactListViewHashIndex].name) && (inType == contactListViewHash[contactListViewHashIndex].type)){
 				console.dir(options.divRef);
-				//alert(options.divRef.id);
 				$('#' + $(options.divRef).attr('id') + '_' + contactListViewHash[contactListViewHashIndex].id).find('.trans-bkg-a-hv').trigger('click');
 				return ;
 			}
 		}
 
+	}
+
+	this.setSelectedByIndex = function(inIndex){
+		$('#' + $(options.divRef).attr('id') + '_' + contactListViewHash[Object.keys(contactListViewHash)[0]].id  ).find('.trans-bkg-a-hv').trigger('click');
+		return ;
 	}
 
 
@@ -317,6 +353,11 @@ $.fn.ContactListView = function(inAction, inJsonStruct){
 	if(inAction == 'test'){
 		contactListView = $(this).data("contactListViewInstance");
 		//alert('test:' + contactListView.getTest());
+	}
+
+	if(inAction == 'refresh'){
+		contactListView = $(this).data("contactListViewInstance");
+		contactListView.refresh();
 	}
 
 	if(inAction == 'loadData'){
@@ -344,7 +385,15 @@ $.fn.ContactListView = function(inAction, inJsonStruct){
 	if(inAction == 'setSelectedByNameAndType'){
 		return contactListView.setSelectedByNameAndType(inJsonStruct);
 	}
-	
+	if(inAction == 'getIdByNameAndType'){
+		return contactListView.getIdByNameAndType(inJsonStruct.name, inJsonStruct.type);
+	}
+	if(inAction == 'getLastSelected'){
+		return contactListView.getLastSelected();
+	}
+	if(inAction == 'setSelectedByIndex'){
+		return contactListView.setSelectedByIndex(inJsonStruct);
+	}
 }
 
 
@@ -502,7 +551,6 @@ var HorizontalRadioGroup = function(inJsonStruct){
 
 				}
 			arrayOptions = $.extend(arrayOptions, options.radioArray[radioArrayIndex]);
-			//var checkedVal = '' + (arrayOptions.checked == true)? 'checked="checked"' : '';
 			var checkedVal = '';
 			if(arrayOptions.checked == true){
 				checkedVal = 'checked="checked"';
@@ -573,14 +621,17 @@ var DataBinderObject = function(inJsonStruct){
 	var _this = this;
 	var theDivRef;
 	var dirtyMark = false;
+	var mode = 'edit';
 	var options = 
 		{
 			id:'dataBinder_' + new Date().getTime(),
-			serializeProcess:false, 							//function
+			toJsonProcess:false, 							//function
 			clearProcess:false, 								//function
 			saveProcess:false, 									//function
 			loadProcess:false,									//function
+			whenDirtyTransition:false,								//function
 			onSave:false,
+			onCancel:false,
 
 		}
 	options = $.extend(options, inJsonStruct);
@@ -596,8 +647,8 @@ var DataBinderObject = function(inJsonStruct){
 	}
 
 	this.toJson = function(){
-		if(!(options.serializeProcess)){console.log('serializeProcess NOT INCLUDED IN CONSTRUCTOR!!!'); return false;}
-		return options.serializeProcess();
+		if(!(options.toJsonProcess)){console.log('toJsonProcess NOT INCLUDED IN CONSTRUCTOR!!!'); return false;}
+		return options.toJsonProcess();
 	}
 
 	this.clear =function(){
@@ -607,6 +658,11 @@ var DataBinderObject = function(inJsonStruct){
 
 	this.save =function(inSaveParams){
 		if(!(options.saveProcess)){console.log('saveProcess NOT INCLUDED IN CONSTRUCTOR!!!'); return false;}
+		if(!(inSaveParams)){
+			inSaveParams = mode;
+			console.log('======================================');
+			console.log('MODE:' + inSaveParams);
+		}
 		if(_this.isDirty()){
 			_this.setDirtyMark();
 			var theNextFunction = function(inData){
@@ -614,9 +670,14 @@ var DataBinderObject = function(inJsonStruct){
 					options.onSave(inData);
 				}
 			}
+			var theCancelFunction = function(inData){
+				if(options.onCancel){
+					options.onCancel(inData);
+				}
+			}
 			console.log('SAVE----------');
 			console.dir(_this.toJson());
-			return options.saveProcess(_this.toJson(), inSaveParams, theNextFunction);
+			return options.saveProcess(_this.toJson(), inSaveParams, theNextFunction, theCancelFunction);
 		}else{
 			return false;
 		}
@@ -624,26 +685,38 @@ var DataBinderObject = function(inJsonStruct){
 
 	this.load =function(inData){
 		if(!(options.loadProcess)){console.log('loadProcess NOT INCLUDED IN CONSTRUCTOR!!!'); return false;}
-		var result = options.loadProcess(inData);
-		_this.setDirtyMark();
-		return result;
+		if(_this.isDirty() && options.whenDirtyTransition){
+			var next = function(){
+				var result = options.loadProcess(inData);
+				_this.setDirtyMark();
+				return result;
+			}
+			//_this.setDirtyMark();
+			return options.whenDirtyTransition(_this.toJson(), _this.save, next);
+		}else{
+			var result = options.loadProcess(inData);
+			_this.setDirtyMark();
+			return result;
+		}
+
 	}
 
 	//resets dirty to false with current data hash value entered....like BOOKMARK THE SERIALIZE
 	this.setDirtyMark = function(){
-		dirtyMark = _this.Md5Hash.md5(JSON.stringify(_this.toJson()));
+		dirtyMark = $.getHash.md5(JSON.stringify(_this.toJson()));
 		console.log('dirtyMarkOut:' + dirtyMark);
 	}
 
 	this.isDirty = function(){
-		return !(dirtyMark == _this.Md5Hash.md5(JSON.stringify(_this.toJson())));
+		return !(dirtyMark == $.getHash.md5(JSON.stringify(_this.toJson())));
+	}
+
+	this.setMode = function(inMode){
+		mode = inMode;
+		return true;
 	}
 
 
-
-	this.Md5Hash = new function(){
-		!function(a){"use strict";function b(a,b){var c=(65535&a)+(65535&b),d=(a>>16)+(b>>16)+(c>>16);return d<<16|65535&c}function c(a,b){return a<<b|a>>>32-b}function d(a,d,e,f,g,h){return b(c(b(b(d,a),b(f,h)),g),e)}function e(a,b,c,e,f,g,h){return d(b&c|~b&e,a,b,f,g,h)}function f(a,b,c,e,f,g,h){return d(b&e|c&~e,a,b,f,g,h)}function g(a,b,c,e,f,g,h){return d(b^c^e,a,b,f,g,h)}function h(a,b,c,e,f,g,h){return d(c^(b|~e),a,b,f,g,h)}function i(a,c){a[c>>5]|=128<<c%32,a[(c+64>>>9<<4)+14]=c;var d,i,j,k,l,m=1732584193,n=-271733879,o=-1732584194,p=271733878;for(d=0;d<a.length;d+=16)i=m,j=n,k=o,l=p,m=e(m,n,o,p,a[d],7,-680876936),p=e(p,m,n,o,a[d+1],12,-389564586),o=e(o,p,m,n,a[d+2],17,606105819),n=e(n,o,p,m,a[d+3],22,-1044525330),m=e(m,n,o,p,a[d+4],7,-176418897),p=e(p,m,n,o,a[d+5],12,1200080426),o=e(o,p,m,n,a[d+6],17,-1473231341),n=e(n,o,p,m,a[d+7],22,-45705983),m=e(m,n,o,p,a[d+8],7,1770035416),p=e(p,m,n,o,a[d+9],12,-1958414417),o=e(o,p,m,n,a[d+10],17,-42063),n=e(n,o,p,m,a[d+11],22,-1990404162),m=e(m,n,o,p,a[d+12],7,1804603682),p=e(p,m,n,o,a[d+13],12,-40341101),o=e(o,p,m,n,a[d+14],17,-1502002290),n=e(n,o,p,m,a[d+15],22,1236535329),m=f(m,n,o,p,a[d+1],5,-165796510),p=f(p,m,n,o,a[d+6],9,-1069501632),o=f(o,p,m,n,a[d+11],14,643717713),n=f(n,o,p,m,a[d],20,-373897302),m=f(m,n,o,p,a[d+5],5,-701558691),p=f(p,m,n,o,a[d+10],9,38016083),o=f(o,p,m,n,a[d+15],14,-660478335),n=f(n,o,p,m,a[d+4],20,-405537848),m=f(m,n,o,p,a[d+9],5,568446438),p=f(p,m,n,o,a[d+14],9,-1019803690),o=f(o,p,m,n,a[d+3],14,-187363961),n=f(n,o,p,m,a[d+8],20,1163531501),m=f(m,n,o,p,a[d+13],5,-1444681467),p=f(p,m,n,o,a[d+2],9,-51403784),o=f(o,p,m,n,a[d+7],14,1735328473),n=f(n,o,p,m,a[d+12],20,-1926607734),m=g(m,n,o,p,a[d+5],4,-378558),p=g(p,m,n,o,a[d+8],11,-2022574463),o=g(o,p,m,n,a[d+11],16,1839030562),n=g(n,o,p,m,a[d+14],23,-35309556),m=g(m,n,o,p,a[d+1],4,-1530992060),p=g(p,m,n,o,a[d+4],11,1272893353),o=g(o,p,m,n,a[d+7],16,-155497632),n=g(n,o,p,m,a[d+10],23,-1094730640),m=g(m,n,o,p,a[d+13],4,681279174),p=g(p,m,n,o,a[d],11,-358537222),o=g(o,p,m,n,a[d+3],16,-722521979),n=g(n,o,p,m,a[d+6],23,76029189),m=g(m,n,o,p,a[d+9],4,-640364487),p=g(p,m,n,o,a[d+12],11,-421815835),o=g(o,p,m,n,a[d+15],16,530742520),n=g(n,o,p,m,a[d+2],23,-995338651),m=h(m,n,o,p,a[d],6,-198630844),p=h(p,m,n,o,a[d+7],10,1126891415),o=h(o,p,m,n,a[d+14],15,-1416354905),n=h(n,o,p,m,a[d+5],21,-57434055),m=h(m,n,o,p,a[d+12],6,1700485571),p=h(p,m,n,o,a[d+3],10,-1894986606),o=h(o,p,m,n,a[d+10],15,-1051523),n=h(n,o,p,m,a[d+1],21,-2054922799),m=h(m,n,o,p,a[d+8],6,1873313359),p=h(p,m,n,o,a[d+15],10,-30611744),o=h(o,p,m,n,a[d+6],15,-1560198380),n=h(n,o,p,m,a[d+13],21,1309151649),m=h(m,n,o,p,a[d+4],6,-145523070),p=h(p,m,n,o,a[d+11],10,-1120210379),o=h(o,p,m,n,a[d+2],15,718787259),n=h(n,o,p,m,a[d+9],21,-343485551),m=b(m,i),n=b(n,j),o=b(o,k),p=b(p,l);return[m,n,o,p]}function j(a){var b,c="";for(b=0;b<32*a.length;b+=8)c+=String.fromCharCode(a[b>>5]>>>b%32&255);return c}function k(a){var b,c=[];for(c[(a.length>>2)-1]=void 0,b=0;b<c.length;b+=1)c[b]=0;for(b=0;b<8*a.length;b+=8)c[b>>5]|=(255&a.charCodeAt(b/8))<<b%32;return c}function l(a){return j(i(k(a),8*a.length))}function m(a,b){var c,d,e=k(a),f=[],g=[];for(f[15]=g[15]=void 0,e.length>16&&(e=i(e,8*a.length)),c=0;16>c;c+=1)f[c]=909522486^e[c],g[c]=1549556828^e[c];return d=i(f.concat(k(b)),512+8*b.length),j(i(g.concat(d),640))}function n(a){var b,c,d="0123456789abcdef",e="";for(c=0;c<a.length;c+=1)b=a.charCodeAt(c),e+=d.charAt(b>>>4&15)+d.charAt(15&b);return e}function o(a){return unescape(encodeURIComponent(a))}function p(a){return l(o(a))}function q(a){return n(p(a))}function r(a,b){return m(o(a),o(b))}function s(a,b){return n(r(a,b))}function t(a,b,c){return b?c?r(b,a):s(b,a):c?p(a):q(a)}"function"==typeof define&&define.amd?define(function(){return t}):a.md5=t}(this);
-	}();
 	_this.setDirtyMark();
 }
 
@@ -666,7 +739,7 @@ $.fn.DataBinderObject = function(inAction, inJsonStruct){
 	}
 
 	if(inAction == 'save'){
-		return dataBinderObject.save();
+		return dataBinderObject.save(inJsonStruct);
 	}
 
 	if(inAction == 'clear'){
@@ -681,10 +754,8 @@ $.fn.DataBinderObject = function(inAction, inJsonStruct){
 		return dataBinderObject.isDirty();
 	}
 
-	if(inAction == 'remove'){
-		//contactListView = $(this).data("contactListViewInstance");
-		/*//inJsonStruct as single string '???'
-		return contactListView.remove(inJsonStruct);*/
+	if(inAction == 'setMode'){
+		return dataBinderObject.setMode(inJsonStruct);
 	}
 }
 
@@ -866,7 +937,7 @@ $.DynamicPopupYesNo = function( inOptions ){
 				console.log('Opened the popup!');
 			},
 			popupafterclose: function(e){
-				$.mobile.changePage('#thankyouPage');
+				//$.mobile.changePage('#thankyouPage');
 			}
 		}
 	);
@@ -882,6 +953,11 @@ $.DynamicPopupYesNo = function( inOptions ){
 		}
 	});
 }
+
+
+$.getHash = new function(){
+		!function(a){"use strict";function b(a,b){var c=(65535&a)+(65535&b),d=(a>>16)+(b>>16)+(c>>16);return d<<16|65535&c}function c(a,b){return a<<b|a>>>32-b}function d(a,d,e,f,g,h){return b(c(b(b(d,a),b(f,h)),g),e)}function e(a,b,c,e,f,g,h){return d(b&c|~b&e,a,b,f,g,h)}function f(a,b,c,e,f,g,h){return d(b&e|c&~e,a,b,f,g,h)}function g(a,b,c,e,f,g,h){return d(b^c^e,a,b,f,g,h)}function h(a,b,c,e,f,g,h){return d(c^(b|~e),a,b,f,g,h)}function i(a,c){a[c>>5]|=128<<c%32,a[(c+64>>>9<<4)+14]=c;var d,i,j,k,l,m=1732584193,n=-271733879,o=-1732584194,p=271733878;for(d=0;d<a.length;d+=16)i=m,j=n,k=o,l=p,m=e(m,n,o,p,a[d],7,-680876936),p=e(p,m,n,o,a[d+1],12,-389564586),o=e(o,p,m,n,a[d+2],17,606105819),n=e(n,o,p,m,a[d+3],22,-1044525330),m=e(m,n,o,p,a[d+4],7,-176418897),p=e(p,m,n,o,a[d+5],12,1200080426),o=e(o,p,m,n,a[d+6],17,-1473231341),n=e(n,o,p,m,a[d+7],22,-45705983),m=e(m,n,o,p,a[d+8],7,1770035416),p=e(p,m,n,o,a[d+9],12,-1958414417),o=e(o,p,m,n,a[d+10],17,-42063),n=e(n,o,p,m,a[d+11],22,-1990404162),m=e(m,n,o,p,a[d+12],7,1804603682),p=e(p,m,n,o,a[d+13],12,-40341101),o=e(o,p,m,n,a[d+14],17,-1502002290),n=e(n,o,p,m,a[d+15],22,1236535329),m=f(m,n,o,p,a[d+1],5,-165796510),p=f(p,m,n,o,a[d+6],9,-1069501632),o=f(o,p,m,n,a[d+11],14,643717713),n=f(n,o,p,m,a[d],20,-373897302),m=f(m,n,o,p,a[d+5],5,-701558691),p=f(p,m,n,o,a[d+10],9,38016083),o=f(o,p,m,n,a[d+15],14,-660478335),n=f(n,o,p,m,a[d+4],20,-405537848),m=f(m,n,o,p,a[d+9],5,568446438),p=f(p,m,n,o,a[d+14],9,-1019803690),o=f(o,p,m,n,a[d+3],14,-187363961),n=f(n,o,p,m,a[d+8],20,1163531501),m=f(m,n,o,p,a[d+13],5,-1444681467),p=f(p,m,n,o,a[d+2],9,-51403784),o=f(o,p,m,n,a[d+7],14,1735328473),n=f(n,o,p,m,a[d+12],20,-1926607734),m=g(m,n,o,p,a[d+5],4,-378558),p=g(p,m,n,o,a[d+8],11,-2022574463),o=g(o,p,m,n,a[d+11],16,1839030562),n=g(n,o,p,m,a[d+14],23,-35309556),m=g(m,n,o,p,a[d+1],4,-1530992060),p=g(p,m,n,o,a[d+4],11,1272893353),o=g(o,p,m,n,a[d+7],16,-155497632),n=g(n,o,p,m,a[d+10],23,-1094730640),m=g(m,n,o,p,a[d+13],4,681279174),p=g(p,m,n,o,a[d],11,-358537222),o=g(o,p,m,n,a[d+3],16,-722521979),n=g(n,o,p,m,a[d+6],23,76029189),m=g(m,n,o,p,a[d+9],4,-640364487),p=g(p,m,n,o,a[d+12],11,-421815835),o=g(o,p,m,n,a[d+15],16,530742520),n=g(n,o,p,m,a[d+2],23,-995338651),m=h(m,n,o,p,a[d],6,-198630844),p=h(p,m,n,o,a[d+7],10,1126891415),o=h(o,p,m,n,a[d+14],15,-1416354905),n=h(n,o,p,m,a[d+5],21,-57434055),m=h(m,n,o,p,a[d+12],6,1700485571),p=h(p,m,n,o,a[d+3],10,-1894986606),o=h(o,p,m,n,a[d+10],15,-1051523),n=h(n,o,p,m,a[d+1],21,-2054922799),m=h(m,n,o,p,a[d+8],6,1873313359),p=h(p,m,n,o,a[d+15],10,-30611744),o=h(o,p,m,n,a[d+6],15,-1560198380),n=h(n,o,p,m,a[d+13],21,1309151649),m=h(m,n,o,p,a[d+4],6,-145523070),p=h(p,m,n,o,a[d+11],10,-1120210379),o=h(o,p,m,n,a[d+2],15,718787259),n=h(n,o,p,m,a[d+9],21,-343485551),m=b(m,i),n=b(n,j),o=b(o,k),p=b(p,l);return[m,n,o,p]}function j(a){var b,c="";for(b=0;b<32*a.length;b+=8)c+=String.fromCharCode(a[b>>5]>>>b%32&255);return c}function k(a){var b,c=[];for(c[(a.length>>2)-1]=void 0,b=0;b<c.length;b+=1)c[b]=0;for(b=0;b<8*a.length;b+=8)c[b>>5]|=(255&a.charCodeAt(b/8))<<b%32;return c}function l(a){return j(i(k(a),8*a.length))}function m(a,b){var c,d,e=k(a),f=[],g=[];for(f[15]=g[15]=void 0,e.length>16&&(e=i(e,8*a.length)),c=0;16>c;c+=1)f[c]=909522486^e[c],g[c]=1549556828^e[c];return d=i(f.concat(k(b)),512+8*b.length),j(i(g.concat(d),640))}function n(a){var b,c,d="0123456789abcdef",e="";for(c=0;c<a.length;c+=1)b=a.charCodeAt(c),e+=d.charAt(b>>>4&15)+d.charAt(15&b);return e}function o(a){return unescape(encodeURIComponent(a))}function p(a){return l(o(a))}function q(a){return n(p(a))}function r(a,b){return m(o(a),o(b))}function s(a,b){return n(r(a,b))}function t(a,b,c){return b?c?r(b,a):s(b,a):c?p(a):q(a)}"function"==typeof define&&define.amd?define(function(){return t}):a.md5=t}(this);
+}();
 
 
 

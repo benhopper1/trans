@@ -13,6 +13,7 @@ body
 	script(src="http://code.jquery.com/jquery-1.11.1.min.js")
 	script(src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js")
 	script(src="/public/js/jquery/hopper/jquery.hopper.extention.js")
+	script(src="/public/js/jquery/hopper/jquery.hopper.database.js")
 
 
 
@@ -453,19 +454,20 @@ body
 						ul
 							li
 								a(href="#tab_editContact" data-ajax="false") Edit Contact
+							//li
+								//a(href="#four" data-ajax="false") Create Contact
 							li
 								a(href="#two" data-ajax="false") Import
 							li
 								a(href="#tab_export" data-ajax="false") Export
 							li
-								a(href="#four" data-ajax="false") Add Contact
-							li
 								a(href="#four" data-ajax="false") User Profile
-					//@@@@@@  TAB ---1--------------------------------------------
-					//Edit Contact------
+
+					//@@@@@@  TAB ---EDIT CONTACT--------------------------------------------
 					div(id="tab_editContact" class="ui-content" style="overflow: auto; ")
 
-
+					//@@@@@@  TAB -----CREATE CONTACT ---------------------------------------
+					//div(id="tab_createContact" class="ui-content")
 
 
 
@@ -484,40 +486,10 @@ body
 
 
 
-						//- a(href="#popupBasic" data-rel="popup") Open Popup
-						//- div(data-role="popup" id="popupBasic" class="ui-content" data-position-to="window" style="height:200px !important;overflow-y: scroll")
-						//- 	a(href="#contactPanel_0" data-ajax="false" style="max-height:200px;overflow-y: scroll")
-						//- 	ul(data-role="listview" id="contactsMenu" class=""   data-inset="false" style="width:300px; ")
 
 
-					//@@@@@@  TAB --2--------------------------------------------
-					div(id="four" class="ui-content")
-						//a(href="#popupBasic" data-rel="popup") Open Popup
-						//div(data-role="popup" id="popupBasic" class="ui-content" data-position-to="window" style="width:90%; height:90% !important;overflow-y: scroll")
-						//- div(id="contactsWindow" data-role="main"  class="ui-content" style="")
-						//- 	form(method="post" id="userForm" style="")
-						//- 		div(class="ui-field-contain" style="" )
 
-						//- 			center
-						//- 				h6 (click to change)
-						//- 				img(id="widget_userForm_image" name="uImg" class="magicSquarePnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" onclick="Widget_userFormScript.chooseFile();")
-						//- 				h5 This is you 
 
-						//- 			input(style="background-color: transparent !important;" tabindex="1" data-mini="true" type="text" id="widget_userForm_firstName" 	name="fname" 		placeholder="First Name...")
-						//- 			input(tabindex="2" type="text" id="widget_userForm_lastName" 	data-mini="true" name="lName" 		placeholder="Last Name...")
-						//- 			input(tabindex="3" type="tel" id="widget_userForm_phone" 		data-mini="true" name="phoneNumber" 	placeholder="Phone Number...")
-						//- 			input(tabindex="4" type="email" id="widget_userForm_email" 		data-mini="true" name="email" 		placeholder="Email Address...")
-						//- 			input(tabindex="5" type="text" id="widget_userForm_userName" 	data-mini="true" name="userName" 	placeholder="User Name...")
-						//- 			input(tabindex="6" type="password" id="widget_userForm_password" 	data-mini="true" name="password" 	placeholder="Password...")
-						//- 			input(tabindex="7" type="password" id="widget_userForm_password2" 	data-mini="true" name="password2" 	placeholder="Password Again (sorry!!)...")
-						//- 			input(tabindex="8" type="text" id="widget_userForm_address" 		data-mini="true" name="address" 		placeholder="Address...")
-						//- 			input(tabindex="9" type="text" id="widget_userForm_city" 		data-mini="true" name="city" 		placeholder="City...")
-						//- 			input(tabindex="10" type="text" id="widget_userForm_state" 		data-mini="true" name="state" 		placeholder="State...")
-						//- 			input(tabindex="11" type="text" id="widget_userForm_zipcode" 		data-mini="true" name="zip" 			placeholder="Zip Code...")
-						//- 			input(tabindex="12" type="text" id="widget_userForm_country" 		data-mini="true" name="country" 		placeholder="Country...")
-									
-						//- 			input(data-icon="action" id="addEditUser_save" 	data-mini="true" type="button" value="Save")
-						//- 			input(data-icon="back" id="addEditUser_clear" 	data-mini="true" type="button" value="Cancel")
 
 
 			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -540,33 +512,13 @@ body
 					test:'hopperTestrVal55',
 					useCheckbox:false,
 					onClick:function(inContactId, inData, inElementId){
-						console.log('conId:' + inContactId);
-						console.dir(inData);
-
-						// CSS Last Selected------
-						//alert(inElementId);
+						// CSS Last Selected------>
 						$( '.trans-bkg-a-hv' ).removeClass( 'lastSelected' )
 						$( '#' + inElementId + ' a').addClass( 'lastSelected' );
 
-
-						//loading selected data into edit form....
-						//- $('#contactEdit_id').val(inData.id);
-						//- $('#contactEdit_image').attr('src', inData.imageUrl);
-						//- $('#contactEdit_type').HorizontalRadioGroup('setSelected', inData.type.replace('[', '').replace(']', ''));
-						//- $('#contactEdit_name').val(inData.name);
-						//- $('#contactEdit_emailAddress').val(inData.emailAddress);
-
-						//- $('#contactEdit_phoneNumber').val(inData.phoneNumber).formatPhoneNumber();
-						//- $('#contactEdit_ext').val(inData.ext);
-						//- $('#contactEdit_companyName').val(inData.companyName);
-						//- $('#contactEdit_department').val(inData.department);
-						//- $('#contactEdit_title').val(inData.title);
-						//- $('#contactEdit_ref').val(inData.refNumber);
-
-						$('#contactsWindow').DataBinderObject('load', inData);
-
-
-
+						//DATA BINDER CALL ----->
+						//$('#contactsWindow').DataBinderObject('load', inData);
+						eventObject.reportOn('contactMenu_itemClick', inData);
 					}
 				}
 			);
@@ -601,6 +553,7 @@ body
 				$('#tab_editContact').trigger('create');
 
 			});
+
 			$('#btBar_contactManager_back').click(function(){
 				history.back();
 				return false;
@@ -955,9 +908,7 @@ body
 								});
 							});
 
-							//deviceQuerySync.phoneLog_getAll(0, function(inCallLogArray){
-							//console.log('callLog callback------------------');
-							//console.dir(inCallLogArray);
+
 							storageObject.getPhoneLogLastId(function(inResultOflastId){
 								deviceQuerySync.phoneLog_getAll(inResultOflastId, function(inCallLogArray){
 									storageObject.addManyPhoneLog(inCallLogArray, function(inResult){
@@ -967,27 +918,9 @@ body
 								});
 							});
 
-							
 
 
-							//test area------
-							//- $postAjax(
-							//- 	{
-							//- 		url:'/database/phonelog/getLast',
-							//- 		send:
-							//- 			{
-							//- 				//use phoneNumber or not for all phonenumbers
-							//- 				//phoneNumber:'19198596799',
-							//- 				queryOption:'today'
-							//- 			},
-							//- 		onAjaxSuccess:function(inResponseText){
-							//- 			//inResponseText = JSON.parse(inResponseText);
-							//- 			alert(inResponseText);
-							//- 			//if(inPostFunction){inPostFunction(JSON.parse(inResponseText));}
-							//- 		}
-							//- 	}
-							//- );
-						//}
+
 
 							//=====================================================================
 							// When Page changes by user catch here for remote menu purposes:
@@ -1498,7 +1431,55 @@ body
 
 
 
+		//=====================================================================================================================
+		//DATA OBJECT
+		//=====================================================================================================================
+		
+		var contactDataObject = new DatabaseObject(
+			{
+				editProcess:function(inData, inPostFunction){
+					$postAjax(
+						{
+							url:'/database/editContact',
+							send:inData,
+							onAjaxSuccess:function(inResponseText){
+								inResponseText = JSON.parse(inResponseText);
+								inPostFunction(inResponseText);
+							}
+						}
+					);
+				},
+				selectProcess:function(inData, inPostFunction){
+					$postAjax(
+						{
+							url:'/database/getContacts',
+							send:
+								{
 
+								},
+							onAjaxSuccess:function(inResponseText){
+								inResponseText = JSON.parse(inResponseText).rows;
+								inPostFunction(inResponseText);
+							}
+						}
+					);
+				},
+				insertProcess:function(inData, inPostFunction){
+					$postAjax(
+						{
+							url:'/database/addContact',
+							send:inData,
+								//{
+								//},
+							onAjaxSuccess:function(inResponseText){
+								inResponseText = JSON.parse(inResponseText);
+								inPostFunction(inResponseText);
+							}
+						}
+					);
+				}
+			}
+		);
 
 
 

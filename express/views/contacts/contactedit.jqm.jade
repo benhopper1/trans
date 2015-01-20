@@ -6,6 +6,11 @@ body
 	form(action="/upload", method="post", enctype="multipart/form-data" style="display: none;")
 		input(id="upload" type="file" name="uploadedFile" style="display: none;" onchange="console.log('changed!!!')")
 
+	div(data-role="fieldcontain" class="")
+		select(name="select-choice-1" data-mini="true" id="option_contact_mode")
+			option(id="option_contact_edit" value="edit") Edit Selected Contact
+			option(id="option_contact_add" value="insert") Create New Contact
+
 	div(id="contactsWindow" data-role="main"  class="ui-content" style="")
 		form(method="post" id="userForm" data-mini="true" style="")
 			div(class="ui-field-contain" style="" )
@@ -117,6 +122,18 @@ script.
 	//});
 
 
+	contactDataObject.getEventObject().setOn('onAfterInsert', function(inData){
+		//alert('onAfterInsert');
+		console.dir(inData);
+		$('#contactsMenu').ContactListView('refresh');
+	});
+	contactDataObject.getEventObject().setOn('onAfterEdit', function(inData){
+		//alert('onAfterEdit');
+		console.dir(inData);
+		$('#contactsMenu').ContactListView('refresh');
+	});
+
+
 	//=====================================================================================================================
 	//FORM DATA BINDER -----------------------
 	//=====================================================================================================================
@@ -152,7 +169,7 @@ script.
 				$('#contactEdit_ref').val(params.refNumber);
 
 			},
-			serializeProcess:function(){
+			toJsonProcess:function(){
 				var data = 
 					{
 						id:$('#contactEdit_id').val(),
@@ -181,30 +198,88 @@ script.
 				$('#contactEdit_department').val('');
 				$('#contactEdit_title').val('');
 				$('#contactEdit_ref').val('');
+				$('#contactEdit_type').HorizontalRadioGroup('setSelected', 0);
 				return true;
 			},
-			saveProcess:function(inSerializedData, inSaveParams, next){
-				$postAjax(
+			saveProcess:function(inSerializedData, inSaveType, next, cancel){
+				//RULE ONLY ONE NAME FOR EACH TYPE----------------------------
+				var theId = $('#contactsMenu').ContactListView('getIdByNameAndType',
 					{
-						url:'/database/editContact',
-						send:inSerializedData,
-						onAjaxSuccess:function(inResponseText){
-							inResponseText = JSON.parse(inResponseText);
-							next(inResponseText);
-						}
+						name:inSerializedData.name,
+						type:inSerializedData.type
 					}
 				);
-				return true;
+
+				if(theId){
+					//could be edit and must be same id being edited, not an insert
+					if(inSaveType == 'insert'){
+						//must cancel!!!!!
+						alert('Can not save! Only one name for each phone number type(MOBILE, HOME ...)  ' + inSerializedData.name +' ' + inSerializedData.type);
+						cancel(inSerializedData)
+						return false;
+					}
+					if(inSaveType == 'edit'){
+						if(theId != inSerializedData.id){
+							//must cancel!!!!!
+							alert('Can not save! Only one name for each phone number type(MOBILE, HOME ...)  ' + inSerializedData.name +' ' + inSerializedData.type);
+							cancel(inSerializedData)
+							return false;
+						}
+					}
+				}
+				//END RULE----------------------------------------------------
+				
+				if(inSaveType == 'edit'){
+					contactDataObject.edit(inSerializedData, function(inPostData){
+						next(inPostData);
+					});
+					return true;
+				}
+				if(inSaveType == 'insert'){
+					contactDataObject.insert(inSerializedData, function(inPostData){
+						next(inPostData);
+					});
+					return true;
+				}
 			},
 			onSave:function(inData){
 				alert('Data Saved' + JSON.stringify(inData));
 			},
-			whenDirtyTransition:function(inData){
-
+			whenDirtyTransition:function(inData, save, next){
+				console.dir(inData);
+				console.log(inData.name.length);
+				if(inData.name.length == 0){
+					next();
+					return false;
+				}
+				$.DynamicPopupYesNo(
+					{
+						message:'You have unsaved data. Would you like to save it before proceeding?',
+						subMessage:'My SubMessage',
+						yesCaption:'YES',
+						noCaption:'NO',
+						onYes:function(){
+							//saveing!!!
+							save();
+							next();
+						},
+						onNo:function(){
+							next();
+						},
+					}
+				);
 			}
 
 		}
 	);//end binder------------
+
+
+	
+
+
+
+
+
 
 
 	$('#btBar_contactManager_back3').click(function(){
@@ -228,4 +303,43 @@ script.
 
 	$('#btBar_contactManager_back5').click(function(){
 		console.log('isDirty :' + $('#contactsWindow').DataBinderObject('save'));
+	});
+
+
+
+	//=============================================================================
+	//BUTTON EVENTS----------------------------------------------------------------
+	//=============================================================================
+	$('#bt_contactEdit_save').click(function(){
+		$('#contactsWindow').DataBinderObject('save');
+	});
+
+
+	// CHANGE MODE EDIT/CREATE(ADD)
+	$("#option_contact_mode").change(function() {
+		var selected = $(this).val(); // or this.value
+		//setting binder mode edit / add based on combobox
+		$('#contactsWindow').DataBinderObject('setMode', $("#option_contact_mode").val());
+		if($("#option_contact_mode").val() == 'insert'){
+			$('#contactsWindow').DataBinderObject('clear');
+		}
+		if($("#option_contact_mode").val() == 'edit'){
+			var theData = $('#contactsMenu').ContactListView('getLastSelected');
+			if(theData){
+				$(theData.jRef).trigger('click');
+			}else{
+				$('#contactsMenu').ContactListView('setSelectedByIndex', 0);
+				var theLastAttemptData = $('#contactsMenu').ContactListView('getLastSelected');
+				if(theData){
+					$(theLastAttemptData.jRef).trigger('click');
+				}
+			}
+		}
+
+	});
+
+	eventObject.setOn('contactMenu_itemClick', function(inData){
+		$('#contactsWindow').DataBinderObject('load', inData);
+		$('#option_contact_edit').text('Editing ' + inData.name);
+		$('#option_contact_mode').selectmenu('refresh');
 	});
