@@ -327,6 +327,10 @@ console.d = function(inArray){
 }
 
 
+var arrayDiff = function(inArray0, inArray1){
+	return $(inArray0).not(inArray1).get();
+}
+
 
 
 //opposite of extend,  recursive difference...

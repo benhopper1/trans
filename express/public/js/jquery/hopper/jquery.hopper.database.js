@@ -13,6 +13,7 @@ var DatabaseObject = function( inOptions ){
 			editProcess:false,
 			deleteProcess:false,
 			selectProcess:false,
+			deleteProcess:false,
 		}
 	options = $.extend(options, inOptions);
 
@@ -52,12 +53,23 @@ var DatabaseObject = function( inOptions ){
 			options.selectProcess(inData, next);
 		}
 	}
-
+	this.delete = function(inData, inPostFunction){
+		eventObject.reportOn('onBeforeDelete', inData);
+		var next = function(inNextData){
+			if(inPostFunction){
+				inPostFunction(inNextData);
+			}
+			eventObject.reportOn('onAfterDelete', inNextData);
+		}
+		if(options.deleteProcess){
+			options.deleteProcess(inData, next);
+		}
+	}
 
 
 
 	//this.edit = function(inData, inPostFunction){}
-	this.delete = function(inData, inPostFunction){}
+	//this.delete = function(inData, inPostFunction){}
 	//this.select = function(inData, inPostFunction){}
 
 	//REPORTS AVALIABLE-------------

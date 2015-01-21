@@ -182,7 +182,7 @@ body
 		}
 
 		body {
-			background: url(/public/images/ui/beach_background4.jpg);
+			background: url(/public/images/ui/whitecloudsimage.jpg);
 			background-repeat:repeat-y;
 			background-position:center center;
 			background-attachment:scroll;
@@ -439,7 +439,7 @@ body
 			div(class="ui-block-a" style="width:25%")
 				div(data-role="collapsible" class="" data-content-theme="d" data-inset="false" data-collapsed="false" data-mini="true" data-iconpos="right" style="padding: 0px 0px 0.5em 12px !important;width:100%; height:100%;border: 0px")
 					h3(style="margin-top: 0px !important;margin-bottom: 0px !important;") my heading
-					div(class="ui-content" data-position-to="window" style="width:90%; ")
+					div(id="txt" class="ui-content" data-position-to="window" style="width:90%; ")
 						a(href="#contactPanel_0" data-ajax="false" style="")
 						ul(data-role="listview" id="contactsMenu" class=""   data-inset="false" style="width:100%; ")
 
@@ -511,6 +511,7 @@ body
 				{
 					test:'hopperTestrVal55',
 					useCheckbox:false,
+					autoScrollOnSelect:true,
 					onClick:function(inContactId, inData, inElementId){
 						// CSS Last Selected------>
 						$( '.trans-bkg-a-hv' ).removeClass( 'lastSelected' )
@@ -519,6 +520,9 @@ body
 						//DATA BINDER CALL ----->
 						//$('#contactsWindow').DataBinderObject('load', inData);
 						eventObject.reportOn('contactMenu_itemClick', inData);
+					},
+					onLongClick:function(inContactId, inData, inElementId){
+						eventObject.reportOn('contactMenu_onLongClick', inData);
 					}
 				}
 			);
@@ -1477,7 +1481,22 @@ body
 							}
 						}
 					);
-				}
+				},
+				deleteProcess:function(inData, inPostFunction){
+					$postAjax(
+						{
+							url:'/database/deleteContact',
+							send:
+								{
+									id:inData.id
+								},
+							onAjaxSuccess:function(inResponseText){
+								inResponseText = JSON.parse(inResponseText);
+								inPostFunction(inResponseText);
+							}
+						}
+					);
+				},
 			}
 		);
 

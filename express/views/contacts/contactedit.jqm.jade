@@ -6,10 +6,10 @@ body
 	form(action="/upload", method="post", enctype="multipart/form-data" style="display: none;")
 		input(id="upload" type="file" name="uploadedFile" style="display: none;" onchange="console.log('changed!!!')")
 
-	div(data-role="fieldcontain" class="")
-		select(name="select-choice-1" data-mini="true" id="option_contact_mode")
-			option(id="option_contact_edit" value="edit") Edit Selected Contact
-			option(id="option_contact_add" value="insert") Create New Contact
+
+
+
+	#contactModeSelect
 
 	div(id="contactsWindow" data-role="main"  class="ui-content" style="")
 		form(method="post" id="userForm" data-mini="true" style="")
@@ -42,7 +42,16 @@ body
 
 
 				input(data-icon="action" id="bt_contactEdit_save" 	data-mini="true" type="button" value="Save")
-				input(data-icon="back" id="bt_contactEdit_cancel" 	data-mini="true" type="button" value="Cancel")
+				input(data-icon="back" id="bt_contactEdit_clear" 	data-mini="true" type="button" value="Clear")
+				br
+				br
+				input(data-icon="delete" id="bt_contactEdit_delete" 	data-mini="true" type="button" value="Delete Contact")
+				//label(for="fs_contactEdit_isActive") Active Contact:
+				//input(type="checkbox" id="fs_contactEdit_isActive" data-role="flipswitch")
+				//select(id="select-based-flipswitch" data-role="flipswitch")
+					//option(value="active") Active
+					//option(value="delete") Delete
+
 
 
 
@@ -132,7 +141,11 @@ script.
 		console.dir(inData);
 		$('#contactsMenu').ContactListView('refresh');
 	});
-
+	contactDataObject.getEventObject().setOn('onAfterDelete', function(inData){
+		//alert('onAfterEdit');
+		console.dir(inData);
+		$('#contactsMenu').ContactListView('refresh');
+	});
 
 	//=====================================================================================================================
 	//FORM DATA BINDER -----------------------
@@ -273,37 +286,53 @@ script.
 		}
 	);//end binder------------
 
+	//====================================================================
+	//ComboBox (contactModeSelect)------ edit / insert mode
+	//====================================================================
+	$('#contactModeSelect').ComboBox('create',
+		{
+			id:'selectSaveMode',
+			optionClass:'',
+			usePopup:true,
+			optionArray:
+				[
+					{
+						caption:'Edit Selected Value',
+						value:'edit'
+					},
+					{
+						caption:'Create New Contact',
+						value:'insert',
+					},
 
-	
+				],
+			onChange:function(inIndex, inCaption, inValue, inJref){
+				console.dir(inIndex, inCaption, inValue, inJref);
+				var selected = inValue; // or this.value
+				//setting binder mode edit / add based on combobox
+				$('#contactsWindow').DataBinderObject('setMode', inValue);
+				if(inValue == 'insert'){
+					$('#contactsWindow').DataBinderObject('clear');
+				}
+				if(inValue == 'edit'){
+					var theData = $('#contactsMenu').ContactListView('getLastSelected');
+					if(theData){
+						$(theData.jRef).trigger('click');
+					}else{
+						$('#contactsMenu').ContactListView('setSelectedByIndex', 0);
+						var theLastAttemptData = $('#contactsMenu').ContactListView('getLastSelected');
+						if(theData){
+							$(theLastAttemptData.jRef).trigger('click');
+						}
+					}
+				}
+			},
+			onSelect:function(inIndex, inCaption, inValue, inJref){
+				$('#contactsWindow').DataBinderObject('setMode', inValue);
+			},
+		}
+	);
 
-
-
-
-
-
-
-	$('#btBar_contactManager_back3').click(function(){
-		//$('#contactsWindow').DataBinderObject('clear');
-		//$('#contactsWindow').DynamicPopup();
-		$.DynamicPopupYesNo(
-			{
-				message:'You have unsaved data. Would you like to save it before proceeding?',
-				subMessage:'My SubMessage',
-				yesCaption:'YES',
-				noCaption:'NO',
-				onYes:function(){alert('YES');},
-				onNo:function(){alert('NO');},
-			}
-		);
-	});
-
-	$('#btBar_contactManager_back4').click(function(){
-		$('#contactsWindow').DataBinderObject('setDirtyMark');
-	});
-
-	$('#btBar_contactManager_back5').click(function(){
-		console.log('isDirty :' + $('#contactsWindow').DataBinderObject('save'));
-	});
 
 
 
@@ -313,33 +342,64 @@ script.
 	$('#bt_contactEdit_save').click(function(){
 		$('#contactsWindow').DataBinderObject('save');
 	});
-
-
-	// CHANGE MODE EDIT/CREATE(ADD)
-	$("#option_contact_mode").change(function() {
-		var selected = $(this).val(); // or this.value
-		//setting binder mode edit / add based on combobox
-		$('#contactsWindow').DataBinderObject('setMode', $("#option_contact_mode").val());
-		if($("#option_contact_mode").val() == 'insert'){
-			$('#contactsWindow').DataBinderObject('clear');
-		}
-		if($("#option_contact_mode").val() == 'edit'){
-			var theData = $('#contactsMenu').ContactListView('getLastSelected');
-			if(theData){
-				$(theData.jRef).trigger('click');
-			}else{
-				$('#contactsMenu').ContactListView('setSelectedByIndex', 0);
-				var theLastAttemptData = $('#contactsMenu').ContactListView('getLastSelected');
-				if(theData){
-					$(theLastAttemptData.jRef).trigger('click');
-				}
-			}
-		}
-
+	$('#bt_contactEdit_clear').click(function(){
+		console.log('bt_contactEdit_clear clcik....');
+		$('#option_contact_add').prop('selected', 'selected');
+		$('#contactModeSelect').ComboBox('selectByIndex', 0);
 	});
+
 
 	eventObject.setOn('contactMenu_itemClick', function(inData){
 		$('#contactsWindow').DataBinderObject('load', inData);
-		$('#option_contact_edit').text('Editing ' + inData.name);
-		$('#option_contact_mode').selectmenu('refresh');
+		$('#contactModeSelect').ComboBox('changeCaption', {index:0,caption:'Editing ' + inData.name});
+		$('#contactModeSelect').ComboBox('selectByIndex', 0);
 	});
+	eventObject.setOn('contactMenu_onLongClick', function(inData){
+		alert('contactMenu_onLongClick');
+		console.dir(inData);
+		contactDataObject.delete(inData, function(inData){alert(JSON.stringify(inData));})
+	});
+
+	$('#btBar_contactManager_back5').click(function(){
+		//- $('html, body').animate({
+		//- 	scrollTop: $('#bt_contactEdit_clear').offset().top
+		//- });
+		//- $('#txt').animate({
+		//- 	scrollTop: $('#contactsMenu_362').offset().top
+		//- });
+		$('#contactsMenu').ContactListView('scrollToSelected');
+
+		
+	});
+	$('#btBar_contactManager_back3').click(function(){
+	});
+
+	$('#btBar_contactManager_back4').click(function(){
+		$('#contactsWindow').DataBinderObject('setDirtyMark');
+	});
+
+	$( "#contactsMenu_275" ).bind( "taphold", function(){
+		alert('LONG HOLD');
+		contactDataObject.delete({id:'275'}, function(inData){alert(JSON.stringify(inData));})
+	});
+
+
+
+	//- this.deleteSelectedContact = function(){
+	//- 			$postAjax(
+	//- 				{
+	//- 					url:'database/deleteContact',
+	//- 					send:
+	//- 						{
+	//- 							id:$('#widgetContactsCollectionDataGrid').datagrid('getSelected').id
+	//- 						},
+	//- 					onAjaxSuccess:function(inResponseText){
+	//- 						inResponseText = JSON.parse(inResponseText);
+	//- 						console.dir(inResponseText);
+	//- 						_this.gridDeleteRow(_this.getSelectedRowIndexFromGrid());
+	//- 						_this.gridSelectFirstRow();
+	//- 						eventObject.reportOn('refreshOnRemote', '');
+	//- 					}
+	//- 				}
+	//- 			);
+	//- 		}

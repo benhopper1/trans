@@ -39,6 +39,10 @@ body
 		$('#contactExport_export').click(function(){
 			//$('#theForm').form_checkbox_clear();
 			alert('NEED TO IMPLEMENT');
+			console.log('contactExport_export');
+			console.dir($('#theForm').form_checkbox_getCheckedData());
+			//form_checkbox_getCheckedData
+			contactExportObject.export($('#theForm').form_checkbox_getCheckedData());
 		});
 		$('#contactExport_refresh').click(function(){
 			//$('#theForm').form_checkbox_removeById('317');
@@ -176,6 +180,30 @@ body
 
 				);
 			}
+			//------------------------------------------------------------------
+			// EXPORT ------
+			//------------------------------------------------------------------
+			this.export = function(checkedRowsArray){
+				commManager.transactionToDeviceToken(
+					{
+						routing:
+							{
+								command:'contactRequest',
+								
+							},
+						data:
+							{
+								action:'addToContacts',
+								contactsArray:checkedRowsArray
+							},
+
+						onComplete:function(inDataLayer, inTransportLayer){
+							console.log('onComplete transactionToDeviceToken call back entered');
+						}
+					}
+				);
+			}
+
 		} // end of obj
 
 		$(document).ready(function(){
