@@ -1,371 +1,299 @@
-head 
-	meta(charset="UTF-8")
-	meta(name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
-	title() AngTest
-
-body(style="")
-	//script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
-
-
-
-	//script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
-	//script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
-
-	link(rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css")
-	script(src="http://code.jquery.com/jquery-1.11.1.min.js")
-	script(src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js")
-	
-	script(src="/public/js/jquery/hopper/jquery.hopper.extention.js")
-
-	script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
-	script(type='text/javascript', src='/js/qrcode/qrcode.js')
-
-	script(type='text/javascript', src='/js/commmanager/commmanager.js')
-	script(type='text/javascript', src='/js/clientutil/clientutil.js')
+doctype html
+html
+	head(lang="en")
+		title Account
+		meta(http-equiv="content-type", content="text/html; charset=UTF-8")
+		meta(name="description", content="")
+		meta(name="keywords", content="")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
 
 
+		link(rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css")
+		script(src="http://code.jquery.com/jquery-1.11.1.min.js")
+		script(src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js")
+		script(src="/public/js/jquery/hopper/jquery.hopper.extention.js")
+
+		script(type='text/javascript', src='/js/clientutil/clientutil.js')
 
 
-	//script(type='text/javascript', src='/public/js/easyui/jquery.easyui.min.js')
-	//script(type='text/javascript', src='/public/js/easyui/hopper/easyui.extention.js')
-	//link(rel='stylesheet', href='/public/js/easyui/themes/ui-sunny/easyui.css')
-	//link(rel='stylesheet', href='/public/js/easyui/themes/default/icon.css')
+		script(type='text/javascript', src='/public/js/easyui/jquery.easyui.min.js')
+		link(rel='stylesheet', href='/public/js/easyui/themes/default/easyui.css')
+		link(rel='stylesheet', href='/public/js/easyui/themes/default/icon.css')
 
+		body(style="")
 
+			style.
+				.imgAndData{
+					font-size: 13px;
+					font-style: normal;
+					font-weight: normal;
+					padding-left: 5px;
+					LINE-HEIGHT:15px;
+					background-color: #eee;
 
-	//- masterMenu-----
-	//- script(src="/public/js/mastermenu/src/js/jquery.mmenu.min.js" type="text/javascript")
-	//- link(href="/public/js/mastermenu/src/css/jquery.mmenu.css" type="text/css" rel="stylesheet")
-	//- link(href="/public/js/mastermenu/src/css/extensions/jquery.mmenu.themes.css" type="text/css" rel="stylesheet")
-	//- link(href="/public/js/mastermenu/src/css/extensions/jquery.mmenu.fullscreen.css" type="text/css" rel="stylesheet")
-	
-	script.
-		var getUserId =function(){return '#{userId}';}
-		var getDeviceId = function(){return '#{deviceId}';}
-		var getURL = function(){return '#{URL}';}
-		var getDefaultUserImageUrl = function(){return '#{defaultUserImageUrl}';}
-		var getDefaultMemberImageUrl = function(){return '#{defaultMemberImageUrl}';}
-
-	style.
-		.mm-menu
-			{
-				background: rgba( 0, 0, 0, 0.6 );
-				box-shadow: none !important;
-				text-align: center;
-				color: #fff;
-			}
-		.logo{
-				border: 1px solid #fff;
-				line-height: 40px;
-				display: inline-block;
-				width: 40px;
-				height: 80px;
-				margin: 0x 0 0 0;
-		}
-		.imgAndData{
-			font-size: 13px;
-			font-style: normal;
-			font-weight: normal;
-			padding-left: 5px;
-			LINE-HEIGHT:15px;
-			background-color: #eee;
-
-		}
-
-		.magicCirc{
-			padding:4px;
-			display:inline-block;
-			font:12px/14px Arial, Helvetica, sans-serif;
-			color:#666;
-			border:1px solid #999;
-			background-color:#eee;
-			-moz-border-radius:10px;
-			-webkit-border-radius: 150px;
-			-moz-box-shadow:#999 2px 0px 3px;
-			-webkit-box-shadow:#999 2px 0px 3px;
-			margin-bottom:4px;
-		}
-
-		.magicCircPnt{
-			padding:4px;
-			display:inline-block;
-			cursor:pointer;
-			font:12px/14px Arial, Helvetica, sans-serif;
-			color:#666;
-			border:1px solid #999;
-			background-color:#eee;
-			-moz-border-radius:10px;
-			-webkit-border-radius: 150px;
-			-moz-box-shadow:#999 2px 0px 3px;
-			-webkit-box-shadow:#999 2px 0px 3px;
-			margin-bottom:4px;
-		}
-
-		.center{
-			margin-left: auto;
-			margin-right: auto;
-			width: 70%;
-			background-color: #b0e0e6;
-		}
-
-
-		@-webkit-keyframes spaceboots {
-			0% { -webkit-transform: translate(2px, 1px) rotate(0deg); }
-			10% { -webkit-transform: translate(-1px, -2px) rotate(-40deg); }
-			20% { -webkit-transform: translate(-3px, 0px) rotate(40deg); }
-			30% { -webkit-transform: translate(0px, 2px) rotate(0deg); }
-			40% { -webkit-transform: translate(1px, -1px) rotate(1deg); }
-			50% { -webkit-transform: translate(-1px, 2px) rotate(-1deg); }
-			60% { -webkit-transform: translate(-3px, 1px) rotate(0deg); }
-			70% { -webkit-transform: translate(2px, 1px) rotate(-1deg); }
-			80% { -webkit-transform: translate(-1px, -1px) rotate(1deg); }
-			90% { -webkit-transform: translate(2px, 2px) rotate(0deg); }
-			100% { -webkit-transform: translate(1px, -2px) rotate(-1deg); }
-		}
-		.shake {
-			-webkit-animation-name: spaceboots;
-			-webkit-animation-duration: 0.8s;
-			-webkit-transform-origin:50% 50%;
-			-webkit-animation-iteration-count: 15;//infinite;
-			-webkit-animation-timing-function: linear;
-		}
-		.magicShadow{
-			-moz-box-shadow:10px 10px 5px #000000;
-			-webkit-box-shadow:10px 10px 5px #000000;
-			box-shadow:10px 10px 5px #000000;
-		}
-
-		.magicPointer{
-			cursor:pointer;
-		}
-		.magicSquare{
-			padding:4px;
-			display:inline-block;
-			font:12px/14px Arial, Helvetica, sans-serif;
-			color:#666;
-			border:1px solid #999;
-			background-color:#eee;
-			-moz-border-radius:00px;
-			-webkit-border-radius: 15px;
-			-moz-box-shadow:#999 2px 0px 3px;
-			-webkit-box-shadow:#999 2px 0px 3px;
-			margin-bottom:4px;
-		}
-
-		body {
-			background: url(public/images/ui/beach_background4.jpg);
-			background-repeat:repeat-y;
-			background-position:center center;
-			background-attachment:scroll;
-			background-size:100% 100%;
-		}
-		img{
-			max-width: 100%;
-		}
-
-		.ui-page {
-			background: transparent;
-			//max-width: 400px;
-		}
-		.ui-content{
-			//background: transparent;
-		}
-		.center-me {
-			//margin: 0 auto !important;
-		}
-		//- img{
-		//- max-width: 17% !important;
-		//- 	width: 17% !important;
-		//- 	padding: 5px;
-		//- }
-
-		//- .ui-li-has-thumb .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li-has-thumb{
-		//- 	min-height: 68px !important;
-		//- }
-		/* this changes the actual div*/
-		#mainmenu li a{
-			background-color: transparent !important;
-			//background-image: url('') !important;
-			//background: rgb(0, 0, 0);
-			//background: rgba(0, 0, 0, 0.6);
-		}
-		#mainmenu li a:hover { 
-			background-color:#feeebd !important;
-		}
-		#mainmenu li a:active { 
-			background-color:#817865 !important;
-		}
-
-		#mainmenu li a img { 
-			height:80px;
-		}
-
-		/* Place on a div */
-		.listViewMenu{
-			background-color: transparent !important;
-		}
-		.listViewMenu:hover { 
-				background-color:#feeebd !important;
-		}
-		.listViewMenu:active { 
-				background-color:#817865 !important;
-		}
-
-
-		.menu_li{
-			//background-color:black !important;
-			background-color: transparent !important;
-			//background: rgb(0, 0, 0);
-			//background: rgba(0, 0, 0, 0.6);
-
-		}
-		.ui-listview li {
-			width: 100% !important;
-			margin: 0% !important;
-			float: left;
-			border: 1px solid #ccc !important;
-			box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
-		}
-		#main_bg {
-			//background: transparent url(public/images/ui/beach_background4.jpg);
-			no-repeat left top; 
-		}
-
-		.transparent{
-			background-color: transparent !important;
-		}
-
-		/*collapsable css fix padding for inset*/
-		.ui-collapsible div ul {
-			margin: -0.6em 0 !important;
-		}
-
-		.ui-collapsible div ul .ui-corner-top, .ui-collapsible div ul .ui-corner-bottom {
-		    border-radius: 0;
-		}
-
-		.ui-collapsible div ul li.ui-li-divider {
-			padding: 0.5em 15px 0.5em 12px !important;
-		}
-
-
-
-	div(id="pg_contactManager" data-role="page" style="")
-		div(data-role="header" data-position="fixed")
-			h1 jQuery Mobile Example
-
-		div(class="ui-grid-c" style="")
-			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid A @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-			div(class="ui-block-a" style="width:25%")
-				div(data-role="collapsible" class="" data-content-theme="d" data-inset="false" data-collapsed="false" data-mini="true" data-iconpos="right" style="padding: 0px 0px 0.5em 12px !important;width:100%; height:100%;border: 0px")
-					h3(style="margin-top: 0px !important;margin-bottom: 0px !important;") my heading
-					div(class="ui-content" data-position-to="window" style="width:90%; ")
-						a(href="#contactPanel_0" data-ajax="false" style="")
-						ul(data-role="listview" id="contactsMenu" class=""   data-inset="false" style="width:100%; ")
-
-			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-			div(class="ui-block-b" style="width:75%;")
-
-				input(data-icon="back" id="bt_contactEdit_cancel" 	data-mini="true" type="button" value="Cancel")
-				#harry2
-
-
-
-
-			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-			div(class="ui-block-c" style="width:0%") 
-			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-			div(class="ui-block-d" style="width:0%") 
-		div(data-role="footer" data-position="fixed")
-			h6 footer
-
-
-
-
-
-
-	script.
-		$(document).ready(function(){
-			setHeight();
-			$('#contactsMenu').ContactListView('create', 
-				{
-					test:'hopperTestrVal55'
 				}
-			);
-			$('#contactsMenu').ContactListView('loadData');
 
-			
-
-			$('#tab_export').load("/jqm/contactexport ", function(){
-				console.log('loaded');
-				$('#tab_export').trigger('create');
-
-			});
-
-			$('#harry2').HorizontalRadioGroup('create',
-				{
-					id:'radioGrp_0',
-					class:'',
-					dataTheme:'a',
-					dataType:'horizontal',
-					legend:'',
-					radioArray:
-						[
-							{
-								caption:'[MOBILE]',
-								value:'on',
-								checked:true
-							},
-							{
-								caption:'[HOME]',
-								value:'other',
-								checked:false
-							},
-							{
-								caption:'[WORK]',
-								value:'other',
-								checked:false
-							},
-							{
-								caption:'[OTHER]',
-								value:'off',
-								checked:false
-							}
-
-						],
-					onSelect:function(inCaption){
-						//alert(inCaption);
-					}
+				.magicCirc{
+					padding:4px;
+					display:inline-block;
+					font:12px/14px Arial, Helvetica, sans-serif;
+					color:#666;
+					border:1px solid #999;
+					background-color:#eee;
+					-moz-border-radius:10px;
+					-webkit-border-radius: 150px;
+					-moz-box-shadow:#999 2px 0px 3px;
+					-webkit-box-shadow:#999 2px 0px 3px;
+					margin-bottom:4px;
 				}
-			);
-			//$('#harry2').HorizontalRadioGroup('test');
-			$('#harry2').HorizontalRadioGroup('load');
-			//$('#harry2').HorizontalRadioGroup('setSelected', 2);
-			$('#harry2').HorizontalRadioGroup('setSelected', '[WORK]');
 
-			$('#bt_contactEdit_cancel').click(function(){
-				$('#harry2').HorizontalRadioGroup('getSelected');
-				console.log('seting');
-				$('#harry2').HorizontalRadioGroup('setSelected', '[OTHER]');
-			});
+				.magicCircPnt{
+					padding:4px;
+					display:inline-block;
+					cursor:pointer;
+					font:12px/14px Arial, Helvetica, sans-serif;
+					color:#666;
+					border:1px solid #999;
+					background-color:#eee;
+					-moz-border-radius:10px;
+					-webkit-border-radius: 150px;
+					-moz-box-shadow:#999 2px 0px 3px;
+					-webkit-box-shadow:#999 2px 0px 3px;
+					margin-bottom:4px;
+				}
 
-		});
+				.center{
+					margin-left: auto;
+					margin-right: auto;
+					width: 70%;
+					background-color: #b0e0e6;
+				}
+
+				.magicSquarePnt{
+					cursor:pointer;
+					padding:4px;
+					display:inline-block;
+					font:12px/14px Arial, Helvetica, sans-serif;
+					color:#666;
+					border:1px solid #999;
+					background-color:#eee;
+					-moz-border-radius:00px;
+					-webkit-border-radius: 15px;
+					-moz-box-shadow:#999 2px 0px 3px;
+					-webkit-box-shadow:#999 2px 0px 3px;
+					margin-bottom:4px;
+				}
+
+
+				@-webkit-keyframes spaceboots {
+					0% { -webkit-transform: translate(2px, 1px) rotate(0deg); }
+					10% { -webkit-transform: translate(-1px, -2px) rotate(-40deg); }
+					20% { -webkit-transform: translate(-3px, 0px) rotate(40deg); }
+					30% { -webkit-transform: translate(0px, 2px) rotate(0deg); }
+					40% { -webkit-transform: translate(1px, -1px) rotate(1deg); }
+					50% { -webkit-transform: translate(-1px, 2px) rotate(-1deg); }
+					60% { -webkit-transform: translate(-3px, 1px) rotate(0deg); }
+					70% { -webkit-transform: translate(2px, 1px) rotate(-1deg); }
+					80% { -webkit-transform: translate(-1px, -1px) rotate(1deg); }
+					90% { -webkit-transform: translate(2px, 2px) rotate(0deg); }
+					100% { -webkit-transform: translate(1px, -2px) rotate(-1deg); }
+				}
+				.shake {
+					-webkit-animation-name: spaceboots;
+					-webkit-animation-duration: 0.8s;
+					-webkit-transform-origin:50% 50%;
+					-webkit-animation-iteration-count: 15;
+					-webkit-animation-timing-function: linear;
+				}
+
+				img{
+					max-width: 100%;
+				}
+
+				.ui-page {
+					background: transparent;
+					//max-width: 400px;
+				}
+				.ui-content{
+					background: transparent;
+				}
+				.center-me {
+					//margin: 0 auto !important;
+				}
+
+				body {
+					background: url(/public/images/ui/accountbkg.png);
+					background-repeat:repeat-y;
+					background-position:center center;
+					background-attachment:scroll;
+					background-size:100% 100%;
+				}
+
+			//   /upload
+			form(action="/upload/contact/image", method="post", enctype="multipart/form-data")
+				input(id="upload" type="file" name="uploadedFile" style="display: none;" onchange="console.log('changed!!!')")
+
+			div(id="page_userForm" data-role="page" data-dialog="true" data-theme="b" style="" class=".center-me")
+				center
+					img(src="/public/images/ui/arfsync_logo.png")
+
+				div(id="contactsWindow" data-role="main"  class="ui-content" style="")
+					form(method="post" id="userForm")
+						div(class="ui-field-contain")
+							input(tabindex="1" type="text" id="widget_userForm_firstName" 	name="fname" 		placeholder="First Name...")
+							input(tabindex="2" type="text" id="widget_userForm_lastName" 	name="lName" 		placeholder="Last Name...")
+							center
+								h6 (click to change)
+								img(id="widget_userForm_image" name="uImg" class="magicSquarePnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" onclick="Widget_userFormScript.chooseFile();")
+								h5 This is you 
+							input(data-icon="action" id="addEditUser_save" 	type="button" value="Save")
+							input(data-icon="back" id="addEditUser_clear" 	type="button" value="Cancel")
+
+			div(id="page_userForm2" data-role="page" data-dialog="true" data-theme="b" style="" class=".center-me")
+			#xxxxx
+				//input(data-icon="action" id="bt_login_postMail" 	type="button" value="Login" style="")
+
+			script.
+				var Widget_userFormScript;
+				$(document).ready(function(){
+
+					//$("div").data("test", { first: 16, last: "pizza!" });
+					//alert($('div').data('test').first);
+
+					Widget_userFormScript = new function(){
+						var _this = this;
+
+						$('#upload').change(function(){
+							//new image to dispay.
+							_this.uploadImage();
+						});
+						this.load = function(){
+							$('#userForm_window').window({
+								title:'User Form',
+								closed:true,
+								width:'100%',
+								height:'100%',
+								modal:true,
+								minimizable:false,
+								maximizable:false,
+								onBeforeClose: function(){
+								},
+								onBeforeOpen: function(){
+								},
+							});
+
+
+							//==============================================
+							// EVENT SETUP
+							//==============================================
+							$('#addEditUser_save').click(function(){
+								_this.addToStore();
+							});
+							$('#addEditUser_clear').click(function(){
+
+
+								$postAjax(
+									{
+										url:'/database/fileCache/getByHashCodes',
+										send:
+											{
+												hashCode_0:'Ben Hopper',
+												hashCode_1:'[MOBILE]',
+											},
+										onAjaxSuccess:function(inHtml){
+											inResponseText = JSON.parse(inHtml).result[0];
+											console.log('onAjaxSuccess');
+											console.dir(inResponseText);
+											
+										}
+									}
+								);
 
 
 
-		var setHeight = function(){
-			var screen = $.mobile.getScreenHeight();
-			var header = $(".ui-header").hasClass("ui-header-fixed") ? $(".ui-header").outerHeight()  - 1 : $(".ui-header").outerHeight();
-			var footer = $(".ui-footer").hasClass("ui-footer-fixed") ? $(".ui-footer").outerHeight() - 1 : $(".ui-footer").outerHeight();
-			
-			/* content div has padding of 1em = 16px (32px top+bottom). This step
-				can be skipped by subtracting 32px from content var directly. 
-			*/
-			var contentCurrent = $(".ui-content").outerHeight() - $(".ui-content").height();
-
-			var content = screen - header - footer - contentCurrent;
-
-			$(".ui-content").height(content);
-		}
 
 
+
+
+
+
+
+
+
+							});
+							
+						}
+
+						this.updateImageSource = function(inSrc){
+							$('#widget_userForm_image').attr('src', inSrc);
+						}
+
+						this.cancel = function(){
+							window.location = "/user/mobilelogin";
+						}
+
+						this.close = function(){
+							$('#userForm_window').window('close');
+						}
+
+						this.show = function(){
+							$('#userForm_window').window('open');
+						}
+
+						this.chooseFile = function(){
+							$('#upload').trigger('click');
+						}
+
+						this.uploadImage = function(){
+							$ajaxFilePostVariableRoute(
+								{
+									uploadRoute:'/upload/phone/cache',
+									fileInputElement:'upload',
+
+									options:
+										{
+											command:'imageStore',
+											theme:'normalUserImage'
+										},
+
+									onComplete:function(inResponse){
+										if(inResponse.domainFilePath){
+											$('#widget_userForm_image').attr('src', inResponse.domainFilePath);
+										}
+									}
+								}
+							);
+						}
+
+						this.addToStore = function(){
+							//alert('SAVE');
+							//return;
+							$postAjax(
+								{
+									url:'/database/phonecache/getExportableData',
+									send:
+										{
+										},
+									onAjaxSuccess:function(inHtml){
+										inResponseText = JSON.parse(inHtml).result;
+										console.log('SAVE');
+										console.dir(inResponseText);
+									}
+								}
+							);
+
+						}
+
+						_this.load();
+						_this.show();
+					}();
+
+				});
+
+				//
+
+				$('#widget_userForm_phone').blur(function(){
+					//alert('blured!!!');
+					$(this).val('tttttt');
+
+				});

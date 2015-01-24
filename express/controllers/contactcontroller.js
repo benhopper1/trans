@@ -82,6 +82,36 @@ module.exports.controller = function(app){
 		}
 	});
 
+	app.get('/jqm/contactimport', function(req, res){
+		if(req.cookies.userId){
+			console.log("/jqm/contactimport");
+			res.render('contacts/contactimport.jqm.jade',
+				{
+					userId:req.cookies.userId,
+					deviceId:"815",//req.cookies.deviceId,
+					URL:configData.domain.address + ":" + configData.domain.port,
+					androidAppRoute:configData.androidAppRoute,
+					webSocketClient:configData.webSocketClient,
+					defaultUserImageUrl:configData.defaultUserImageUrl,
+					defaultMemberImageUrl:configData.defaultMemberImageUrl,
+					data:
+						{
+						}
+				}
+			);
+		}else{
+			//============================================================
+			//YOUR NOT LOGED IN ------------------------------------------
+			//============================================================
+			console.log("/jqm/contactimport    YOUR NOT LOGED IN????");
+			/*res.render('contacts/widget_contactscollection.jade',
+				{
+
+				}
+			);*/
+		}
+	});
+
 	app.get('/jqm/contactedit', function(req, res){
 		if(req.cookies.userId){
 			console.log("/jqm/contactedit");

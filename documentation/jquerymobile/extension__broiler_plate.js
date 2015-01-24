@@ -1,46 +1,70 @@
 //=======================================================================================================================================================
-// ComboBox -------------------------------------------------------------------------------------------------------------------
+// CheckboxLines ------------------------------------------------------------------------------------------------------------------------------------
 //=======================================================================================================================================================
 
-var ComboBox = function(inJsonStruct){
+var CheckboxLines = function(inJrefOfThis, inJsonStruct){
 	var _this = this;
 	var theDivRef;
-	var dirtyMark = false;
-	var mode = 'edit';
 	var options = 
 		{
-			id:'comboBox_' + new Date().getTime(),
+			id:((inJrefOfThis).attr('id'))? (inJrefOfThis).attr('id') + '_form' : new Date().getTime() + '_form',
+			//id:'checkboxLines_' + new Date().getTime(),
+			style:'',
+			class:'',
 		}
 	options = $.extend(options, inJsonStruct);
 	theDivRef = options.divRef;
 
 	this.test = function(){
-		alert('ComboBox TEST');
+		alert('checkboxLines TEST');
+	}
+
+	var createHtmlContainer = function(){
+		var formDiv =  $('<div></div>').attr(
+			{
+					'id': options.id,
+					//'data-role': 'popup',
+					//'data-theme': settings['data-theme'],
+					//'data-position-to': settings['data-position-to'],
+					//'data-dismissible': settings['data-dismissible'],
+					//'data-transition': settings['data-transition'],
+					//'data-arrow': settings['data-arrow']
+			}
+		).addClass('ui-content')
+		 .addClass(options.class);
+
+		var fieldSet = 7;
+
+
+
+
+
+
 	}
 }
-$.fn.ComboBox = function(inAction, inJsonStruct){
-	var comboBox = $(this).data("comboBoxInstance");
+$.fn.CheckboxLines = function(inAction, inJsonStruct){
+	var checkboxLines = $(this).data("checkboxLinesInstance");
 
-	if(!(comboBox) || inAction == 'create'){
+	if(!(checkboxLines) || inAction == 'create'){
 		inJsonStruct['divRef'] = $(this);
-		console.log('comboBox CREATED');
-		var comboBox = new comboBox(inJsonStruct);
-		$(this).data("comboBoxInstance", comboBox);
+		console.log('checkboxLines CREATED');
+		var checkboxLines = new CheckboxLines($(this), inJsonStruct);
+		$(this).data("checkboxLinesInstance", checkboxLines);
 		return ;
 	}
 	if(inAction == 'test'){
-		comboBox.test();
+		checkboxLines.test();
 	}
 
 	if(inAction == 'load'){
-		return comboBox.load(inJsonStruct);
+		return checkboxLines.load(inJsonStruct);
 	}
 
 	if(inAction == 'save'){
-		return comboBox.save(inJsonStruct);
+		return checkboxLines.save(inJsonStruct);
 	}
 
 	if(inAction == 'clear'){
-		return comboBox.clear();
+		return checkboxLines.clear();
 	}
 }

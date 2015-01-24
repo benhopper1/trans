@@ -279,6 +279,34 @@ var $ajaxFilePost = function(inData){
 	client.send(formData);
 }
 
+
+// VARIBLE ROUTE---------------------------------------------------------
+var $ajaxFilePostVariableRoute = function(inData){
+	var _this = this;
+	var client = new XMLHttpRequest();
+	client.onreadystatechange = function() {
+		if (client.readyState == 4 && client.status == 200){
+			if(inData.onComplete){
+				if(client.responseText){
+					inData.onComplete(JSON.parse(client.responseText));
+				}
+			}
+		}
+	}
+
+	var file = document.getElementById(inData.fileInputElement);
+	var formData = new FormData();
+	console.log(JSON.stringify(file.files[0]));
+	formData.append("uploadedFile", file.files[0]);
+
+	for(key in inData.options){
+		formData.append(key, inData.options[key]);
+	}
+
+	client.open("post", inData.uploadRoute, true);
+	client.send(formData);
+}
+
 var cleanPhoneNumber =function(inNumber){
 	//US ONLY-----
 	var standardNo = inNumber.replace(/[^\d]/g,'');

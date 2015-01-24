@@ -1,0 +1,125 @@
+head 
+	meta(charset="UTF-8")
+	meta(name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+	title() arfSync
+body
+
+
+	div(data-role="navbar")
+		ul
+			li
+				a(href="#" id="contactImport_import" data-icon="arrow-l") Import From Phone
+			li
+				a(href="" id="contactImport_refresh" data-icon="refresh") Refresh List
+	div(data-role="main" class="ui-content")
+		#importListDiv
+
+
+
+
+
+
+
+
+
+	script.
+		//========================================================
+		//(exportListDiv) CHECKBOXLINES --------------------------
+		//========================================================
+		$('#importListDiv').CheckboxLines('create', 
+			{
+				onChange:function(lookupId, isChecked, dataWrapper, formJref, inputJref, labelJref){
+					console.dir(dataWrapper);
+				}
+			}
+		);
+
+		$('#importListDiv').CheckboxLines('addItem',
+			{
+				caption:'noCaption88',
+				isChecked:true
+			}
+		);
+		//=========================================================
+		// BUTTON EVENTS
+		//=========================================================
+		$('#contactImport_import').click(function(){
+			ImportObject.import();
+
+		});
+		$('#contactImport_refresh').click(function(){
+			ImportObject.refresh();
+		});
+
+
+		var ImportObject = new function(){
+			var _this = this;
+
+
+			this.import = function(inPostFunction){
+				var checkedRowsArray = $('#importListDiv').CheckboxLines('getDataArrayFromWrapperArray', $('#importListDiv').CheckboxLines('getCheckedData'));
+
+				async.eachSeries(checkedRowsArray, function(aCheckedRow, next){
+					$postAjax(
+						{
+							url:'/database/phonecache/moveCachedContact',
+							send:
+								{
+									refId:aCheckedRow.id,
+									filePathToCopy:aCheckedRow.imageUrl,
+								},
+							onAjaxSuccess:function(inResponseText){
+								var moveResult = inResponseText = JSON.parse(inResponseText).result;
+								aCheckedRow.imageUrl = moveResult.newFilePath;
+								contactDataObject.insert(aCheckedRow, function(inData){
+									next();
+								});
+							}
+						}
+					);
+				},function(err){
+					//=====================================
+					// ASYNC DONE
+					//=====================================
+					_this.refresh();
+
+					if(inPostFunction){
+						inPostFunction(err);
+					}
+				});
+
+
+			}//-- end import
+
+			this.refresh = function(){
+				$('#importListDiv').CheckboxLines('clear');
+
+				$postAjax(
+					{
+						url:'/database/phonecache/getImportableData',
+						send:
+							{
+							},
+						onAjaxSuccess:function(inResult){
+							var rows = JSON.parse(inResult).result;
+
+							for(var rowsIndex in rows){
+								var caption = phoneDisplayFormat(rows[rowsIndex].phoneNumber)+ ' &nbsp;&nbsp;&nbsp;&nbsp;  ' + rows[rowsIndex].name + '&nbsp;&nbsp;&nbsp;&nbsp;   ' + rows[rowsIndex].type;
+								$('#importListDiv').CheckboxLines('addItem',
+									{
+										lookupId:rows[rowsIndex].id,
+										caption:caption,
+										isChecked:false,
+										data:rows[rowsIndex]
+									}
+								);
+							}
+
+						}
+					}
+				);
+			}
+
+
+
+		}//end object

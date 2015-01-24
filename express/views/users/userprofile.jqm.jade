@@ -1,0 +1,51 @@
+head
+	meta(charset="UTF-8")
+	meta(name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+	title() arfSync
+body
+	form(action="/upload", method="post", enctype="multipart/form-data" style="display: none;")
+		input(id="user_upload" type="file" name="uploadedFile" style="display: none;" onchange="console.log('changed!!!')")
+
+	
+	div(id="userOutterFormDiv" data-role="main"  class="ui-content" style="")
+		form(method="post" id="userProfileForm" data-mini="true" style="")
+			div(class="ui-field-contain" style="" )
+
+
+				div(class="ui-grid-a" style="")
+					div(class="ui-block-a" style="width:25%")
+						center(style="height:150px;")
+							//h6 (click to change)
+							img(id="userProfile_image" name="userImg" class="magicSquarePnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" )
+							h5 Click Image To Change 
+
+					div(class="ui-block-b" style="width:45%;")
+						#contactEdit_type
+						input(tabindex="1" type="text" 	id="userProfile_firstName" 	data-mini="true" name="name" placeholder="First Name..." style="background-color: transparent !important;")
+						input(tabindex="2" type="text" 	id="userProfile_lastName" 	data-mini="true" name="name" placeholder="Last Name..." style="background-color: transparent !important;")
+						
+						input(tabindex="3" type="email" id="userProfile_emailAddress" 	data-mini="true" name="emailAddress" placeholder="Email Address...")
+
+						input(tabindex="4" type="text" 	id="userProfile_address" 	data-mini="true" name="name" placeholder="Address..." style="background-color: transparent !important;")
+						input(tabindex="5" type="text" 	id="userProfile_city" 	data-mini="true" name="name" placeholder="City..." style="background-color: transparent !important;")
+						input(tabindex="6" type="text" 	id="userProfile_state" 	data-mini="true" name="name" placeholder="State..." style="background-color: transparent !important;")
+						input(tabindex="7" type="text" 	id="userProfile_zipcode" 	data-mini="true" name="name" placeholder="Zipcode..." style="background-color: transparent !important;")
+						input(tabindex="8" type="text" 	id="userProfile_country" 	data-mini="true" name="name" placeholder="Country..." style="background-color: transparent !important;")
+						
+						br
+						br
+						br
+
+						input(data-icon="action" id="bt_userProfile_save" 	data-mini="true" type="button" value="Save")
+						input(data-icon="back" id="bt_userProfile_clear" 	data-mini="true" type="button" value="Clear")
+
+
+script.
+	$('#bt_bar_userProfile_back3').click(function(){
+		$('#userProfile_contents').load("/jqm/userprofile ", function(){
+			console.log('loading userprofile');
+			$('#userProfile_contents').trigger('create');
+			$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_3', {transition:'turn', reverse:'true'});
+
+		});
+	});

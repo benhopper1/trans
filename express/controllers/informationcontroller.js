@@ -49,7 +49,8 @@ module.exports.controller = function(app) {
 						userNameExistRoute:configData.userNameExistRoute,
 						tempUploadRoute:configData.tempUploadRoute,
 						contactImageUploadRoute:configData.contactImageUploadRoute,
-						memberImageUploadRoute:configData.memberImageUploadRoute
+						memberImageUploadRoute:configData.memberImageUploadRoute,
+						phoneCacheRoute:configData.phoneCacheRoute
 
 					}
 			}

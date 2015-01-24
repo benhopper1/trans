@@ -4,6 +4,10 @@ var path = require('path');
 var basePath = path.dirname(require.main.filename);
 var uuid = require(basePath + '/node_modules/node-uuid');
 var url = require('url');
+var fs = require('fs');
+var configData = fs.readFileSync(path.dirname(require.main.filename) + '/main.conf', 'utf8');
+configData = JSON.parse(configData);
+
 
 
 
@@ -251,7 +255,35 @@ module.exports.controller = function(app) {
 		));
 	});
 
-	//database/addUser
+	app.get('/jqm/userprofile', function(req, res){
+		if(req.cookies.userId){
+			console.log("/jqm/userprofile");
+			res.render('users/userprofile.jqm.jade',
+				{
+					userId:req.cookies.userId,
+					deviceId:"815",//req.cookies.deviceId,
+					URL:configData.domain.address + ":" + configData.domain.port,
+					androidAppRoute:configData.androidAppRoute,
+					webSocketClient:configData.webSocketClient,
+					defaultUserImageUrl:configData.defaultUserImageUrl,
+					defaultMemberImageUrl:configData.defaultMemberImageUrl,
+					data:
+						{
+						}
+				}
+			);
+		}else{
+			//============================================================
+			//YOUR NOT LOGED IN ------------------------------------------
+			//============================================================
+			console.log("/jqm/contactmangaer    YOUR NOT LOGED IN????");
+			/*res.render('contacts/widget_contactscollection.jade',
+				{
+
+				}
+			);*/
+		}
+	});
 
 
 }

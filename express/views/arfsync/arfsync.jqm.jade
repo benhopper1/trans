@@ -14,6 +14,7 @@ body
 	script(src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js")
 	script(src="/public/js/jquery/hopper/jquery.hopper.extention.js")
 	script(src="/public/js/jquery/hopper/jquery.hopper.database.js")
+	script(src="/public/js/jquery/hopper/jquery.hopper.checkboxlines.js")
 
 
 
@@ -371,8 +372,8 @@ body
 		//#contactsWindow
 		#testHandset
 		#welcome_phoneWindowDiv
-		a(href="#pg_page_1" data-transition="slide") Slide to Page One
-		a(href="#pg_page_2" data-transition="turn" ) Slide to Page Two
+		//a(href="#pg_page_1" data-transition="slide") Slide to Page One
+		//a(href="#pg_page_2" data-transition="turn" ) Slide to Page Two
 
 
 
@@ -410,7 +411,7 @@ body
 
 
 	//=================================================================================================================================================================================
-	//-)--> PAGE 2-(WELCOME SCREEN)----------------------------------------------------------------------------------------------------------------------------------------------------
+	//-)--> PAGE 2-(CONTACT MANAGER)----------------------------------------------------------------------------------------------------------------------------------------------------
 	//=================================================================================================================================================================================
 
 	div(id="pg_page_2" data-role="page"  data-fullscreen="true" data-theme="a"  class=".center-me" data-dialog="false")
@@ -425,9 +426,9 @@ body
 					li
 						a(href="#" id="btBar_contactManager_back" data-icon="back") Back
 					li
-						a(href="#" id="btBar_contactManager_back2" data-icon="back") Back
+						a(href="#" id="btBar_contactManager_back2" data-icon="back") Contact Manager
 					li
-						a(href="#" id="btBar_contactManager_back3" data-icon="back") test popup
+						a(href="#" id="btBar_contactManager_headButton_2" data-icon="back") User Profile
 					li
 						a(href="#" id="btBar_contactManager_back4" data-icon="back") test-setMark
 					li
@@ -457,7 +458,7 @@ body
 							//li
 								//a(href="#four" data-ajax="false") Create Contact
 							li
-								a(href="#two" data-ajax="false") Import
+								a(href="#tab_import" data-ajax="false") Import
 							li
 								a(href="#tab_export" data-ajax="false") Export
 							li
@@ -472,14 +473,14 @@ body
 
 
 					//@@@@@@  TAB --2--------------------------------------------
-					div(id="two" class="ui-content" style="")
-						div(data-role="fieldcontain")
-							label(for="select-choice-1" class="select") Choose shipping method:
-							select(name="select-choice-1" id="select-choice-1")
-								option(value="standard") Standard: 7 day
-								option(value="rush") Rush: 3 days
-								option(value="express") Express: next day
-								option(value="overnight") Overnight
+					div(id="tab_import" class="ui-content" style="")
+						//- div(data-role="fieldcontain")
+						//- 	label(for="select-choice-1" class="select") Choose shipping method:
+						//- 	select(name="select-choice-1" id="select-choice-1")
+						//- 		option(value="standard") Standard: 7 day
+						//- 		option(value="rush") Rush: 3 days
+						//- 		option(value="express") Express: next day
+						//- 		option(value="overnight") Overnight
 					//@@@@@@  TAB --2--EXPORT------------------------------------------
 					div(id="tab_export" class="ui-content")
 
@@ -498,6 +499,39 @@ body
 			div(class="ui-block-d" style="width:0%") 
 		div(data-role="footer" data-position="fixed")
 			h6 footer
+
+
+
+
+	//=================================================================================================================================================================================
+	//-)--> PAGE 3-(USER PROFILE)----------------------------------------------------------------------------------------------------------------------------------------------------
+	//=================================================================================================================================================================================
+
+	div(id="pg_page_3" data-role="page"  data-fullscreen="true" data-theme="a"  class=".center-me" data-dialog="false")
+		//====================================
+		//-)--> GRID--------------------------
+		//====================================
+		div(data-role="header" data-position="fixed")
+			h1 jQuery Mobile Example
+			div(data-role="navbar" data-mini="true")
+				ul
+					li
+						a(href="#" id="btBar_userProfile_back" data-icon="back") Back
+					li
+						a(href="#" id="btBar_userProfile_back2" data-icon="back") Back
+					li
+						a(href="#" id="bt_bar_userProfile_back3" data-icon="back") test popup
+					li
+						a(href="#" id="btBar_userProfile_back4" data-icon="back") test-setMark
+					li
+						a(href="#" id="btBar_userProfile_back5" data-icon="back") test save
+		#userProfile_contents
+
+
+
+
+
+
 
 
 
@@ -552,6 +586,11 @@ body
 				$('#tab_export').trigger('create');
 
 			});
+			$('#tab_import').load("/jqm/contactimport ", function(){
+				console.log('loaded');
+				$('#tab_import').trigger('create');
+
+			});
 			$('#tab_editContact').load("/jqm/contactedit ", function(){
 				console.log('loaded');
 				$('#tab_editContact').trigger('create');
@@ -562,6 +601,19 @@ body
 				history.back();
 				return false;
 			});
+
+			$('#btBar_contactManager_headButton_2').click(function(){
+				$('#userProfile_contents').load("/jqm/userprofile ", function(){
+					console.log('loading userprofile');
+					$('#userProfile_contents').trigger('create');
+					$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_3', {transition:'turn', reverse:'true'});
+
+				});
+			});
+
+		
+
+			
 
 		});
 

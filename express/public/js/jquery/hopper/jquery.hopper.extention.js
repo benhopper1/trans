@@ -203,6 +203,11 @@ var ContactListView = function(inJsonStruct){
 							options.onClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
 						}
 					});
+					$('#' + uid + '_' + inRecords[contactIndex].id).bind( "taphold", function(e){
+						if(options.onLongClick){
+							options.onLongClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
+						}
+					});
 					//contactListViewHash[Object.keys(contactListViewHash)[Object.keys(contactListViewHash).length -1].id]
 					_this.setSelectedByIndex(0);
 
