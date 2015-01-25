@@ -108,8 +108,9 @@ script.
 		$('#upload').trigger('click');
 	});
 	$('#upload').change(function(){
-		$ajaxFilePost(
+		$ajaxFilePostVariableRoute(
 			{
+				uploadRoute:'/upload/contact/image',
 				fileInputElement:'upload',
 
 				options:

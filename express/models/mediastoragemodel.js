@@ -53,7 +53,7 @@ var Model = function(){
 		*/
 		
 		if(inData.mimeType.indexOf('image') != -1 || path.extname(inData.fileName) == '.jpg' || path.extname(inData.fileName) == '.gif' || path.extname(inData.fileName) == '.png'){			
-			_this.storeImageFile(inData.file, inData.fileName, inData.encoding, inData.mimeType, inData.data.theme, inData.onProcessUploadedFileComplete);
+			_this.storeImageFile(inData.file, inData.fileName, inData.encoding, inData.mimeType, inData.data.theme, inData.onProcessUploadedFileComplete, inData.data.storageFolder);
 			return true;
 		}
 	}
@@ -120,18 +120,23 @@ var Model = function(){
   		return true;
 	}
 */
-	this.storeImageFile = function(inFile, inFileNamePath, inEncoding, inMimeType, inTheme, inCompleteFunction){
+	this.storeImageFile = function(inFile, inFileNamePath, inEncoding, inMimeType, inTheme, inCompleteFunction, inControlledDestination){
 		imageModel.resizeStream(inFile, inFileNamePath, inTheme, function(err, stdout, stderr){
 			inFileNamePath = _this.buildUniqueName(inFileNamePath);
-			_this.dbStoreFile(path.join(audioFolderPath, path.basename(inFileNamePath)), inEncoding, inMimeType, '');
-			var saveTo = path.join(imageFolderPath, path.basename(inFileNamePath));
+			//_this.dbStoreFile(path.join(audioFolderPath, path.basename(inFileNamePath)), inEncoding, inMimeType, '');
+			
+			var destFolder = (inControlledDestination)? inControlledDestination : imageFolderPath;
+			console.log('destFolder:' + destFolder);
+
+			//var saveTo = path.join(imageFolderPath, path.basename(inFileNamePath));
+			var saveTo = path.join(basePath + destFolder, path.basename(inFileNamePath));
   			stdout.pipe(fs.createWriteStream(saveTo));
   			stdout.on('close', function(){
   				if(inCompleteFunction){
   					inCompleteFunction(
   						{
   							fileName:path.basename(inFileNamePath),
-  							domainFilePath:configData.mediaStorageModel.imageFolderPath + '/' + path.basename(inFileNamePath),
+  							domainFilePath:destFolder + '/' + path.basename(inFileNamePath),
   							fileNameNoExt:path.basename(inFileNamePath, path.extname(inFileNamePath))
   						}
 					);

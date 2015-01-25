@@ -25,15 +25,6 @@ var Model = function(){
 		return domainAddress;
 	}
 
-/*	this.getUsers = function(inData, inPostFunction){
-		connection.query('SELECT * from tb_user', function(err, rows, fields){
-			for(key in rows){
-				console.log(rows[key].userName);
-			}
-			if(inPostFunction){inPostFunction(err, rows, fields);}
-			
-		});
-	}*/
 
 	this.verifyUserPassword = function(inUserName, inPassword, inPostFunction){
 		var sqlString = "SELECT * from tb_user WHERE userName = "+ connection.escape(inUserName) + " AND password = " + connection.escape(inPassword) + " ";
@@ -240,52 +231,6 @@ var Model = function(){
 		inRequestRef.cookies.userId;
 	}
 
-	/*this.dbEditUserAccountData = function(inData){
-		if(inData.onFinish){
-			inData.onFinish(
-				{
-					test:'from userModel dbEditUserAccountData',
-					error:true
-				}
-			);
-		
-		}
-	}*/
-
-	//REPLACED by: dbAddUserAccountDataToUserTable
-/*	this.dbAddUserAccountData = function(inData){
-		console.log('dbAddUserAccountData');
-		console.dir(inData);
-		var activateCode = uuid.v1();
-
-		inData.password = 'dog';//TODO md5 routines will go inplace etc...
-		var sqlString = "INSERT INTO tb_user (fName,lName ,emailAddress, userName, password, address, city, state, zipcode, country, userGroup, screenImage, activateCode) VALUES(" + connection.escape(inData.firstName) + ", " + connection.escape(inData.lastName) + "," + connection.escape(inData.emailAddress) + ", " + connection.escape(inData.userName) + ", " + connection.escape(inData.password) + ", " + connection.escape(inData.address) + ", " + connection.escape(inData.city) + ", " + connection.escape(inData.state) + ", " + connection.escape(inData.zipcode) + ", " + connection.escape(inData.country) + ", " + connection.escape('arfUser') + ", " + connection.escape(configData.mediaStorageModel.imageFolderPath + '/'+ path.basename(inData.userImagePath)) + ", " + connection.escape(activateCode) + " )";
-		connection.query(sqlString, function(err, result){
-			if(!(err)){
-				_this.sendMailActivateCode(inData.emailAddress, activateCode, result.insertId);
-			}
-
-
-
-			if(inData.userImagePath){
-				if(err){
-					console.log("ERROR in dbAddUserAccountData insert" + err );
-					if(inData.onFinish){
-						inData.onFinish(err, result);
-					}
-					return false;
-				}
-
-				inData.userId = result.insertId;
-				_this.dbStoreUserImage(inData);
-			}
-
-		});
-
-	}*/
-
-
-
 	this.dbAddUserAccountDataToUserTable = function(inParams, inPostFunction){
 			var fieldData = 
 			{
@@ -387,20 +332,6 @@ var Model = function(){
 			}
 		}	
 	}
- 
-
-	//--remove this is testing function -----
-/*	this.sendMail = function(inData){
-		var transporter = nodemailer.createTransport(configData.mail.accountSetup.transporter);
-		transporter.sendMail(
-			{
-			    from: 'arfcomm@gmail.com',
-			    to: 'hopperdevelopment@gmail.com',
-			    subject: 'subject=hopper',
-			    text: 'just a very short message, welcome'
-			}
-		);
-	}*/
 
 	this.sendMailActivateCode = function(inDestinationAddess, inCode, inUserId){
 		var transporter = nodemailer.createTransport(configData.mail.accountSetup.transporter);
@@ -458,7 +389,81 @@ var Model = function(){
 
 	}
 
-	this.getUser
+	this.getUserById = function(inParams, inPostFunction){
+		console.log('deleteCacheEntry:');
+		console.dir(inParams);
+		var fieldData = 
+			{
+				userId:false,
+			}
+		fieldData = extend(fieldData, inParams);
+
+		if(!(fieldData.userId)){
+			if(inPostFunction){
+				var err = 'No User Id, records will not mutated';
+				inPostFunction(err, false, false);
+			}
+		}
+		var sqlString = 
+			"SELECT fName, lName, emailAddress, userName, status, city, state, country, userGroup, entryDate, address, zipcode, screenImage"  + " " +
+			"FROM tb_user"																													+ " " +
+			"WHERE id = " + connection.escape(parseInt(fieldData.userId))
+		;
+		console.log('sql:' + sqlString);
+		connection.query(sqlString, function(err, result){
+			console.log('error' + err);
+			if(inPostFunction){inPostFunction(err, result);}
+		});
+	}
+
+	this.updateUser = function(inParams, inPostFunction){
+		var fieldData = 
+			{
+				fName:'',
+				lName:'',
+				emailAddress:'',
+				//userName:'',
+				status:'',
+				city:'',
+				state:'',
+				country:'',
+				userGroup:'',
+				entryDate:'',
+				address:'',
+				zipcode:'',
+				screenImage:'',
+				userId:false,
+			}
+		fieldData = extend(fieldData, inParams);
+
+		if(!(fieldData.userId)){
+			if(inPostFunction){
+				var err = 'No User Id, records will not mutated';
+				inPostFunction(err, false, false);
+			}
+		}
+		var sqlString = "UPDATE tb_user SET " +
+			"fName = " + connection.escape(fieldData.fName) 				+ ", " +
+			"lName = " + connection.escape(fieldData.lName) 				+ ", " +
+			"emailAddress = " + connection.escape(fieldData.emailAddress) 		+ ", " +
+			//"userName = " + connection.escape(fieldData.companyName) 			+ ", " +
+			//"status = " + connection.escape(fieldData.status) 				+ ", " +
+			"city = " + connection.escape(fieldData.city) 				+ ", " +
+			"state = " + connection.escape(fieldData.state) 				+ ", " +
+			"country = " + connection.escape(fieldData.country) 			+ ", " +
+			//"userGroup = " + connection.escape(fieldData.companyName) 		+ ", " +
+			//"entryDate = " + connection.escape(fieldData.companyName) 			+ ", " +
+			"address = " + connection.escape(fieldData.address) 			+ ", " +
+			"zipcode = " + connection.escape(fieldData.zipcode) 			+ ", " +
+			"screenImage = " + connection.escape(fieldData.screenImage) 		+ " " +
+			"WHERE id = " + connection.escape(parseInt(fieldData.userId))
+		;
+		console.log('sql:' + sqlString);
+		connection.query(sqlString, function(err, result){
+			console.log('error' + err);
+			if(inPostFunction){inPostFunction(err, result);}
+		});
+	}
 
 
 }

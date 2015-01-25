@@ -45,10 +45,15 @@ var Model = function(){
 
 		  	//TODO remove-------------------
 		  	//----Testing purpose only------
-		  	.stroke("#ffffff")
-			.font("Helvetica.ttf", 9)
-			.drawText(5, 20, "arfSync by Ben Hopper")
+		  	//.stroke("#ffffff")
+			//.font("Helvetica.ttf", 9)
+			//.drawText(5, 20, "arfSync by Ben Hopper")
 			//-------------------------------
+
+			.stroke(configData.themes[inTheme].imageWriteOver.stroke)
+			.font(configData.themes[inTheme].imageWriteOver.font, configData.themes[inTheme].imageWriteOver.fontSize)
+			.drawText(configData.themes[inTheme].imageWriteOver.drawTextX, configData.themes[inTheme].imageWriteOver.drawTextY, configData.themes[inTheme].imageWriteOver.drawTextText)
+
 
 		  	.crop(configData.themes[inTheme].cropX, configData.themes[inTheme].cropY)
 			.stream(function (err, stdout, stderr) {

@@ -258,20 +258,31 @@ module.exports.controller = function(app) {
 	app.get('/jqm/userprofile', function(req, res){
 		if(req.cookies.userId){
 			console.log("/jqm/userprofile");
-			res.render('users/userprofile.jqm.jade',
-				{
-					userId:req.cookies.userId,
-					deviceId:"815",//req.cookies.deviceId,
-					URL:configData.domain.address + ":" + configData.domain.port,
-					androidAppRoute:configData.androidAppRoute,
-					webSocketClient:configData.webSocketClient,
-					defaultUserImageUrl:configData.defaultUserImageUrl,
-					defaultMemberImageUrl:configData.defaultMemberImageUrl,
-					data:
-						{
-						}
-				}
-			);
+
+
+			userModel.getUserById({userId:req.cookies.userId}, function(err, result){
+				res.render('users/userprofile.jqm.jade',
+					{
+						userId:req.cookies.userId,
+						deviceId:"815",//req.cookies.deviceId,
+						URL:configData.domain.address + ":" + configData.domain.port,
+						androidAppRoute:configData.androidAppRoute,
+						webSocketClient:configData.webSocketClient,
+						defaultUserImageUrl:configData.defaultUserImageUrl,
+						defaultMemberImageUrl:configData.defaultMemberImageUrl,
+						data:result[0],
+					}
+				);
+				/*res.setHeader('Content-Type', 'application/json');
+				res.end(JSON.stringify(
+					{
+						hadError:((err)? true : false),
+						err:err,
+						result:result
+					}
+				));*/
+			});
+
 		}else{
 			//============================================================
 			//YOUR NOT LOGED IN ------------------------------------------
@@ -283,6 +294,24 @@ module.exports.controller = function(app) {
 				}
 			);*/
 		}
+	});
+
+	app.post('/database/updateUser', function(req, res){
+		console.log("/database/updateUser post");
+		//res.render('contacts/addcontact.jade',req.body);
+		console.log('---------userId---------------------------------:' +  req.cookies.userId);
+		req.body['userId'] = req.cookies.userId;
+		userModel.updateUser(req.body, function(err, result){
+			res.setHeader('Content-Type', 'application/json');
+			res.end(JSON.stringify(
+				{
+					hadError:((err)? true : false),
+					err:err,
+					result:result
+				}
+			));
+		});
+		res.setHeader('Content-Type', 'application/json');
 	});
 
 

@@ -424,7 +424,7 @@ body
 			div(data-role="navbar" data-mini="true")
 				ul
 					li
-						a(href="#" id="btBar_contactManager_back" data-icon="back") Back
+						a(href="#" id="btBar_contactManager_back" data-icon="back" class="backButtonClass") Back
 					li
 						a(href="#" id="btBar_contactManager_back2" data-icon="back") Contact Manager
 					li
@@ -507,7 +507,7 @@ body
 	//-)--> PAGE 3-(USER PROFILE)----------------------------------------------------------------------------------------------------------------------------------------------------
 	//=================================================================================================================================================================================
 
-	div(id="pg_page_3" data-role="page"  data-fullscreen="true" data-theme="a"  class=".center-me" data-dialog="false")
+	div(id="page_userProfile" data-role="page"  data-fullscreen="true" data-theme="a"  class=".center-me" data-dialog="false")
 		//====================================
 		//-)--> GRID--------------------------
 		//====================================
@@ -516,7 +516,7 @@ body
 			div(data-role="navbar" data-mini="true")
 				ul
 					li
-						a(href="#" id="btBar_userProfile_back" data-icon="back") Back
+						a(href="#" id="btBar_userProfile_back" data-icon="back" class="backButtonClass") Back
 					li
 						a(href="#" id="btBar_userProfile_back2" data-icon="back") Back
 					li
@@ -577,6 +577,12 @@ body
 			});
 
 
+			$(document).on("pagecreate","#page_userProfile",function(){
+				console.log('page_userProfile main pageinit!!!');
+			});
+
+
+
 
 			//=================================================================
 			// JQM LOADS-------------------------------------------------------
@@ -597,21 +603,35 @@ body
 
 			});
 
-			$('#btBar_contactManager_back').click(function(){
+			//- $('#btBar_contactManager_back').click(function(){
+			//- 	history.back();
+			//- 	return false;
+			//- });
+			//changeing to use class..
+			$('.backButtonClass').click(function(){
 				history.back();
 				return false;
 			});
+
 
 			$('#btBar_contactManager_headButton_2').click(function(){
 				$('#userProfile_contents').load("/jqm/userprofile ", function(){
 					console.log('loading userprofile');
 					$('#userProfile_contents').trigger('create');
-					$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_3', {transition:'turn', reverse:'true'});
-
+					$(':mobile-pagecontainer').pagecontainer('change', '#page_userProfile', {transition:'turn', reverse:'true'});
 				});
 			});
 
-		
+			//loading and setting to page_3
+			$('#userProfile_contents').load("/jqm/userprofile ", function(){
+				console.log('loading userprofile');
+				$('#userProfile_contents').trigger('create');
+				$(':mobile-pagecontainer').pagecontainer('change', '#page_userProfile', {transition:'turn', reverse:'true'});
+
+			});
+			//});
+
+
 
 			
 

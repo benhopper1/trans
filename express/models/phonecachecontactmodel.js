@@ -152,7 +152,7 @@ var Model = function(){
 			}
 		}
 
-		var sqlString = 
+		/*var sqlString = 
 			"SELECT t1.*, CONCAT(t1.name, t1.type) AS compKey FROM"																+ " " +
 				"("																												+ " " +
 					"SELECT max(fc.path) AS imageUrl, cpc.id, cpc.name, cpc.phoneNumber,cpc.emailAddress, cpc.companyName, cpc.department, cpc.title, cpc.userId, cpc.ext, cpc.type, cpc.photoUriString, cpc.rawContactId, cpc.contactId, cpc.entryDate"	+ " " +
@@ -165,6 +165,12 @@ var Model = function(){
 					"GROUP BY cpc.id"																							+ " " +
 				") AS t1"																										+ " " +
 			"WHERE CONCAT(t1.name, t1.type) NOT IN (SELECT cONCAT(t2.name, t2.type) AS compKey FROM tb_storedContacts AS t2)"
+		;*/
+		var sqlString = 
+			"SELECT * FROM  vw_actionable"									+ " " +
+				"WHERE isImportable = 1" 									+ " " +
+				"AND"														+ " " +
+				"userId = " + connection.escape(parseInt(fieldData.userId)) 
 		;
 
 		console.log('sql:' + sqlString);
@@ -268,6 +274,8 @@ var Model = function(){
 		}
 
 		var dataArray = fieldData.dataArray;
+		console.log('dataArray');
+		console.dir(dataArray);
 		var sqlString = 
 			"SELECT max(fc.path) AS cachePath, cpc.* FROM tb_cachePhoneContacts AS cpc LEFT JOIN tb_fileCache AS fc ON cpc.photoUriString = fc.hashCode_2 AND cpc.userId = fc.userId" + " " +
 				"WHERE cpc.userId = " + connection.escape(parseInt(fieldData.userId)) + " " +
@@ -276,6 +284,8 @@ var Model = function(){
 		console.log('sql(0):' + sqlString);
 		connection.query(sqlString, function(err, result){
 			console.log('error' + err);
+			console.log('reslut of  sql(0)--');
+			console.dir(result);
 			var recordsHash = {};
 			var tmpForDeleteHash = {};
 			for(resultIndex in result){
@@ -290,11 +300,15 @@ var Model = function(){
 			var resultDataArray = [];
 			//var needToDeleteArray = [];
 			for(var dataArrayIndex in dataArray){
+				console.log('dataArrayIndex:' + dataArrayIndex);
 				var dbRecord = recordsHash[dataArray[dataArrayIndex].name + dataArray[dataArrayIndex].type];
 				if(dbRecord){
 					console.log('cachePath:' + dbRecord.cachePath);
 					console.log('dbRecord.cachePath "" ' + dbRecord.cachePath == 'null');
 					console.log('dbRecord.cachePath ' + dbRecord.cachePath == null);
+					console.log('TEST_0');
+					console.log(dataArray[dataArrayIndex].photoUriString);
+					console.log(dbRecord.cachePath);
 					if( (dbRecord.photoUriString != dataArray[dataArrayIndex].photoUriString) || (dbRecord.cachePath == null) ){
 						//need to cache!!!
 						resultDataArray.push(
@@ -306,8 +320,20 @@ var Model = function(){
 					}
 					//remove, because whats left will be deleted!!!!!
 					delete tmpForDeleteHash[dataArray[dataArrayIndex].name + dataArray[dataArrayIndex].type];
+				}else{
+					/*resultDataArray.push(
+						{
+							name:dataArray[dataArrayIndex].name,
+							type:dataArray[dataArrayIndex].type,
+						}
+					);*/
 				}
 			}
+
+			console.log('--------------------------------------------------------');
+			console.log('pre check---:');
+			console.log('resultDataArray');
+			console.dir(resultDataArray);
 
 			// convert Hash to Array----
 			var needToDeleteArray = [];
@@ -317,8 +343,14 @@ var Model = function(){
 			console.log('needToDeleteArray');
 			console.dir(needToDeleteArray);
 
+			console.log('--------------------------------------------------------');
+			console.log('cacheContacts complete err/result:');
+			console.log('resultDataArray');
+			console.dir(resultDataArray);
+			if(inPostFunction){inPostFunction(err, resultDataArray);}
 
-			finish.map(needToDeleteArray, function(value, done){
+
+			/*finish.map(needToDeleteArray, function(value, done){
 				value.userId = fieldData.userId;
 				_this.deleteCacheEntry(value, function(inErr, inResult){
 					done(null, value);
@@ -333,7 +365,7 @@ var Model = function(){
 				if(inPostFunction){inPostFunction(err, resultDataArray);}
 
 
-			});
+			});*/
 
 
 

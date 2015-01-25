@@ -70,3 +70,20 @@ $('#tab_export').load("/jqm/contactexport #level_1", function(){
 	$('#tab_export').trigger('create');
 	console.log('dog:' + dog);
 });
+
+
+===================================================
+load events
+===================================================
+
+If you want the code to run on a certain page (I bet that's the case) you can use this pattern:
+
+$('div:jqmData(url="thepageyouwanted.html")').live('pageshow',function(){
+    // code to execute on that page
+    //$(this) works as expected - refers the page
+});
+Events you can use:
+
+pagebeforeshow starts just before transition
+pageshow starts right after transition
+pagecreate starts only the first time page is loaded
