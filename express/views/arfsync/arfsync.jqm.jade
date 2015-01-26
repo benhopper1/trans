@@ -15,9 +15,10 @@ body
 	script(src="/public/js/jquery/hopper/jquery.hopper.extention.js")
 	script(src="/public/js/jquery/hopper/jquery.hopper.database.js")
 	script(src="/public/js/jquery/hopper/jquery.hopper.checkboxlines.js")
+	script(src="/public/js/jquery/hopper/jquery.hopper.extension.dynamictable.js")
 
-
-
+	link(href="/public/js/footable/css/footable.core.css?v=2-0-1" rel="stylesheet" type="text/css")
+	script(src="/public/js/footable/js/footable.js?v=2-0-1")
 
 	script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
 	script(type='text/javascript', src='/js/qrcode/qrcode.js')
@@ -430,7 +431,7 @@ body
 					li
 						a(href="#" id="btBar_contactManager_headButton_2" data-icon="back") User Profile
 					li
-						a(href="#" id="btBar_contactManager_back4" data-icon="back") test-setMark
+						a(href="#" id="btBar_pg_2_smsManager" data-icon="back") Sms Manager
 					li
 						a(href="#" id="btBar_contactManager_back5" data-icon="back") test save
 
@@ -529,6 +530,33 @@ body
 
 
 
+	//=================================================================================================================================================================================
+	//-)--> PAGE 4-(USER PROFILE)----------------------------------------------------------------------------------------------------------------------------------------------------
+	//=================================================================================================================================================================================
+
+	div(id="page_smsManager" data-role="page"  data-fullscreen="true" data-theme="a"  class=".center-me" data-dialog="false")
+		//====================================
+		//-)--> GRID--------------------------
+		//====================================
+		div(data-role="header" data-position="fixed")
+			h1 jQuery Mobile Example
+			div(data-role="navbar" data-mini="true")
+				ul
+					li
+						a(href="#" id="btBar_smsManager_back" data-icon="back" class="backButtonClass") Back
+					li
+						a(href="#" id="btBar_smsManager_back2" data-icon="back") Back
+					li
+						a(href="#" id="bt_bar_smsManager_back3" data-icon="back") test popup
+					li
+						a(href="#" id="btBar_smsManager_back4" data-icon="back") test-setMark
+					li
+						a(href="#" id="btBar_smsManager_back5" data-icon="back") test save
+		#smsManager_contents
+
+
+
+
 
 
 
@@ -577,7 +605,11 @@ body
 			});
 
 
-			$(document).on("pagecreate","#page_userProfile",function(){
+
+
+
+			//loadup focus----
+			$(document).on("pagecreate","#page_smsManager",function(){
 				console.log('page_userProfile main pageinit!!!');
 			});
 
@@ -626,14 +658,29 @@ body
 			$('#userProfile_contents').load("/jqm/userprofile ", function(){
 				console.log('loading userprofile');
 				$('#userProfile_contents').trigger('create');
-				$(':mobile-pagecontainer').pagecontainer('change', '#page_userProfile', {transition:'turn', reverse:'true'});
+				//$(':mobile-pagecontainer').pagecontainer('change', '#page_userProfile', {transition:'turn', reverse:'true'});
 
 			});
-			//});
 
 
 
-			
+			// smsManager -------------------------------
+			$('#btBar_pg_2_smsManager').click(function(){
+				$('#smsManager_contents').load("/jqm/smsManager ", function(){
+					console.log('loading userprofile');
+					$('#userProfile_contents').trigger('create');
+					$(':mobile-pagecontainer').pagecontainer('change', '#page_smsManager', {transition:'turn', reverse:'true'});
+				});
+			});
+
+			$('#smsManager_contents').load("/jqm/smsManager ", function(){
+				console.log('loading userprofile');
+				$('#smsManager_contents').trigger('create');
+				$(':mobile-pagecontainer').pagecontainer('change', '#page_smsManager', {transition:'turn', reverse:'true'});
+
+			});
+
+
 
 		});
 
@@ -804,62 +851,13 @@ body
 				//alert('not implemented , no click here yet!! on TODO');
 			});
 
-			//- $('#bt_menu_home').click(function(){
-			//- 	//Android.showToast('Hello ben');";
-			//- 	console.log('CLICK bt_menu_home');
-			//- 	commManager.transactionToDeviceToken(
-			//- 		{
-			//- 			routing:
-			//- 				{
-			//- 					command:'webMenu',
-			//- 					action:'openWebMenuActivity'
-			//- 				},
-			//- 			data:
-			//- 				{
-			//- 					url:"/webmenu/normalmenu"
-			//- 				},
-
-			//- 			onComplete:function(inDataLayer, inTransportLayer){
-			//- 				console.log('onComplete transactionToDeviceToken call back entered');
-			//- 			}
-			//- 		}
-			//- 	);
-
-			//- });
-
-			//- $('#bt_menu_close').click(function(){
-			//- 	//Android.showToast('Hello ben');";
-			//- 	console.log('CLICK bt_menu_home');
-			//- 	commManager.transactionToDeviceToken(
-			//- 		{
-			//- 			routing:
-			//- 				{
-			//- 					command:'webMenu',
-			//- 					action:'openWebMenuActivity'
-			//- 				},
-
-			//- 			onComplete:function(inDataLayer, inTransportLayer){
-			//- 				console.log('onComplete transactionToDeviceToken call back entered');
-			//- 			}
-			//- 		}
-			//- 	);
-
-			//- });
-
+			
 
 
 
 
 			var waitingDeviceTokenId;
-			//menuObject = new MenuObject();
-			//menuObject.load();
-
-			//- $('#qrAccord').accordion(
-			//- 	{
-			//- 		animate:true,
-			//- 		selected:0
-			//- 	}
-			//- );
+			
 
 			$('#login_panel').panel({
 				title:'myTitle',
@@ -893,28 +891,11 @@ body
 						console.log('onLoginSuccess');
 						console.dir(inTransportLayer_string);
 
-						//- var transport_json33 = JSON.parse(inTransportLayer_string);
-						//- console.log("->userId:" + transport_json33.userId);
-
-						//- if(inTransportLayer_string){
-						//- 	if(inTransportLayer_string.userId){
-								
-						//- 	}
-						//- }
-						
-						//- //set up user id cookie
-						//- getAllPhoneContacts(function(inJsonStruct){
-						//- 	console.log('---------getAllPhoneContacts CALLBACK!!-----------------------');
-						//- 	console.dir(inJsonStruct);
-						//- });
 
 
 
 						sessionSetupAndValidation("loginByScan", waitingDeviceTokenId, function(inJsonStruct){
 							createFilters();
-
-							//- waitingDialog = new WaitingDialog();
-							//- waitingDialog.show();
 
 							contactsObject = new ContactsObject();
 							userObject = new UserObject(function(userErr, userData){
@@ -929,7 +910,7 @@ body
 									$('#lb_loggedInUserName').text(userData.fullName);
 
 
-									$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_2', {transition:'turn', reverse:'true'});
+									//$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_2', {transition:'turn', reverse:'true'});
 									//- setTimeout(function(){
 									//- 	$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_0', {transition:'turn'});
 									//- },10000);

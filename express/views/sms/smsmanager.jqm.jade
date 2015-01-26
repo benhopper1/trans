@@ -1,0 +1,232 @@
+head 
+	meta(charset="UTF-8")
+	meta(name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+	title() arfSync
+body
+
+
+	//h1 contact export
+
+	div(data-role="navbar")
+		ul
+			li
+				a(href="#" id="bt_smsManager_0" data-icon="arrow-r") unknown
+			li
+				a(href="" id="bt_smsManager_1" data-icon="refresh") unknown
+	div(data-role="main" class="ui-content")
+		h1 smsManager 123
+		
+		div(class="ui-grid-c" style="")
+			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid A @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+			//CONTACT LIST VIEW
+			div(class="ui-block-a" style="width:25%")
+				div(data-role="collapsible" class="" data-content-theme="d" data-inset="false" data-collapsed="false" data-mini="true" data-iconpos="right" style="padding: 0px 0px 0.5em 12px !important;width:100%; height:100%;border: 0px")
+					h3(style="margin-top: 0px !important;margin-bottom: 0px !important;") my heading
+
+
+					div(class="ui-content" data-position-to="window" style="width:90%; ")
+						a(href="#contactPanel_0" data-ajax="false" style="")
+						ul(data-role="listview" id="contactsMenu_sms" class=""   data-inset="false" style="width:100%; ")
+
+			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+			//all tabs here
+			div(class="ui-block-b" style="width:50%;")
+				div(class="ui-content" data-position-to="window" style="width:90%; ")
+					#dynamicTableDiv
+
+
+
+
+			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid C @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+			div(class="ui-block-c"  style="width:25%;")
+				h1 block c
+
+
+
+
+
+
+
+	script.
+		$('#contactsMenu_sms').ContactListView('create', 
+			{
+				test:'hopperTestrVal55',
+				useCheckbox:false,
+				autoScrollOnSelect:true,
+				onClick:function(inContactId, inData, inElementId){
+					// CSS Last Selected------>
+					$( '.trans-bkg-a-hv' ).removeClass( 'lastSelected' )
+					$( '#' + inElementId + ' a').addClass( 'lastSelected' );
+
+					SmsManagerObject.refresh(
+						{
+							limit:125,
+							contactData:inData,
+						}
+					);
+
+					//DATA BINDER CALL ----->
+					//$('#contactsWindow').DataBinderObject('load', inData);
+					//eventObject.reportOn('contactMenu_itemClick', inData);
+
+				},
+				onLongClick:function(inContactId, inData, inElementId){
+					//eventObject.reportOn('contactMenu_onLongClick', inData);
+				}
+			}
+		);
+
+		$('#contactsMenu_sms').ContactListView('loadData');
+
+
+		$('#dynamicTableDiv').DynamicTable('create',
+			{
+				fieldHeader:
+					[
+						{
+							caption:'Contact',
+							attributes:
+								{
+								},
+							style:'',
+						},
+						{
+							caption:'When',
+							attributes:{},
+							style:'',
+						},
+						{
+							caption:'Short Message',
+							attributes:
+								{
+									'data-toggle':true,
+								},
+							style:'',
+						},
+						{
+							caption:'Long Message',
+							attributes:
+								{
+									'data-hide':"all",
+									style:'jj:88;',
+								},
+							style:'',
+						},
+					],
+				class:'footable ui-body-d ui-shadow table-stripe ui-responsive',
+				attributes:{
+
+				},
+				onClick:function(inIndex, inData, inJref){
+					//alert('onClick' + inIndex + JSON.stringify(inData));
+					//$('#dynamicTableDiv').DynamicTable('clear');
+				}
+			}
+		);
+
+		//- for(i in [0,1,2,3]){
+		//- $('#dynamicTableDiv').DynamicTable('addRow', 
+		//- 	{
+		//- 		rowArray:
+		//- 			[
+		//- 				'<img src="/public/images/users/02291390-a3fc-11e4-be6b-99ef5cb46bcf.png" height="60px"></img>',
+		//- 				'2',
+		//- 				'<img src="/public/images/users/02291390-a3fc-11e4-be6b-99ef5cb46bcf.png" height="60px"></img>',
+		//- 				'4ffffffffffffffff'
+		//- 			],
+		//- 		data:{key:i}
+		//- 	}
+		//- );
+		//- }
+
+
+
+		$(function () {
+			$('.footable').footable(
+				{
+					breakpoints: 
+						{
+							tiny: 100,
+							medium: 555,
+							big: 2048
+						}
+				}
+			);
+
+
+		});
+		$('#bt_bar_smsManager_back3').click(function(){
+			SmsManagerObject.refresh(
+				{
+					limit:25,
+					contactData:
+						{
+							phoneNumber:'12564662496'
+						}
+				}
+			);
+			
+		});
+
+		
+
+
+		var SmsManagerObject = new function(){
+			var _this = this;
+
+
+
+
+			this.refresh = function(inParams, inPostFunction){
+				//from db
+				var fieldData = 
+					{
+						limit:1000,
+						contactData:
+							{
+								imageUrl:'#{defaultMemberImageUrl}',
+								phoneNumber:false,
+							},
+
+					}
+				fieldData = $.extend(fieldData, inParams);
+				$postAjax(
+					{
+						url:'/database/sms/getAllSmsByPhone',
+						send:
+							{
+								phoneNumber:fieldData.contactData.phoneNumber,
+								limit:fieldData.limit,
+							},
+						onAjaxSuccess:function(inResponseText){
+							var smsArray = JSON.parse(inResponseText).result;
+							for(var smsArrayIndex in smsArray){
+								console.log('smsArray[smsArrayIndex].smsContext' + smsArray[smsArrayIndex].smsContext);
+								var theImageUrl = (smsArray[smsArrayIndex].smsContext == 'inBox') ? fieldData.contactData.imageUrl : smsArray[smsArrayIndex].screenImage;
+								//var smsBody = (smsArray[smsArrayIndex].body.length < 21)? smsArray[smsArrayIndex].body : smsArray[smsArrayIndex].body.substring(0, 20) + '...';
+								$('#dynamicTableDiv').DynamicTable('addRow', 
+									{
+										rowArray:
+											[
+												'<img src="' + theImageUrl + '" height="60px"></img>',
+												smsArray[smsArrayIndex].date,
+												(smsArray[smsArrayIndex].body.length < 21)? smsArray[smsArrayIndex].body : smsArray[smsArrayIndex].body.substring(0, 20) + '...',
+												smsArray[smsArrayIndex].body,
+											],
+										data:smsArray[smsArrayIndex],
+									}
+								);
+							}
+
+							$('.footable').trigger('footable_redraw');
+
+							//if(inPostFunction){inPostFunction(inResponseText);}
+						}
+					}
+				);
+			}
+
+		}();
+
+
+		setHeight();
