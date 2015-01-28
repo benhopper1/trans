@@ -40,12 +40,13 @@ body
 				input(tabindex="6" type="text" 	id="contactEdit_title" 			data-mini="true" name="title" 		placeholder="title...")
 				input(tabindex="7" type="text" 	id="contactEdit_ref" 			data-mini="true" name="ref" 		placeholder="Reference Number...")
 
-
-				input(data-icon="action" id="bt_contactEdit_save" 	data-mini="true" type="button" value="Save")
-				input(data-icon="back" id="bt_contactEdit_clear" 	data-mini="true" type="button" value="Clear")
-				br
-				br
-				input(data-icon="delete" id="bt_contactEdit_delete" 	data-mini="true" type="button" value="Delete Contact")
+				div(class="ui-grid-b" style="")
+					div(class="ui-block-a" style="width:33%")
+						input(data-icon="action" id="bt_contactEdit_save" 	data-mini="true" type="button" value="Save")
+					div(class="ui-block-b" style="width:33%")
+						input(data-icon="back" id="bt_contactEdit_clear" 	data-mini="true" type="button" value="Clear")
+					div(class="ui-block-c" style="width:33%")
+						input(data-icon="delete" id="bt_contactEdit_delete" 	data-mini="true" type="button" value="Delete Contact")
 				//label(for="fs_contactEdit_isActive") Active Contact:
 				//input(type="checkbox" id="fs_contactEdit_isActive" data-role="flipswitch")
 				//select(id="select-based-flipswitch" data-role="flipswitch")

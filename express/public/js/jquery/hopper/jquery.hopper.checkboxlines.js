@@ -104,10 +104,21 @@ var CheckboxLines = function(inJrefOfThis, inJsonStruct){
 	this.setCheckbox = function(inLookupId, inCheckValue){
 		var theRef = $(inJrefOfThis).data('itemHash')[inLookupId].divInputRef;
 		$(inJrefOfThis).data('itemHash')[inLookupId].isChecked = inCheckValue;
+		var oldVal = _this.isChecked(inLookupId);
 		if(inCheckValue){
 			$(theRef).prop('checked',true).checkboxradio('refresh');
+			if(!(oldVal)){
+				if(options.onChange){
+					options.onChange(inLookupId, inCheckValue, _this.getDataByLookupId(inLookupId), divForm, _this.getDataByLookupId(inLookupId)['divInputRef'], _this.getDataByLookupId(inLookupId)['divLabelRef']);
+				}
+			}
 		}else{
 			$(theRef).removeAttr('checked').checkboxradio('refresh');
+			if(oldVal){
+				if(options.onChange){
+					options.onChange(inLookupId, inCheckValue, _this.getDataByLookupId(inLookupId), divForm, _this.getDataByLookupId(inLookupId)['divInputRef'], _this.getDataByLookupId(inLookupId)['divLabelRef']);
+				}
+			}
 		}
 	}
 

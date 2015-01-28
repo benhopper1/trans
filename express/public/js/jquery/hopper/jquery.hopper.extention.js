@@ -256,6 +256,7 @@ var ContactListView = function(inJsonStruct){
 				delete contactListViewHash[removeArray[removeArrayIndex]];
 			}
 			$(theDivRef).listview().listview('refresh');
+			//$('table tbody').trigger('footable_redraw');
 		});
 
 	}
@@ -278,6 +279,47 @@ var ContactListView = function(inJsonStruct){
 
 	}
 
+	this.addTempContacts = function(inRecords){
+		var resultContacts = [];
+		for(contactIndex in inRecords){
+			//md5 hashing!!!!
+			inRecords[contactIndex].md5Hash = $.getHash.md5(JSON.stringify(inRecords[contactIndex]));
+			inRecords[contactIndex].id = inRecords[contactIndex].id ? inRecords[contactIndex].id : new Date().getTime();
+			var html = createHtml(
+				{
+					id:inRecords[contactIndex].id ? inRecords[contactIndex].id : new Date().getTime(),
+					class:'listViewClass',
+					imageUrl:inRecords[contactIndex].imageUrl,
+					name:inRecords[contactIndex].name,
+					number:inRecords[contactIndex].phoneNumber,
+					type:inRecords[contactIndex].type,
+				}
+			);
+			$(theDivRef).append(html);
+			inRecords[contactIndex].jRef = $('#' + uid + '_' + inRecords[contactIndex].id);
+			contactListViewHash[inRecords[contactIndex].id] = inRecords[contactIndex];
+			resultContacts.push(inRecords[contactIndex]);
+			$('#' + uid + '_' + inRecords[contactIndex].id).click(function(e){
+				var id = 
+				console.log('clcik list view AA3 :' + $(e.currentTarget).attr('contactid'));
+				console.dir(e);
+				if(options.onClick){
+					if(options.useCheckbox){
+						_this.toggleState($(e.currentTarget));
+					}
+					options.onClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
+				}
+			});
+			$('#' + uid + '_' + inRecords[contactIndex].id).bind( "taphold", function(e){
+				if(options.onLongClick){
+						options.onLongClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
+					}
+			});
+		}
+		$(theDivRef).listview().listview('refresh');
+		return resultContacts;
+	}
+
 	this.loadData = function(){
 		contactDataObject.select({}, function(inRecords){
 			for(contactIndex in inRecords){
@@ -289,7 +331,7 @@ var ContactListView = function(inJsonStruct){
 						class:'listViewClass',
 						imageUrl:inRecords[contactIndex].imageUrl,
 						name:inRecords[contactIndex].name,
-						number:formatPhoneNumber(inRecords[contactIndex].phoneNumber),
+						number:inRecords[contactIndex].phoneNumber,
 						type:inRecords[contactIndex].type,
 					}
 				);
@@ -314,6 +356,7 @@ var ContactListView = function(inJsonStruct){
 				});
 			}
 			$(theDivRef).listview().listview('refresh');
+			//$('table tbody').trigger('footable_redraw');
 		});
 	}
 
@@ -333,7 +376,7 @@ var ContactListView = function(inJsonStruct){
 				class:'listViewClass',
 				imageUrl:inData.imageUrl,
 				name:inData.name,
-				number:formatPhoneNumber(inData.phoneNumber),
+				number:phoneDisplayFormat(inData.phoneNumber),
 				type:inData.type,
 			}
 		);
@@ -371,7 +414,7 @@ var ContactListView = function(inJsonStruct){
 			'<li id="' + uid + '_' + options.id + '" contactId="' + options.id + '" class="menu_li checkbox_click_' + uid + '_' + options.class + '"  data-icon="false" data-inset="true">' + ' ' +
 				'<a "/hjhjhjh" class="trans-bkg-a-hv" style="' + style + '" > ' + options.name 													+ ' ' +
 					'<img src="' + options.imageUrl + '" style="margin: 15px 15px;" class="magicSquare" height="50px"/>'			+ ' ' +
-					'<p>' + options.number + '</p>'													+ ' ' +
+					'<p>' + phoneDisplayFormat(options.number) + '</p>'													+ ' ' +
 					'<p>' + options.type + '</p>'													+ ' ' +
 				'</a>'																				+ ' ' +
 			'</li>'
@@ -401,8 +444,6 @@ var ContactListView = function(inJsonStruct){
 	}
 
 	this.setSelectedByNameAndType = function(inJstruct){
-		console.log('setSelectedByNameAndType');
-		console.dir(inJstruct);
 		var options2 = 
 			{
 				name:'',
@@ -412,12 +453,8 @@ var ContactListView = function(inJsonStruct){
 		var inName = options2.name;
 		var inType = options2.type;
 
-		for(var contactListViewHashIndex in contactListViewHash){
-			console.log('--------------------------------------------------------------------------');
-			console.log(inName + '<->' + contactListViewHash[contactListViewHashIndex].name);
-			console.log(inType + '<->' + contactListViewHash[contactListViewHashIndex].type);
+		for(var contactListViewHashIndex in contactListViewHash){			
 			if((inName == contactListViewHash[contactListViewHashIndex].name) && (inType == contactListViewHash[contactListViewHashIndex].type)){
-				console.dir(options.divRef);
 				$('#' + $(options.divRef).attr('id') + '_' + contactListViewHash[contactListViewHashIndex].id).find('.trans-bkg-a-hv').trigger('click');
 				if(options.autoScrollOnSelect){ _this.scrollToSelected(); }
 				return ;
@@ -430,6 +467,15 @@ var ContactListView = function(inJsonStruct){
 		$('#' + $(options.divRef).attr('id') + '_' + contactListViewHash[Object.keys(contactListViewHash)[0]].id  ).find('.trans-bkg-a-hv').trigger('click');
 		if(options.autoScrollOnSelect){ _this.scrollToSelected(); }
 		return ;
+	}
+
+	this.findFirstByPhoneNumber = function(inPhoneNumber){
+		for(var contactListViewHashIndex in contactListViewHash){
+			if(phoneNumberCompare(contactListViewHash[contactListViewHashIndex].phoneNumber, inPhoneNumber)){
+				return contactListViewHash[contactListViewHashIndex];
+			}
+		}
+		return false;
 	}
 
 
@@ -475,7 +521,6 @@ $.fn.ContactListView = function(inAction, inJsonStruct){
 
 	if(inAction == 'remove'){
 		contactListView = $(this).data("contactListViewInstance");
-		//inJsonStruct as single string '???'
 		return contactListView.remove(inJsonStruct);
 	}
 
@@ -493,6 +538,12 @@ $.fn.ContactListView = function(inAction, inJsonStruct){
 	}
 	if(inAction == 'scrollToSelected'){
 		return contactListView.scrollToSelected(inJsonStruct);
+	}
+	if(inAction == 'findFirstByPhoneNumber'){
+		return contactListView.findFirstByPhoneNumber(inJsonStruct);
+	}
+	if(inAction == 'addTempContacts'){
+		return contactListView.addTempContacts(inJsonStruct);
 	}
 
 }
@@ -521,7 +572,6 @@ $.fn.form_checkbox_add = function(inJsonStruct){
 		var theArray = [];
 		$(this).data("elementArray", theArray);
 	}
-	console.dir(options);
 	$(this).data("elementArray").push(options);
 	$(this).find('.ui-controlgroup-controls').append(createHtml(options));
 	$(this).trigger('create');

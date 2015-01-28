@@ -6,6 +6,7 @@ var DynamicTable = function(inJrefOfThis, inJsonStruct){
 	var _this = this;
 	var theDivRef;
 	var dataHashByRowId = {};
+	var tableId;
 	var options = 
 		{
 			id:((inJrefOfThis).attr('id'))? (inJrefOfThis).attr('id') + '_table' : new Date().getTime() + '_table',
@@ -32,9 +33,12 @@ var DynamicTable = function(inJrefOfThis, inJsonStruct){
 		;
 		$(inJrefOfThis).append(tableDiv);
 
+		tableId = $(tableDiv).attr('id');
+
 		var theadDiv = $('<thead></thead>').attr({});
 		var trDiv = $('<tr></tr>').attr({});
 		$(theadDiv).append(trDiv);
+
 
 
 
@@ -45,14 +49,23 @@ var DynamicTable = function(inJrefOfThis, inJsonStruct){
 		}
 
 		$(tableDiv).html(theadDiv);
-		$(tableDiv).append('<tbody id="' + options.id + '_tbody' + '"></tbody>');
+		$(tableDiv).append('<tbody id="' + options.id + '_tbody' + '" style=""></tbody>');
 
+	}
+
+	this.getTableId = function(){
+		return tableId;
 	}
 
 
 
 
 	createHtmlContainer();
+	console.log('createHtmlContainer loaded');
+
+
+
+
 
 	this.addRow = function(inJsonStruct){
 		var inRowData = [];
@@ -75,8 +88,11 @@ var DynamicTable = function(inJrefOfThis, inJsonStruct){
 				options.onClick($(this).attr('index'), dataHashByRowId[$(this).attr('id')], $(this));
 			}
 		});
-
+		//$('#' + rowId ).table( "refresh" );
 		rowCount++;
+		//$('.footable').trigger('footable_redraw');
+		$( "table#table-reflow tbody" ).closest( "table#table-reflow" )
+            .table( "refresh" ).trigger( "create" );
 	}
 
 	this.clear = function(){
@@ -112,6 +128,9 @@ $.fn.DynamicTable = function(inAction, inJsonStruct){
 		return dynamicTable.addRow(inJsonStruct);
 	}
 
+	if(inAction == 'getTableId'){
+		return dynamicTable.getTableId(inJsonStruct);
+	}
 	/*if(inAction == 'save'){
 		return dynamicTable.save(inJsonStruct);
 	}*/

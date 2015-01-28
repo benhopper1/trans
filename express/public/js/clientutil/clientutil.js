@@ -321,11 +321,13 @@ var phoneNumberCompare = function(inNumberA, inNumberB){
 }
 
 var phoneDisplayFormat = function(inNumber){
-	if(inNumber.length = 10){
-		return '1' + inNumber.substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)$2-$3');
+	//inNumber = inNumber.toString();
+	if(inNumber.length == 10){
+		inNumber = '1' + inNumber;
+		return inNumber.substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '1($1)$2-$3');
 	}
 
-	if(inNumber.length = 11){
+	if(inNumber.length == 11){
 
 		return '1' + inNumber.substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)$2-$3');
 	}
@@ -787,7 +789,8 @@ var Backstack = function(inJsonStruct){
 
 	var exist = function(inItem){
 		for(index in stack){
-			if(JSON.stringify(stack[index]) == JSON.stringify(inItem)){
+			//if(JSON.stringify(stack[index]) == JSON.stringify(inItem)){
+			if(stack[index].toString() == inItem.toString()){
 				console.log('exist true');
 				return index;
 			}

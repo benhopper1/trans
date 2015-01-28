@@ -1,0 +1,71 @@
+div(data-role="header")
+	h1 Header Text
+
+//div(data-role="main" class="ui-content")
+div(class="ui-content" data-position-to="window" style="width:400px; height:80%")
+	#contactsMenu_sms_popup(style="height:80%;overflow-y: auto")
+	br
+	div(class="ui-grid-a" style="")
+		div(class="ui-block-a" style="width:50%")
+			a(data-icon="delete" data-theme="a" id="bt_smsPopup_clear" 	data-mini="true" class="ui-overlay-shadow ui-btn") Clear
+		div(class="ui-block-b" style="width:50%;")
+			a(data-icon="minus" data-theme="a" id="bt_smsPopup_hidePanel" 	data-mini="true" class="ui-overlay-shadow ui-btn") Hide Panel
+
+	br
+
+
+
+script.
+	$('#contactsMenu_sms_popup').CheckboxLines('create', 
+		{
+			onChange:function(lookupId, isChecked, dataWrapper, formJref, inputJref, labelJref){
+				console.dir(dataWrapper);
+				var checkedArray = $('#contactsMenu_sms_popup').CheckboxLines('getCheckedData');
+				SmsManagerObject.drawToContactSleeve(checkedArray);
+			}
+		}
+	);
+
+	$('#bt_smsPopup_clear').click(function(){
+		var theDataArray = $('#contactsMenu_sms_popup').CheckboxLines('getCheckedData');
+		for(var theDataArrayIndex in theDataArray){
+			console.log('theDataArrayIndex');
+			console.dir(theDataArray[theDataArrayIndex]); //theDataArray[theDataArrayIndex]
+			$('#contactsMenu_sms_popup').CheckboxLines('setCheckbox',
+				{
+					lookupId:theDataArray[theDataArrayIndex].lookupId,
+					isChecked:false,
+				}
+			);
+		}
+
+	});
+	$('#bt_smsPopup_hidePanel').click(function(){
+		$('#contactPopup_sms').popup().popup( "close" );
+	});
+
+
+
+
+
+	contactDataObject.select({}, function(inRecords){
+		for(contactIndex in inRecords){
+			$('#contactsMenu_sms_popup').CheckboxLines('addItem',
+				{
+					lookupId:inRecords[contactIndex].id,
+					data:inRecords[contactIndex],
+					caption:'<img src="'  + inRecords[contactIndex].imageUrl + '" style="height:40px; float:left" class="magicSquare"/><h4>&nbsp;&nbsp;&nbsp;' + inRecords[contactIndex].name + '<br>&nbsp;&nbsp;&nbsp;' + phoneDisplayFormat(inRecords[contactIndex].phoneNumber) + '</h4>',
+					isChecked:false,
+					formStyle:'border:0;width:400px;'
+				}
+			);
+		}
+	});
+
+
+
+
+
+
+	$('#contactsMenu_sms_popup').trigger('create');
+

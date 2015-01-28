@@ -9,9 +9,16 @@ var basePath = path.dirname(require.main.filename);
 module.exports.controller = function(app){
 
 	app.post('/security/process', function(req, res){
+		console.log('##############################################');
+		console.log('SECURITY');
+		console.log('##############################################');
+
 		var waitingDeviceTokenId = req.body.waitingDeviceTokenId;
+		console.log('SECURITY waitingDeviceTokenId' + waitingDeviceTokenId);
 		securityCheck(req, res, waitingDeviceTokenId, function(inSecurityOk, inUserId){
 			if(inSecurityOk){
+				console.log('SECURITY Secutiy == OK');
+				console.log('SECURITY userId from security check:' + inUserId);
 				res.cookie('canProcess', "true", { maxAge: (60000 * 60 * 24), httpOnly: true });
 
 				res.setHeader('Content-Type', 'application/json');
@@ -21,6 +28,8 @@ module.exports.controller = function(app){
 					}
 				));
 			}else{
+				console.log('SECURITY Secutiy == BAD');
+				console.log('SECURITY userId from security check:' + inUserId);
 				res.cookie('canProcess', "false", { maxAge: (60000 * 60 * 240000), httpOnly: true });
 				res.setHeader('Content-Type', 'application/json');
 				res.end(JSON.stringify(

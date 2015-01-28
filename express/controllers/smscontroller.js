@@ -38,6 +38,38 @@ module.exports.controller = function(app){
 		}
 	});
 
+
+	app.get('/jqm/contactselectpopup', function(req, res){
+		console.log('cookie userId:' + req.cookies.userId);
+		if(req.cookies.userId){
+			console.log("/jqm/contactselectpopup");
+			res.render('sms/contactselectpopup.jqm.jade',
+				{
+					userId:req.cookies.userId,
+					deviceId:"815",//req.cookies.deviceId,
+					URL:configData.domain.address + ":" + configData.domain.port,
+					androidAppRoute:configData.androidAppRoute,
+					webSocketClient:configData.webSocketClient,
+					defaultUserImageUrl:configData.defaultUserImageUrl,
+					defaultMemberImageUrl:configData.defaultMemberImageUrl,
+					data:
+						{
+						}
+				}
+			);
+		}else{
+			//============================================================
+			//YOUR NOT LOGED IN ------------------------------------------
+			//============================================================
+			console.log("/jqm/contactselectpopup    YOUR NOT LOGED IN????");
+			/*res.render('contacts/widget_contactscollection.jade',
+				{
+
+				}
+			);*/
+		}
+	});
+
 	app.get('/entity_smsmessage', function(req, res){
 		console.log("/entity_smsmessage get");
 		res.render('sms/entity_smsmessage.jade',
