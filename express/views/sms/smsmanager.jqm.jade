@@ -76,6 +76,7 @@ script.
 
 
 	$( "#page_smsManager").on( "pageshow", function( event, ui ){
+		alert(mysqlEpochToLocalDateTime(new Date().getTime()));
 		console.log('PAGE SHOW---------------------------SMS');
 		SmsManagerObject.load();
 		setHeight();
@@ -97,30 +98,6 @@ script.
 					phoneNumber:'12564662496',
 					message:$('#ta_smsMessage').val(),
 				},
-				{
-					phoneNumber:'12564662496',
-					message:$('#ta_smsMessage').val(),
-				},
-				{
-					phoneNumber:'12564662496',
-					message:$('#ta_smsMessage').val(),
-				},
-				{
-					phoneNumber:'12564662496',
-					message:$('#ta_smsMessage').val(),
-				},
-				{
-					phoneNumber:'12564662496',
-					message:$('#ta_smsMessage').val(),
-				},
-				{
-					phoneNumber:'12564662496',
-					message:$('#ta_smsMessage').val(),
-				},
-				{
-					phoneNumber:'12564662496',
-					message:$('#ta_smsMessage').val(),
-				},
 			]
 		SmsManagerObject.sendManySms(test, function(e){
 			console.log('e:');
@@ -128,11 +105,18 @@ script.
 		})
 	});
 
+	
+
 
 	var SmsManagerObject = new function(){
 		var _this = this;
 		var toContactHash = {};
 		var currentContactBackstack;
+
+
+		//===================================================
+		//>----EVENTS 
+		//===================================================
 
 
 		this.clear = function(){
@@ -275,7 +259,7 @@ script.
 						console.log('onPush callback' + inItem);
 						console.dir(inItem);
 						$('#hotLinks').prepend(
-							'<div id="widgetSmsMessage_currentContact_' + inItem.id + '" class="magicSquarePnt" style="width:100px;">' 		+
+							'<div id="widgetSmsMessage_currentContact_' + inItem.id + '" class="magicSquarePnt hot-link-contact" style="width:100px;" phoneNumber="' + inItem.phoneNumber + '">' 		+
 								'<center>'														+
 									'<img class=" shake" src="' + inItem.imageUrl + '" phone="' + inItem.phoneNumber + '" style="width:75px;"/>' +
 									'<br>'								   +
@@ -284,12 +268,20 @@ script.
 							'</div>'
 						);
 						//-- on click of current contact---------
-						//- $('#widgetSmsMessage_currentContact_' + inItem.id).click(function(){
-						//- 	console.log('clicked' + inItem.phoneNumber);
-						//- 	if(inItem.phoneNumber){
-						//- 		_this.comboSetSelectedByPhone(inItem.phoneNumber);
-						//- 	}
-						//- });
+						$('.hot-link-contact').click(function(){
+							//user clicks on hot link!!!!!!!!!!!!!!!!!
+							alert('hotLink!!!' + $(this).attr('phoneNumber'));
+							var resultContact = $('#contactsMenu_sms').ContactListView('findFirstByPhoneNumber', $(this).attr('phoneNumber'));
+							console.log('resultContact');
+							console.dir(resultContact);
+							$('#contactsMenu_sms').ContactListView('setSelectedByNameAndType',
+								{
+									name:resultContact.name,
+									type:resultContact.type
+								}
+							);
+							$(resultContact.jRef).trigger('click');
+						});
 					},
 
 					onPop:function(inItem){
@@ -541,12 +533,41 @@ script.
 							//- );
 							if(theContacts){
 								_this.addContactToHotLinks(theContacts[0]);
+								contact = theContacts[0];
 							}
-							//- _this.addContactToHotLinks(contact);
-							//- if(!(_this.comboExistByPhone(contact.phoneNumber))){
-							//- 	_this.addContactToContactCombo(contact);
-							//- }
+
+
+
 						}
+
+						//>--- only when contact selected inject new sms into view(outgoing too!!)
+						//selected == phoneNumber == phoneNumber
+						var selectedContactData = $('#contactsMenu_sms').ContactListView('getLastSelected');
+						console.log('selectedContactData');
+						console.dir(selectedContactData);
+						console.dir(contact);
+						//TODO: add date to receivimg bundle, so reflect same across..will be differnet after refresh...
+						if(selectedContactData){
+							if(selectedContactData.phoneNumber == contact.phoneNumber){
+								alert('inject heer');
+								$('#dynamicTableDiv').DynamicTable('addRowTop', 
+									{
+										rowArray:createRowArrayHtml(
+											{
+												imageUrl:selectedContactData.imageUrl,
+												date:new Date().getTime(),
+												body:inTransportLayer_Json.dataLayer.msg
+											}
+										),
+										data:selectedContactData,
+									}
+								);
+								$('.footable').trigger('footable_redraw');
+							}
+						}
+
+
+
 					}
 				}
 			}
@@ -573,6 +594,32 @@ script.
 							//- if(!(_this.comboExistByPhone(contact.phoneNumber))){
 							//- 	_this.addContactToContactCombo(contact);
 							//- }
+						}
+
+						var selectedContactData = $('#contactsMenu_sms').ContactListView('getLastSelected');
+						console.log('selectedContactData2');
+						console.dir(selectedContactData);
+						console.log('contact');
+
+						console.dir(contact);
+						//TODO: add date to receivimg bundle, so reflect same across..will be differnet after refresh...
+						if(selectedContactData){
+							if(selectedContactData.phoneNumber == contact.phoneNumber){
+								alert('inject heer2');
+								$('#dynamicTableDiv').DynamicTable('addRowTop', 
+									{
+										rowArray:createRowArrayHtml(
+											{
+												imageUrl:selectedContactData.imageUrl,
+												date:new Date().getTime(),
+												body:inTransportLayer_Json.dataLayer.msg
+											}
+										),
+										data:selectedContactData,
+									}
+								);
+								$('.footable').trigger('footable_redraw');
+							}
 						}
 					}
 				}

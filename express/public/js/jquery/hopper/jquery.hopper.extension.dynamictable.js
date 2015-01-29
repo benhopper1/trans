@@ -63,7 +63,33 @@ var DynamicTable = function(inJrefOfThis, inJsonStruct){
 	createHtmlContainer();
 	console.log('createHtmlContainer loaded');
 
+	this.addRowTop = function(inJsonStruct){
+		var inRowData = [];
+		inRowData = $.extend(inRowData, inJsonStruct.rowArray);
+		var theData = {}
+		theData = $.extend(theData, inJsonStruct.data);
 
+		var resultString;
+		for(var inRowDataIndex in inRowData){
+			resultString += '<td>' + inRowData[inRowDataIndex] + '</td>';
+		}
+
+		var rowId = options.id + '_row_' + rowCount;
+		var theRow = '<tr id="' + rowId + '" index="' + rowCount + '">' + resultString +	'</tr>';
+		$('#' + options.id + '_tbody').prepend(theRow);
+
+		dataHashByRowId[rowId] = theData;
+		$('#' + rowId ).click(function(){
+			if(options.onClick){
+				options.onClick($(this).attr('index'), dataHashByRowId[$(this).attr('id')], $(this));
+			}
+		});
+		//$('#' + rowId ).table( "refresh" );
+		rowCount++;
+		//$('.footable').trigger('footable_redraw');
+		$( "table#table-reflow tbody" ).closest( "table#table-reflow" )
+            .table( "refresh" ).trigger( "create" );
+	}
 
 
 
@@ -126,6 +152,10 @@ $.fn.DynamicTable = function(inAction, inJsonStruct){
 
 	if(inAction == 'addRow'){
 		return dynamicTable.addRow(inJsonStruct);
+	}
+
+	if(inAction == 'addRowTop'){
+		return dynamicTable.addRowTop(inJsonStruct);
 	}
 
 	if(inAction == 'getTableId'){
