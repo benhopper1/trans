@@ -1,7 +1,7 @@
 //====================================
 //-)--> GRID--------------------------
 //====================================
-div(data-role="main" class="ui-content")
+div(data-role="main" class="")
 	//#contactPopup_sms(data-role="popup" class="responseNotice" style="background: #00ff00 url('/public/images/ui/whitecloudsimage.jpg') no-repeat fixed center; ")
 
 
@@ -16,24 +16,25 @@ div(data-role="main" class="ui-content")
 
 
 			div(class="ui-content" data-position-to="window" style="width:90%; ")
-				a(href="#contactPanel_0" data-ajax="false" style="")
+				//a(href="#contactPanel_0" data-ajax="false" style="")
 				ul(data-role="listview" id="contactsMenu_sms" class=""   data-inset="false" style="width:100%; ")
 
 		//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 		//all tabs here
-		div(class="ui-block-b" style="width:50%;height: 100%;")
+		div(class="ui-block-b" style="width:50%;")
 			//div(id="dynamicTable_content_sms_div" class="ui-content" data-position-to="window" style="width:90%; height:60%;")
-			div(class="" data-position-to="window" style="width:90%; height:220px; overflow-y:hide;")
-				#pad(style="padding:10px;")
+			div(class="ui-content")
+				div(class="sms-top-height" data-position-to="window" style="border:1;width:90%; overflow-y:hide;")
+					#pad(style="padding:10px;")
 
-					//a(href="#contactPopup_sms" data-rel="popup" class="ui-overlay-shadow")
+						//a(href="#contactPopup_sms" data-rel="popup" class="ui-overlay-shadow")
 
-					div(id="smsContactSleeve" class=" smsContactSleeveCls" )
-					textarea(id="ta_smsMessage" data-mini="true" style="heigth:63px;" name="ref" placeholder="Sms message to send...")
-					input(data-icon="action" id="bt_smsManager_send" 	data-mini="true" type="button" value="Send Sms Message")
+						div(id="smsContactSleeve" class=" smsContactSleeveCls" )
+						textarea(id="ta_smsMessage" data-mini="true" style="heigth:63px;" name="ref" placeholder="Sms message to send...")
+						input(data-icon="action" id="bt_smsManager_send" 	data-mini="true" type="button" value="Send Sms Message")
 
-			div(id="dynamicTable_content_sms_div" class="" data-position-to="window" style="width:90%; height:100%; overflow-y:auto;")
-				#dynamicTableDiv
+				div(id="dynamicTable_content_sms_div" class="sms-bottom-height" data-position-to="window" style="height:200px;width:90%; overflow-y:auto;")
+					#dynamicTableDiv
 
 
 
@@ -77,10 +78,14 @@ script.
 	$( "#page_smsManager").on( "pageshow", function( event, ui ){
 		console.log('PAGE SHOW---------------------------SMS');
 		SmsManagerObject.load();
+		setHeight();
+		$('#smsManager_contents').trigger('create');
 	});
 	$( "#page_smsManager").on( "pagecreate", function( event, ui ){
 		//alert('pageshow');
 		console.log('PAGE CREATE---------------------------SMS');
+		setHeight();
+		$('#smsManager_contents').trigger('create');
 		//SmsManagerObject.load();
 		//dynamicTableDiv_table.footable();
 	});
@@ -396,33 +401,33 @@ script.
 			$('#sms_upper_img2').attr('src',fieldData.contactImageUrl);
 		}
 
-		this.setHeight = function(){
-			var screen = $.mobile.getScreenHeight();
-			var header = 159;//$(".ui-header").hasClass("ui-header-fixed") ? $(".ui-header").outerHeight()  - 1 : $(".ui-header").outerHeight();
-			var footer = 0;//$(".ui-footer").hasClass("ui-footer-fixed") ? $(".ui-footer").outerHeight() - 1 : $(".ui-footer").outerHeight();
+		//- this.setHeight = function(){
+		//- 	var screen = $.mobile.getScreenHeight();
+		//- 	var header = 159;//$(".ui-header").hasClass("ui-header-fixed") ? $(".ui-header").outerHeight()  - 1 : $(".ui-header").outerHeight();
+		//- 	var footer = 0;//$(".ui-footer").hasClass("ui-footer-fixed") ? $(".ui-footer").outerHeight() - 1 : $(".ui-footer").outerHeight();
 			
-			/* content div has padding of 1em = 16px (32px top+bottom). This step
-				can be skipped by subtracting 32px from content var directly. 
-			*/
-			var contentCurrent = $(".ui-content").outerHeight() - $(".ui-content").height();
+		//- 	/* content div has padding of 1em = 16px (32px top+bottom). This step
+		//- 		can be skipped by subtracting 32px from content var directly. 
+		//- 	*/
+		//- 	var contentCurrent = $(".ui-content").outerHeight() - $(".ui-content").height();
 
-			var content = screen - header - footer - contentCurrent;
+		//- 	var content = screen - header - footer - contentCurrent;
 
-			$(".ui-content").height(content);
-		}
+		//- 	$(".ui-content").height(content);
+		//- }
 
-		this.getContentHeight = function(){
-			var header = $.mobile.activePage.find("div[data-role='header']:visible");
-			var footer = $.mobile.activePage.find("div[data-role='footer']:visible");
-			var content = $.mobile.activePage.find("div[data-role='content']:visible:visible");
-			var viewport_height = $(window).height();
+		//- this.getContentHeight = function(){
+		//- 	var header = $.mobile.activePage.find("div[data-role='header']:visible");
+		//- 	var footer = $.mobile.activePage.find("div[data-role='footer']:visible");
+		//- 	var content = $.mobile.activePage.find("div[data-role='content']:visible:visible");
+		//- 	var viewport_height = $(window).height();
 
-			var content_height = viewport_height - header.outerHeight() - footer.outerHeight();
-			if((content.outerHeight() - header.outerHeight() - footer.outerHeight()) <= viewport_height) {
-				content_height -= (content.outerHeight() - content.height());
-			}
-			return content_height;
-		}
+		//- 	var content_height = viewport_height - header.outerHeight() - footer.outerHeight();
+		//- 	if((content.outerHeight() - header.outerHeight() - footer.outerHeight()) <= viewport_height) {
+		//- 		content_height -= (content.outerHeight() - content.height());
+		//- 	}
+		//- 	return content_height;
+		//- }
 
 		this.drawToContactSleeve = function(inContacts){
 			console.log('inContacts');
@@ -579,4 +584,4 @@ script.
 	}();
 	//$("#dynamicTable_content_sms_div").iscrollview();
 
-	SmsManagerObject.setHeight();
+	//setHeight();

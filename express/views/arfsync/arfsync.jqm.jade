@@ -57,12 +57,12 @@ head
 
 	script(type='text/javascript', src='/public/js/async/async.js')
 
-	script(type='text/javascript', src='/public/js/reportview/reportview.js')
+	//script(type='text/javascript', src='/public/js/reportview/reportview.js')
 
 	//masterMenu-----
-	script(src="/public/js/mastermenu/src/js/jquery.mmenu.min.js" type="text/javascript")
-	link(href="/public/js/mastermenu/src/css/jquery.mmenu.css" type="text/css" rel="stylesheet")
-	link(href="/public/js/mastermenu/src/css/extensions/jquery.mmenu.themes.css" type="text/css" rel="stylesheet")
+	//script(src="/public/js/mastermenu/src/js/jquery.mmenu.min.js" type="text/javascript")
+	//link(href="/public/js/mastermenu/src/css/jquery.mmenu.css" type="text/css" rel="stylesheet")
+	//link(href="/public/js/mastermenu/src/css/extensions/jquery.mmenu.themes.css" type="text/css" rel="stylesheet")
 
 
 
@@ -111,8 +111,8 @@ body
 		//====================================
 		div(class="ui-grid-b")
 			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid A @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-			div(class="ui-block-a")
-				div(data-role="main" class="ui-content" syle="")
+			div(class="ui-block-a" syle="overflow:hidden;")
+				div(data-role="main" class="ui-content" syle="overflow:hidden;")
 					div(class="ui-field-contain" id="main_bg" style="width:300px; left:10px")
 						ul(data-role="listview" id="mainmenu" class=""  data-inset="true" )
 							li(id="contactManagerDiv" class="menu_li" )
@@ -155,13 +155,10 @@ body
 
 
 
-
+		//TODO: remove section---
 		#smsWindowDiv
-		//#contactsWindow
 		#testHandset
 		#welcome_phoneWindowDiv
-		//a(href="#pg_page_1" data-transition="slide") Slide to Page One
-		//a(href="#pg_page_2" data-transition="turn" ) Slide to Page Two
 
 
 
@@ -204,24 +201,6 @@ body
 
 	div(id="pg_page_2" data-role="page"  data-fullscreen="true" data-theme="a"  class=".center-me" data-dialog="false")
 
-		//====================================
-		//-)--> GRID--------------------------
-		//====================================
-		//- div(data-role="header" data-position="fixed")
-		//- 	h1 jQuery Mobile Example
-		//- 	div(data-role="navbar" data-mini="true")
-		//- 		ul
-		//- 			li
-		//- 				a(href="#" id="btBar_contactManager_back" data-icon="back" class="backButtonClass") Back
-		//- 			li
-		//- 				a(href="#" id="btBar_contactManager_back2" data-icon="back") Contact Manager
-		//- 			li
-		//- 				a(href="#" id="btBar_contactManager_headButton_2" data-icon="back") User Profile
-		//- 			li
-		//- 				a(href="#" id="btBar_contactManager_smsManager" data-icon="back") Sms Manager
-		//- 			li
-		//- 				a(href="#" id="btBar_contactManager_handSet" data-icon="back" class="toLoginClass") Hand Set
-
 		div(class="ui-grid-c" style="")
 			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid A @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 			//CONTACT LIST VIEW
@@ -229,11 +208,6 @@ body
 				div(class="ui-content" data-position-to="window" style="width:90%; ")
 					a(href="#contactPanel_0" data-ajax="false" style="")
 					ul(data-role="listview" id="contactsMenu" class=""   data-inset="false" style="width:100%; ")
-				//- div(data-role="collapsible" class="" data-content-theme="d" data-inset="false" data-collapsed="false" data-mini="true" data-iconpos="right" style="padding: 0px 0px 0.5em 12px !important;width:100%; height:100%;border: 0px")
-				//- 	h3(style="margin-top: 0px !important;margin-bottom: 0px !important;") Contacts List
-				//- 	div(id="txt" class="ui-content" data-position-to="window" style="width:90%; ")
-				//- 		a(href="#contactPanel_0" data-ajax="false" style="")
-				//- 		ul(data-role="listview" id="contactsMenu" class=""   data-inset="false" style="width:100%; ")
 
 			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 			//all tabs here
@@ -246,51 +220,26 @@ body
 						ul
 							li
 								a(href="#tab_editContact" data-ajax="false") Edit Contact
-							//li
-								//a(href="#four" data-ajax="false") Create Contact
 							li
 								a(href="#tab_import" data-ajax="false") Import
 							li
 								a(href="#tab_export" data-ajax="false") Export
-							//- li
-							//- 	a(href="#four" data-ajax="false") User Profile
 
-					//@@@@@@  TAB ---EDIT CONTACT--------------------------------------------
+					//@@@@@@  TAB ---EDIT CONTACT----------------------------------------------
 					div(id="tab_editContact" class="ui-content" style="overflow: auto; ")
 
-					//@@@@@@  TAB -----CREATE CONTACT ---------------------------------------
-					//div(id="tab_createContact" class="ui-content")
-
-
-
-					//@@@@@@  TAB --2--------------------------------------------
+					//@@@@@@  TAB ---IMPORT CONTACT--------------------------------------------
 					div(id="tab_import" class="ui-content" style="")
-						//- div(data-role="fieldcontain")
-						//- 	label(for="select-choice-1" class="select") Choose shipping method:
-						//- 	select(name="select-choice-1" id="select-choice-1")
-						//- 		option(value="standard") Standard: 7 day
-						//- 		option(value="rush") Rush: 3 days
-						//- 		option(value="express") Express: next day
-						//- 		option(value="overnight") Overnight
-					//@@@@@@  TAB --2--EXPORT------------------------------------------
+
+					//@@@@@@  TAB ---EXPORT CONTACT--------------------------------------------
 					div(id="tab_export" class="ui-content")
-
-
-
-
-
-
-
 
 
 
 			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 			div(class="ui-block-c" style="width:0%") 
 			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SubGrid B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-			div(class="ui-block-d" style="width:0%") 
-		//- div(data-role="footer" data-position="fixed")
-		//- 	h6 footer
-
+			div(class="ui-block-d" style="width:0%")
 
 
 
@@ -299,46 +248,13 @@ body
 	//=================================================================================================================================================================================
 
 	div(id="page_userProfile" data-role="page"  data-fullscreen="true" data-theme="a"  class=".center-me" data-dialog="false")
-		//====================================
-		//-)--> GRID--------------------------
-		//====================================
-		//- div(data-role="header" data-position="fixed")
-		//- 	h1 jQuery Mobile Example
-		//- 	div(data-role="navbar" data-mini="true")
-		//- 		ul
-		//- 			li
-		//- 				a(href="#" id="btBar_userProfile_back" data-icon="back" class="backButtonClass") Back
-		//- 			li
-		//- 				a(href="#" id="btBar_userProfile_back2" data-icon="back") Back
-		//- 			li
-		//- 				a(href="#" id="bt_bar_userProfile_back3" data-icon="back") test popup
-		//- 			li
-		//- 				a(href="#" id="btBar_userProfile_back4" data-icon="back") test-setMark
-		//- 			li
-		//- 				a(href="#" id="btBar_userProfile_back5" data-icon="back") test save
 		#userProfile_contents
-
-
 
 	//=================================================================================================================================================================================
 	//-)--> PAGE 4-(USER PROFILE)----------------------------------------------------------------------------------------------------------------------------------------------------
 	//=================================================================================================================================================================================
 
 	div(id="page_smsManager" data-role="page"  data-fullscreen="true" data-theme="a"  class=".center-me" data-dialog="false")
-		//- div(data-role="header" data-position="fixed")
-		//- 	h1 jQuery Mobile Example
-		//- 	div(data-role="navbar" data-mini="true")
-		//- 		ul
-		//- 			li
-		//- 				a(href="#" id="btBar_smsManager_back" data-icon="back" class="backButtonClass") Back
-		//- 			li
-		//- 				a(href="#" id="btBar_smsManager_back2" data-icon="back") Back
-		//- 			li
-		//- 				a(href="#" id="bt_bar_smsManager_back3" data-icon="back") test popup
-		//- 			li
-		//- 				a(href="#" id="btBar_smsManager_back4" data-icon="back") test-setMark
-		//- 			li
-		//- 				a(href="#" id="btBar_smsManager_back5" data-icon="back" class="toLoginClass") test save
 		#smsManager_contents
 
 
@@ -349,15 +265,47 @@ body
 
 
 	script.
-		$(".mainHeader").toolbar();
-		//$( ".selector" ).toolbar( "refresh" );
-		//$(".mainHeader").toolbar( "create" );
-		$(".mainHeader").toolbar( "refresh" );
+		//======================================================================
+		//>--- GLOBAL DECLARE SECTION-------------------------------------------
+		//======================================================================
 		var globalUserImageUrl;
-		/*$(function () {
-			$('.footable').footable();
+		var commManager;
+		var deviceTokenId;
+		var contactsObject;
+		var storageObject;
+
+		var LoginManagerObject;
+		var eventObject = new EventOrigin();//TODO: move inside create event
+		var widgetSmsMessageWindowScript;
+		var deviceQuerySync;
+
+
+		//======================================================================
+		//>--- LOGIN PAGE EVENTS------------------------------------------------
+		//======================================================================
+
+		$( "#pg_page_0").on( "pagecreate", function( event, ui ){
+			console.log('PAGE CREATE---------------------------LoginManager');
+			loginManagerObject = new LoginManagerObject();
+			loginManagerObject.load();
+			window.location.hash = '';
+			$.mobile.navigate( "#btBar_main_back", {
+				info: "info about the #bar hash"
+			});
+
 		});
-		*/
+
+		$( "#pg_page_0").on( "pageshow", function( event, ui ){
+			console.log('PAGE SHOW-----------------------------LoginManager');
+			window.location.hash = '';
+		});
+
+		//======================================================================
+		//>--- HEADER SETUP-----------------------------------------------------
+		//======================================================================
+		$(".mainHeader").toolbar();
+
+
 
 		//======================================================================
 		//>--- MAIN TOOLBAR -----/(EVENTS)--------------------------------------
@@ -384,23 +332,6 @@ body
 
 
 
-
-
-		//- $(function () {
-		//- 	console.log('footable running');
-		//- 	$('.footable').footable(
-		//- 		{
-		//- 			breakpoints: 
-		//- 				{
-		//- 					tiny: 100,
-		//- 					medium: 555,
-		//- 					big: 2048
-		//- 				}
-		//- 		}
-		//- 	);
-		//- });
-
-
 		//=========================================================
 		// PageLoaderObject
 		//=========================================================
@@ -414,38 +345,35 @@ body
 						{
 							loginManager:function(){
 								$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_0', {reload:false, transition:'turn', reverse:'true'});
+								loadedHash['loginManager'] = true;
 							},
 							contactManager:function(){
-								//  setup events----------------------------
+								$('#pg_page_2').load("/jqm/contactmanager ", function(){
+									//  setup events----------------------------
+									$('#tab_export').load("/jqm/contactexport ", function(){
+										console.log('loaded');
+										$('#tab_export').trigger('create');
 
+									});
+									$('#tab_import').load("/jqm/contactimport ", function(){
+										console.log('loaded');
+										$('#tab_import').trigger('create');
 
-								$('#tab_export').load("/jqm/contactexport ", function(){
-									console.log('loaded');
-									$('#tab_export').trigger('create');
+									});
+									$('#tab_editContact').load("/jqm/contactedit ", function(){
+										console.log('loaded');
+										$('#tab_editContact').trigger('create');
 
-								});
-								$('#tab_import').load("/jqm/contactimport ", function(){
-									console.log('loaded');
-									$('#tab_import').trigger('create');
+									});
+									loadedHash['contactManager'] = true;
 
-								});
-								$('#tab_editContact').load("/jqm/contactedit ", function(){
-									console.log('loaded');
-									$('#tab_editContact').trigger('create');
-
-								});
-								loadedHash['contactManager'] = true;
 								$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_2', {reload:false, transition:'turn', reverse:'true'});
-
+								});
 							},
 							userProfile:function(){
 								$('#userProfile_contents').load("/jqm/userprofile ", function(){
 									console.log('loading userprofile');
-									//$('#userProfile_contents').trigger('create');
-									//$('#page_userProfile').load("/jqm/smsManager ");
 									$(':mobile-pagecontainer').pagecontainer('change', '#page_userProfile', { transition:'turn', reverse:'true'});
-									//$(':mobile-pagecontainer').pagecontainer('change', '#page_userProfile', {reload:false, transition:'turn', reverse:'true'});
-									//$( ":mobile-pagecontainer" ).pagecontainer( "change", "confirm.html", { role: "dialog" } );
 									loadedHash['userProfile'] = true;
 								});
 							},
@@ -463,20 +391,12 @@ body
 
 								});
 
-								//- $('#page_smsManager').load("/jqm/smsManager ", function(){
-								//- 	$(':mobile-pagecontainer').pagecontainer('change', '#page_smsManager', {reload:false,transition:'turn', reverse:'true'});
-								//- 	$('#page_smsManager').trigger('create');
-								//- });
-									
-								//- $('#page_smsManager').load("/jqm/smsManager ", function(){
-								//- 	console.log('loaded');
-								//- 	$('#page_smsManager').trigger('create');
-								//- 	$(':mobile-pagecontainer').pagecontainer('change', '#page_smsManager', {reload:true, transition:'turn', reverse:'true'});
-								//- });
-
-									loadedHash['smsManager'] = true;
-								//});
+								loadedHash['smsManager'] = true;
 							},
+
+
+
+
 						},
 					show:{
 							loginManager:function(){
@@ -520,307 +440,83 @@ body
 				if(_this.isLoaded(pageName)){
 					processHash.show[pageName]();
 				}else{
-					loadProcess(pageName);
+					processHash.load[pageName]();
 				}
 			}
 
 			this.isLoaded = function(pageName){
 				return loadedHash[pageName];
 			}
-
-			var loadProcess = function(pageName){
-				processHash.load[pageName]();
-			}
-
-			var showProcess = function(pageName){
-
-			}
-
 		}();
 
 
+		//=========================================================
+		// LoginManagerObject
+		//=========================================================
+
+		var LoginManagerObject = function(){
+			this.load = function(){
+
+				setHeight();
+				//=========================================================
+				// BUTTON EVENTS (LoginManagerObject)
+				//=========================================================
+				$('#contactManagerDiv').click(function(){
+					PageLoaderObject.loadPage('contactManager');
+				});
+				$('#smsManagerDiv').click(function(){
+					PageLoaderObject.loadPage('smsManager');
+				});
+				$('#handsetControllerDiv').click(function(){
+					openHandset();
+				});
+				$('#userProfileDiv').click(function(){
+					PageLoaderObject.loadPage('userProfile');
+				});
+				$('#downloaddiv').click(function(){
+					window.location.href = "/public/download/androidapp/v002/Qr_Proj_3.apk";
+				});
+			}
+		}
+
+		//=========================================================
+		// GLOBAL FUNCTIONS
+		//=========================================================
 
 
 
-
-
-
-
-
-
-
-
-
-
-		$(document).ready(function(){
-			console.log('DOCUMENT READY IN ARFSYNC.JQM.JADE');
-			setHeight();
-			$('#contactsMenu').ContactListView('create', 
-				{
-					test:'hopperTestrVal55',
-					useCheckbox:false,
-					autoScrollOnSelect:true,
-					onClick:function(inContactId, inData, inElementId){
-						// CSS Last Selected------>
-						$( '.trans-bkg-a-hv' ).removeClass( 'lastSelected' )
-						$( '#' + inElementId + ' a').addClass( 'lastSelected' );
-
-						//DATA BINDER CALL ----->
-						//$('#contactsWindow').DataBinderObject('load', inData);
-						eventObject.reportOn('contactMenu_itemClick', inData);
-					},
-					onLongClick:function(inContactId, inData, inElementId){
-						eventObject.reportOn('contactMenu_onLongClick', inData);
-					}
-				}
-			);
-
-
-
-
-			$('#contactsMenu').ContactListView('loadData');
-
-
-
-			eventObject.setOn('contactSliderSelected', function(inData){
-				console.dir(inData);
-				//alert("eventObject");
-				console.log('name(frm phone):' + inData.name);
-				//widgetContactsCollectionScript.gridDataSelectByName(inData.name, inData.type);
-				$('#contactsMenu').ContactListView('setSelectedByNameAndType', inData);
-			});
-
-
-
-
-
-			//loadup focus----
-			$(document).on("pagecreate","#page_smsManager",function(){
-				console.log('page_smsManager main pageinit!!!');
-			});
-
-
-
-
-			//- //=================================================================
-			//- // JQM LOADS-------------------------------------------------------
-			//- //=================================================================
-			//- $('#tab_export').load("/jqm/contactexport ", function(){
-			//- 	console.log('loaded');
-			//- 	$('#tab_export').trigger('create');
-
-			//- });
-			//- $('#tab_import').load("/jqm/contactimport ", function(){
-			//- 	console.log('loaded');
-			//- 	$('#tab_import').trigger('create');
-
-			//- });
-			//- $('#tab_editContact').load("/jqm/contactedit ", function(){
-			//- 	console.log('loaded');
-			//- 	$('#tab_editContact').trigger('create');
-
-			//- });
-
-			//- $('#btBar_contactManager_back').click(function(){
-			//- 	history.back();
-			//- 	return false;
-			//- });
-			//changeing to use class..
-			//- $('.backButtonClass').click(function(){
-			//- 	PageLoaderObject.loadPage('login');
-			//- 	return false;
-			//- });
-
-			//- $('.toLoginClass').click(function(){
-			//- 	history.back();
-			//- 	return false;
-			//- });
-
-
-			$('#btBar_contactManager_headButton_2').click(function(){
-				PageLoaderObject.loadPage('userProfile');
-			});
-
-			//loading and setting to page_3
-			//- $('#userProfile_contents').load("/jqm/userprofile ", function(){
-			//- 	PageLoaderObject.loadPage('userProfile');
-
-			//- });
-
-			// smsManager -------------------------------
-			$('#btBar_contactManager_smsManager').click(function(){
-				PageLoaderObject.loadPage('smsManager');
-			});
-
-
-
-
-
-
-			//$('#page_smsManager').load("/jqm/smsManager ");
-
-			//PageLoaderObject.loadPage('contactManager');
-
-
-			//PageLoaderObject.loadPage('smsManager');
-			//PageLoaderObject.loadPage('contactManager');
-
-			//$('#smsManager_contents').load("/jqm/smsManager ", function(){
-				//console.log('loading userprofile');
-			//$('#smsManager_contents').trigger('create');
-				//$(':mobile-pagecontainer').pagecontainer('change', '#page_smsManager', {transition:'turn', reverse:'true'});
-
-			//});
-			
-
-			//$(':mobile-pagecontainer').pagecontainer('load', '#page_smsManager', {reload:false, transition:'turn', reverse:'true'});
-			//$(':mobile-pagecontainer').pagecontainer('change', '#page_smsManager', {reload:false, transition:'turn', reverse:'true'});
-
-
-		});
-
-
-
+		//@@--> SET HEIGHT @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 		var setHeight = function(){
 			var screen = $.mobile.getScreenHeight();
 			var header = $(".ui-header").hasClass("ui-header-fixed") ? $(".ui-header").outerHeight()  - 1 : $(".ui-header").outerHeight();
 			var footer = $(".ui-footer").hasClass("ui-footer-fixed") ? $(".ui-footer").outerHeight() - 1 : $(".ui-footer").outerHeight();
+			var navbar = $(".ui-header > .ui-navbar").outerHeight();
 			
 			/* content div has padding of 1em = 16px (32px top+bottom). This step
 				can be skipped by subtracting 32px from content var directly. 
 			*/
 			var contentCurrent = $(".ui-content").outerHeight() - $(".ui-content").height();
 
-			var content = screen - header - footer - contentCurrent;
+			//var content = screen - (header + navbar) - footer - contentCurrent;
+			var content = screen - 120;  // 115;
 
 			$(".ui-content").height(content);
+			//$(".over-shot").height(content - 20);
+
+			$(".sms-top-height").height(220);
+			$(".sms-bottom-height").height(content - 220);
+
+			//$(".contact-list-onEdit").height(content - 220);
+			//$("#userFormContactsList").height(content - 220);
+
+			//$(".sms-bottom-height").css({ top: (content * .2) + 100 }); //top(content * .2);
+			//$(".sms-bottom-height").css({ top: 800}); //top(content * .2);
+			//$("#contactsMenu").height(   content -50   );
+
+
 		}
 
-
-			//EVENTS--------------------------------
-			$('#goBackDiv').click(function(){
-				history.back();
-				return false;
-			});
-			$('#contactManagerDiv_pg2').click(function(){
-				console.log('contactManagerDiv_pg2 click function');
-				//$.mobile.loadPage( "/jqm/contactmanager" );
-				$.mobile.changePage( "/jqm/contactmanager", {
-					transition: "pop",
-					reverse: false,
-					changeHash: false
-				});
-			});
-
-			//- $('#btBar_contactManager_back').click(function(){
-			//- 	//$('#contactsMenu').ContactListView('getSelectedData');
-			//- 	alert(JSON.stringify($('#contactsMenu').ContactListView('getSelected')  ));
-			//- });
-			$('#btBar_contactManager_back2').click(function(){
-				$('#contactsMenu').ContactListView('remove', '276');
-				//alert(JSON.stringify($('#contactsMenu').ContactListView('getSelected')  ));
-			});
-
-
-
-
-
-
-
-
-
-		$(document).ready(function() {
-
-			//$( "#menuPanel" ).panel( "open");
-
-			$("#my-menu").mmenu(
-				{
-					// options
-					//classes: "mm-light",
-					//offCanvas:false
-					offCanvas:true,
-					classes: "mm-fullscreen mm-light",
-					
-				}				
-
-
-
-				/*, 
-				{
-					// configuration
-					offCanvas: 
-						{
-							pageNodetype: "section"
-						}
-				}*/
-			);
-
-
-
-
-
-		});
-
-
-	
-
-
-
-
-
-	script.
-
-		//- var prevPage = '#page_';
-		//- $(':mobile-pagecontainer').pagecontainer(
-		//- 	{
-		//- 		change: function( event, ui ) {
-		//- 			console.log('change event');
-		//- 			prevPage = ui.prevPage;
-		//- 		}
-		//- 	}
-		//- );
-
-		//- var pageBack = function(){
-		//- 	console.log('--------------------');
-		//- 	console.dir(prevPage);
-		//- 	$(':mobile-pagecontainer').pagecontainer('change', prevPage);
-		//- }
-
-
-		//console.log('phonetset:' + phoneDisplayFormat('12564445555'));
-		var commManager;
-		var deviceTokenId;
-		var contactsObject;
-		var storageObject;
-		//var filterObj;
-
-		var eventObject = new EventOrigin();
-
-		var widgetSmsMessageWindowScript;
-
-		var deviceQuerySync;
-
-		//var menuObject;
-
-
-		var theLayout = new function(){
-			var _this = this;
-
-			this.load = function(){
-				//- $('#main_layout_0').layout('resize', {
-				//- 	width:'80%',
-				//- 	height:300
-				//- })
-				
-			}
-
-			this.postLoginResize = function(){
-
-			}
-
-		}();
-
-
+		//@@--> JQUERY . CENTER @@@@@@@@@@@@@@@@@@@@@@@@@@@@
 		jQuery.fn.center = function () {
 			this.css("position","absolute");
 			this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + 
@@ -829,38 +525,31 @@ body
 			$(window).scrollLeft()) + "px");
 			return this;
 		}
+
+
+		//=========================================================
+		// GLOBAL EVENTS
+		//=========================================================
+		$('#goBackDiv').click(function(){
+			history.back();
+			return false;
+		});
+
+
+
+
+
+
+
+
+
+
 		$( document ).ready(function(){
-
-			$('#contactManagerDiv').click(function(){
-				PageLoaderObject.loadPage('contactManager');
-				//loadContactManager();
-				//$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_2', {transition:'turn', reverse:'true'});
-			});
-			$('#smsManagerDiv').click(function(){
-				//loadSmsWindow();
-				PageLoaderObject.loadPage('smsManager');
-			});
-			$('#handsetControllerDiv').click(function(){
-				openHandset();
-			});
-			$('#userProfileDiv').click(function(){
-				PageLoaderObject.loadPage('userProfile');
-			});
-			$('#downloaddiv').click(function(){
-				window.location.href = "/public/download/androidapp/v002/Qr_Proj_3.apk";
-				//alert('not implemented , no click here yet!! on TODO');
-			});
-
-			
-
-
-
-
 			var waitingDeviceTokenId;
 			
 
 			$('#login_panel').panel({
-				title:'myTitle',
+				title:'ArfSync',
 				width:400,
 				height:400
 			});
@@ -911,38 +600,11 @@ body
 
 									$('#lb_loggedInUserName').text(userData.fullName);
 
-
-									//$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_2', {transition:'turn', reverse:'true'});
-									//- setTimeout(function(){
-									//- 	$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_0', {transition:'turn'});
-									//- },10000);
-
 									contactsObject.refresh(function(contactErr, contactData){
 									console.log('contactsObject callback');
 									console.dir(contactData);
-									//loadSmsWindow();
-									//var panel_0 = $('#qrAccord').accordion('getPanel', 0);
-									//console.dir($('#qrAccord').accordion('getPanel', 0));
-									//- $('#qrAccord').accordion('getPanel', 0).panel(
-									//- 	{
-									//- 		openDuration:3000,
-									//- 		closeDuration:3000
-									//- 	}
-									//- ),
-									//- $('#qrAccord').accordion('getPanel', 0).panel("collapse",true);
-									//- $('#qrAccord').accordion('getPanel', 1).panel("expand",true);
 
-									//open Main Menu ------
-									//$('#open_main_menu').trigger('click');
-									// --> MENU ---OPEN ----
 									openWebMenuOnPhone();
-
-									//- setTimeout(function(){
-									//- 	$('#qrAccord').remove();
-									//- 	//$('#masterDiv').remove();
-									//- 	//$('#qrAccord').accordion('remove', 0);
-									//- },5000);
-
 
 									//=============================================
 									// LOGIN READY 
@@ -952,8 +614,6 @@ body
 								});
 							});
 
-
-							
 							deviceQuerySync = new DeviceQuerySync(commManager);
 							storageObject = new StorageObject();
 							storageObject.getSmsLastId(function(inResultOflastId){
@@ -961,7 +621,6 @@ body
 								console.dir(inResultOflastId);
 								deviceQuerySync.sms_getAllMessages(inResultOflastId, function(inSmsArray){
 									storageObject.addManySms(inSmsArray, function(inResult){
-
 
 
 									});
@@ -1004,22 +663,13 @@ body
 									);
 							});
 							$(document).on("pagehide","#pg_page_2",function(){ // When leaving pagetwo
-								//alert("pg_page_2 is now hidden");
+
 							});
 
 
 						});
 
 
-						
-						
-
-
-						//loadSmsWindow();
-						//getAllSmsByNumber();
-						//- $.get( "/widget_contactscollection", function(data){
-						//- 	$("#contactsWindow").append(data);
-						//- });
 
 					},
 					//#############################################################################################################
@@ -1151,35 +801,6 @@ body
 			}
 		}//end contactsObj...
 
-		//#############################################################################################################
-		//-------- W a i t i n g   D i a l o g ---------------------------------------------------------
-		//#############################################################################################################
-		var WaitingDialog = function(){
-			var id = "dd_" + new Date().getTime();
-			var htmlString = '<div id="' + id + '"><center><img id="waitImage" src="public/images/ui/wait.gif"></img></center>></div>';
-			$("body").append(htmlString);
-			$('#' + id).dialog(
-				{
-					title: 'My Dialog',
-					width: 400,
-					height: 200,
-					closed: false,
-					cache: false,
-					//href: 'get_content.php',
-					modal: true
-				}
-			);
-			//var dialogHtml ='<center><dialog id="window"><h3>Hello World!</h3><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum, inventore!</p><button id="waitDialogCancelButton">Exit</button></dialog>';
-			
-			this.show = function(){
-				$('#' + id).dialog('open');
-			}
-
-			this.close = function(){
-				$('#' + id).dialog('close');
-			}
-
-		}
 
 		//#############################################################################################################
 		//-------- U s e r   O b j e c t ---------------------------------------------------------
@@ -1222,12 +843,7 @@ body
 									console.log('userdata--------------------------');
 									console.dir(userData);
 									if(userData.screenImage && userData.fullName){
-										//$('#loginUserImage').attr('src',userData.screenImage);
-										$('#memberImage').attr('src',userData.screenImage);
-
-										$('#loginUserImage').addClass('magicCirc');
-										//$('#loginUserFullName').html(userData.fullName);
-										//magicCirc
+										//---userimage update here??
 									}
 								}
 							}
@@ -1460,36 +1076,6 @@ body
 			});
 
 		}
-
-
-		
-
-
-
-
-
-		//- eventObject.setOn('onPageChange', function(inPageId){
-		//- 	if(inPageId == 'pg_page_0'){
-		//- 		eventObject.reportOn('onOpenCloseToRemote',
-		//- 			{
-		//- 				open:true,
-		//- 				id:'???????'
-		//- 			}
-		//- 		);
-		//- 	}
-
-		//- 	if(inPageId == 'pg_page_2'){
-		//- 		eventObject.reportOn('onOpenCloseToRemote',
-		//- 			{
-		//- 				open:true,
-		//- 				id:'mainMenu_contacts'
-		//- 			}
-		//- 		);
-		//- 	}
-
-		//- });
-
-
 
 
 		//=====================================================================================================================
