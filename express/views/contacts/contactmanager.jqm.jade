@@ -9,7 +9,7 @@ div(class="ui-grid-c" style="")
 		//div(id="contactsWindow2" data-role="main"  class="ui-overlay-shadow ui-shadow" style="padding-top: 25px;width:95%; ")
 		//div( id="contactsMenu_col" data-role="collapsible" data-collapsed="false" class="ui-overlay-shadow ui-shadow")
 		//h3 Contact List
-		div(class="ui-content" data-position-to="window" style="width:90%; ")
+		div(class="ui-content" data-position-to="window" style="width:90%;direction: ltr;")
 			a(href="#contactPanel_0" data-ajax="false" style="")
 			ul(data-role="listview" id="contactsMenu" class=""   data-inset="true" style="width:100%; ")
 			//- div(class="" data-position-to="window" class="" style="direction: ltr;height:90%; width:90%")
@@ -96,7 +96,9 @@ script.
 					}
 				}
 			);
-			$('#contactsMenu').ContactListView('loadData');
+			$('#contactsMenu').ContactListView('loadData', function(){
+				$('#contactsMenu').ContactListView('setSelectedByIndex', 0);
+			});
 			//$('#contactsWindow2').trigger('refresh');
 			$('[data-role="content]').trigger('create');
 

@@ -33,7 +33,7 @@ var CheckboxLines = function(inJrefOfThis, inJsonStruct){
 					'style':options.formStyle,
 					'data-mini':'true',
 			}
-		).addClass('ui-content')
+		).addClass('') //ui-content
 		 .addClass(options.formClass);
 
 		var fieldset =  $('<fieldset></fieldset>').attr(
@@ -43,7 +43,7 @@ var CheckboxLines = function(inJrefOfThis, inJsonStruct){
 					'data-mini':'true',
 					'style':options.fieldsetStyle
 			}
-		).addClass('ui-content')
+		).addClass('') //ui-content
 		 .addClass(options.fieldsetClass);
 
 		$(inJrefOfThis).append(formDiv);

@@ -227,25 +227,45 @@ html
 						}
 
 						this.uploadImage = function(){
-							$ajaxFilePost(
-								{
-									fileInputElement:'upload',
+						//- 	$ajaxFilePost(
+						//- 		{
+						//- 			fileInputElement:'upload',
 
-									options:
-										{
-											command:'imageStore',
-											theme:'normalUserImage'
-										},
+						//- 			options:
+						//- 				{
+						//- 					command:'imageStore',
+						//- 					theme:'normalUserImage'
+						//- 				},
 
-									onComplete:function(inResponse){
-										if(inResponse.domainFilePath){
-											$('#widget_userForm_image').attr('src', inResponse.domainFilePath);
+						//- 			onComplete:function(inResponse){
+						//- 				if(inResponse.domainFilePath){
+						//- 					$('#widget_userForm_image').attr('src', inResponse.domainFilePath);
+						//- 				}
+						//- 			}
+						//- 		}
+						//- 	);
+						//- }
+							//$('#upload').change(function(){
+								$ajaxFilePostVariableRoute(
+									{
+										uploadRoute:'/upload/contact/image',
+										fileInputElement:'upload',
+
+										options:
+											{
+												command:'imageStore',
+												theme:'normalUserImage'
+											},
+
+										onComplete:function(inResponse){
+											if(inResponse.domainFilePath){
+												$('#widget_userForm_image').attr('src', inResponse.domainFilePath);
+											}
 										}
 									}
-								}
-							);
+								);
+							//});
 						}
-
 						this.addToStore = function(){
 							$postAjax(
 								{

@@ -23,18 +23,20 @@ div(data-role="main" class="")
 		//all tabs here
 		div(class="ui-block-b" style="width:50%;")
 			//div(id="dynamicTable_content_sms_div" class="ui-content" data-position-to="window" style="width:90%; height:60%;")
-			div(class="ui-content")
+			div(class="ui-content ui-overlay-shadow ui-shadow")
 				div(class="sms-top-height" data-position-to="window" style="border:1;width:90%; overflow-y:hide;")
-					#pad(style="padding:10px;")
+					//#pad(style="padding:10px;")
 
-						//a(href="#contactPopup_sms" data-rel="popup" class="ui-overlay-shadow")
-
-						div(id="smsContactSleeve" class=" smsContactSleeveCls" )
+					//a(href="#contactPopup_sms" data-rel="popup" class="ui-overlay-shadow")
+					//div(class="ui-overlay-shadow ui-shadow" style="width:100%; padding:15px;")
+					div(id="smsContactSleeve" class=" ui-overlay-shadow ui-shadow" style="padding:5px 15px 0px; width:100%;")
+					div(class="ui-overlay-shadow ui-shadow smsContactSleeveCls" style="padding:5px 15px 5px; width:100%")
 						textarea(id="ta_smsMessage" data-mini="true" style="heigth:63px;" name="ref" placeholder="Sms message to send...")
 						input(data-icon="action" id="bt_smsManager_send" 	data-mini="true" type="button" value="Send Sms Message")
 
-				div(id="dynamicTable_content_sms_div" class="sms-bottom-height" data-position-to="window" style="height:200px;width:90%; overflow-y:auto;")
-					#dynamicTableDiv
+					div(id="dynamicTable_content_sms_div" class="sms-bottom-height" data-position-to="window" style="margin:10px 15px 0px; height:200px;width:100%; overflow-y:auto;")
+						#dynamicTableDiv
+						#noSmsLogInfo
 
 
 
@@ -62,21 +64,21 @@ script.
 	});
 
 
-	$('#bt_bar_smsManager_back3').click(function(){
-		console.log('bt_bar_smsManager_back3');
-		//- for(i in [0,1,2,3,4,5,6,7]){
-		//- 	$('#hotLinks').append(
-		//- 		'<center><img src="/public/images/contacts/fa4ea550-a2a1-11e4-a4d9-ab3746982107.jpg" class="magicSquare"/></center>'
-		//- 	);
-		//- }
-		$("#contactPopup_sms").trigger("create");
-		$('#contactPopup_sms').popup().popup("open");
-	});
+	//- $('#bt_bar_smsManager_back3').click(function(){
+	//- 	console.log('bt_bar_smsManager_back3');
+	//- 	//- for(i in [0,1,2,3,4,5,6,7]){
+	//- 	//- 	$('#hotLinks').append(
+	//- 	//- 		'<center><img src="/public/images/contacts/fa4ea550-a2a1-11e4-a4d9-ab3746982107.jpg" class="magicSquare"/></center>'
+	//- 	//- 	);
+	//- 	//- }
+	//- 	$("#contactPopup_sms").trigger("create");
+	//- 	$('#contactPopup_sms').popup().popup("open");
+	//- });
 
 
 
 	$( "#page_smsManager").on( "pageshow", function( event, ui ){
-		alert(mysqlEpochToLocalDateTime(new Date().getTime()));
+		//alert(now());
 		console.log('PAGE SHOW---------------------------SMS');
 		SmsManagerObject.load();
 		setHeight();
@@ -99,6 +101,9 @@ script.
 					message:$('#ta_smsMessage').val(),
 				},
 			]
+
+		$('#ta_smsMessage').val(''); //clear
+
 		SmsManagerObject.sendManySms(test, function(e){
 			console.log('e:');
 			console.dir(e);
@@ -163,6 +168,33 @@ script.
 								direction:'fromUser'
 							}
 						);
+
+
+						// WHEN no group being used add to popup as checked item....
+						var groupOfSelectedContacts = $('#contactsMenu_sms_popup').CheckboxLines('getCheckedData');
+						console.log('groupOfSelectedContacts');
+						console.dir(groupOfSelectedContacts);
+						if(groupOfSelectedContacts.length < 2){
+							if(groupOfSelectedContacts.length == 1){
+								if(groupOfSelectedContacts[0].data.id){
+									//remove
+									$('#contactsMenu_sms_popup').CheckboxLines('setCheckbox',
+										{
+											lookupId:groupOfSelectedContacts[0].data.id,
+											isChecked:false,
+										}
+									);
+								}
+							}
+							$('#contactsMenu_sms_popup').CheckboxLines('setCheckbox',
+								{
+									lookupId:inContactId,
+									isChecked:true,
+								}
+							);
+						}
+
+
 					},
 					onLongClick:function(inContactId, inData, inElementId){
 						//eventObject.reportOn('contactMenu_onLongClick', inData);
@@ -261,7 +293,7 @@ script.
 						$('#hotLinks').prepend(
 							'<div id="widgetSmsMessage_currentContact_' + inItem.id + '" class="magicSquarePnt hot-link-contact" style="width:100px;" phoneNumber="' + inItem.phoneNumber + '">' 		+
 								'<center>'														+
-									'<img class=" shake" src="' + inItem.imageUrl + '" phone="' + inItem.phoneNumber + '" style="width:75px;"/>' +
+									'<img class=" shake member-img" src="' + inItem.imageUrl + '" contactId="' + inItem.id + '" phone="' + inItem.phoneNumber + '" style="width:75px;"/>' +
 									'<br>'								   +
 									'<h4>' + phoneDisplayFormat(inItem.phoneNumber) + '</h4>'  +
 								'</center>'														+
@@ -294,7 +326,7 @@ script.
 				}
 			);//-->END BACKSTACK
 
-
+			_this.drawToContactSleeve([]);
 
 
 		}
@@ -327,6 +359,7 @@ script.
 						$('#dynamicTableDiv').DynamicTable('clear');
 						//$('.footable').trigger('footable_redraw');
 						if(smsArray.length > 0){
+							SmsManagerObject.noMessageClear();
 							for(var smsArrayIndex in smsArray){
 								console.log('smsArray[smsArrayIndex].smsContext' + smsArray[smsArrayIndex].smsContext);
 								var theImageUrl = (smsArray[smsArrayIndex].smsContext == 'inBox') ? fieldData.contactData.imageUrl : smsArray[smsArrayIndex].screenImage;
@@ -345,6 +378,8 @@ script.
 							}
 							$('.footable').trigger('footable_redraw');
 							console.log('redrawing footable');
+						}else{
+							SmsManagerObject.noMessageShow();
 						}
 
 						$.mobile.loading('hide');
@@ -377,20 +412,20 @@ script.
 		}
 
 		this.updateUpperDisplay = function(inParams){
-			var fieldData = 
-				{
-					userImageUrl:globalUserImageUrl,
-					contactImageUrl:'',
-					direction:'fromUser' //toUser' // fromUser
-				}
-			fieldData = $.extend(fieldData, inParams);
-			$('#sms_upper_img0').attr('src',fieldData.userImageUrl);
-			if(fieldData.direction == 'toUser'){
-				$('#sms_upper_img1').attr('src', '/public/images/ui/left_arr.png');
-			}else{
-				$('#sms_upper_img1').attr('src','/public/images/ui/right_arr.png');
-			}
-			$('#sms_upper_img2').attr('src',fieldData.contactImageUrl);
+			//- var fieldData = 
+			//- 	{
+			//- 		userImageUrl:GLOBAL_USER_IMAGE_URL,
+			//- 		contactImageUrl:'',
+			//- 		direction:'fromUser' //toUser' // fromUser
+			//- 	}
+			//- fieldData = $.extend(fieldData, inParams);
+			//- //$('#sms_upper_img0').attr('src',fieldData.userImageUrl);
+			//- if(fieldData.direction == 'toUser'){
+			//- 	$('#sms_upper_img1').attr('src', '/public/images/ui/left_arr.png');
+			//- }else{
+			//- 	$('#sms_upper_img1').attr('src','/public/images/ui/right_arr.png');
+			//- }
+			//- $('#sms_upper_img2').attr('src',fieldData.contactImageUrl);
 		}
 
 		//- this.setHeight = function(){
@@ -421,6 +456,45 @@ script.
 		//- 	return content_height;
 		//- }
 
+		var noMessageHtml = false;
+		this.noMessageShow = function(){
+			if(!(noMessageHtml)){
+
+				var lastSelected = $('#contactsMenu_sms').ContactListView('getLastSelected');
+				var options = 
+					{
+						name:'No One Selected',
+						imageUrl:getDefaultMemberImageUrl()
+					}
+				options = $.extend(options, lastSelected)
+
+				$postAjax(
+					{
+						url:'/jqm/message',
+						send:
+							{
+								messageId:'sms_nolog',
+								imageUrl:options.imageUrl,
+								name:options.name,
+							},
+						onAjaxSuccess:function(inResult){
+							$('#noSmsLogInfo').html(inResult);
+							//noMessageHtml = inResult; TODO: add script to edit html in dom
+							return;
+						}
+					}
+				);
+				return;
+			}
+
+			$('#noSmsLogInfo').html(noMessageHtml);
+		}
+
+		this.noMessageClear = function(){
+			console.log('noMessageClear');
+			$('#noSmsLogInfo').html('');
+		}
+
 		this.drawToContactSleeve = function(inContacts){
 			console.log('inContacts');
 			console.dir(inContacts);
@@ -430,15 +504,18 @@ script.
 				//inContacts[inContactsIndex]
 				centerHtml += '<img id="sms_upper_img0" src="' + inContacts[inContactsIndex].data.imageUrl + '" class="magicSquare" style="height:30px">';
 			}
+			var caption = (inContacts.length > 1)? 'Group of Sms Recipients:' : 'The Sms Recipient:';
 			var headerHtml = 
-				//'<center class="magicSquare">' +
-					//'<img id="sms_upper_img0" src="' + globalUserImageUrl + '" class="magicSquare" style="height:50px">' +
-					//'<img id="sms_upper_img1" src="/public/images/ui/right_arr.png" class="" style="height:50px">' +
-					'<center><h5>Sending To Group :</h4></center>' +
+					'<div style="width:100%" class="ui-button-text"><a id="bt_smsGroupBuild" style="float:left;" href="" data-inline="true" data-role="button" data-mini="true" data-icon="user" data-iconpos="notext"></a><h5">' + caption + '</h4><div>' +
 					centerHtml 
-				//'</center>'
 			;
 			$('#smsContactSleeve').html(headerHtml);
+			$('#smsContactSleeve').trigger("create");
+
+			$('#bt_smsGroupBuild').click(function(){
+				$("#contactPopup_sms").trigger("create");
+				$('#contactPopup_sms').popup().popup("open");
+			});
 		}
 
 		this.sendManySms = function(inArray, inPostFunction){
@@ -519,8 +596,9 @@ script.
 								{
 									lookupId:theContacts[0].id,
 									caption:'<img src="'  + theContacts[0].imageUrl + '" style="height:40px; float:left" class="magicSquare"/><h4>&nbsp;&nbsp;&nbsp;' + theContacts[0].name + '<br>&nbsp;&nbsp;&nbsp;' + phoneDisplayFormat(theContacts[0].phoneNumber) + '</h4>',
-									isChecked:true,
-									formStyle:'border:0;width:400px;'
+									isChecked:false,
+									formStyle:'border:0;width:400px;',
+									data:theContacts[0]
 								}
 							);
 
@@ -555,7 +633,7 @@ script.
 										rowArray:createRowArrayHtml(
 											{
 												imageUrl:selectedContactData.imageUrl,
-												date:new Date().getTime(),
+												date:now(),
 												body:inTransportLayer_Json.dataLayer.msg
 											}
 										),
@@ -610,8 +688,8 @@ script.
 									{
 										rowArray:createRowArrayHtml(
 											{
-												imageUrl:selectedContactData.imageUrl,
-												date:new Date().getTime(),
+												imageUrl:GLOBAL_USER_IMAGE_URL,
+												date:now(),
 												body:inTransportLayer_Json.dataLayer.msg
 											}
 										),
@@ -630,5 +708,31 @@ script.
 
 	}();
 	//$("#dynamicTable_content_sms_div").iscrollview();
-
 	//setHeight();
+
+	$('#bt_test').click(function(){
+		//$("#contactPopup_sms").trigger("create");
+		//$('#contactPopup_sms').popup().popup("open");
+		//- $('#noSmsLogInfo').load("/jqm/message ", {'messageZ':'yes man'}, function(){
+		//- 	console.log('loaded');
+		//- 	$('#noSmsLogInfo').trigger('create');
+
+		//- });
+
+		//- $postAjax(
+		//- 	{
+		//- 		url:'/jqm/message',
+		//- 		send:
+		//- 			{
+		//- 				messageId:'sms_nolog',
+		//- 				imageUrl:'/public/images/5337f300-a334-11e4-857d-d1c8c43f3c6b.png',
+		//- 				name:'Somebody Biggg',
+		//- 			},
+		//- 		onAjaxSuccess:function(inResult){
+		//- 			$('#noSmsLogInfo').html(inResult);
+		//- 		}
+		//- 	}
+		//- );
+		SmsManagerObject.noMessageShow();
+
+	});

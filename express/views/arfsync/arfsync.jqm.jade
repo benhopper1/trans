@@ -82,7 +82,7 @@ body
 	div(data-role="header" data-mini="true" data-position="fixed" data-theme="a" class="mainHeader")
 		a(href="#" id="btBar_main_back" data-icon="back" class="ui-btn-left backButtonClass") Back
 		h1 ArfSync
-		a(href="index.html" data-icon="delete" class="ui-btn-right") Cancel2
+		a(id="bt_test" href="" data-icon="delete" class="ui-btn-right") Cancel2
 		div(data-role="navbar" data-theme="a" data-iconpos="left" data-mini="true")
 			ul
 				li
@@ -268,7 +268,7 @@ body
 		//======================================================================
 		//>--- GLOBAL DECLARE SECTION-------------------------------------------
 		//======================================================================
-		var globalUserImageUrl;
+		var GLOBAL_USER_IMAGE_URL;
 		var commManager;
 		var deviceTokenId;
 		var contactsObject;
@@ -285,6 +285,7 @@ body
 		//======================================================================
 
 		$( "#pg_page_0").on( "pagecreate", function( event, ui ){
+			$(".mainHeader").hide();
 			console.log('PAGE CREATE---------------------------LoginManager');
 			loginManagerObject = new LoginManagerObject();
 			loginManagerObject.load();
@@ -296,8 +297,15 @@ body
 		});
 
 		$( "#pg_page_0").on( "pageshow", function( event, ui ){
+			$(".mainHeader").hide();
 			console.log('PAGE SHOW-----------------------------LoginManager');
 			window.location.hash = '';
+		});
+
+		$( "#pg_page_0").on( "pagehide", function( event, ui ){
+			$(".mainHeader").show();
+			console.log('PAGE HIDE-----------------------------LoginManager');
+			//window.location.hash = '';
 		});
 
 		//======================================================================
@@ -513,6 +521,9 @@ body
 			//$(".sms-bottom-height").css({ top: 800}); //top(content * .2);
 			//$("#contactsMenu").height(   content -50   );
 
+			var bottomOfButton = $('#bt_smsManager_send').css('bottom');
+			$('#dynamicTable_content_sms_div').css('top', bottomOfButton);
+
 
 		}
 
@@ -589,7 +600,7 @@ body
 							contactsObject = new ContactsObject();
 							userObject = new UserObject(function(userErr, userData){
 									//$('#qrAccord').hide(1000);
-									globalUserImageUrl = userData.screenImage;
+									GLOBAL_USER_IMAGE_URL = userData.screenImage;
 									console.log('userData:');
 									console.dir(userData);
 
@@ -609,7 +620,7 @@ body
 									//=============================================
 									// LOGIN READY 
 									//=============================================
-									$('#img_loginManager_userImg').attr('src',globalUserImageUrl)
+									$('#img_loginManager_userImg').attr('src',GLOBAL_USER_IMAGE_URL)
 									eventObject.reportOn('loginReady', {});
 								});
 							});

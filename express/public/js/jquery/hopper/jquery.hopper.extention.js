@@ -320,7 +320,7 @@ var ContactListView = function(inJsonStruct){
 		return resultContacts;
 	}
 
-	this.loadData = function(){
+	this.loadData = function(inPostFunction){
 		contactDataObject.select({}, function(inRecords){
 			for(contactIndex in inRecords){
 				//md5 hashing!!!!
@@ -356,6 +356,7 @@ var ContactListView = function(inJsonStruct){
 				});
 			}
 			$(theDivRef).listview().listview('refresh');
+			if(inPostFunction){inPostFunction();}
 			//$('table tbody').trigger('footable_redraw');
 		});
 	}
@@ -505,7 +506,7 @@ $.fn.ContactListView = function(inAction, inJsonStruct){
 
 	if(inAction == 'loadData'){
 		contactListView = $(this).data("contactListViewInstance");
-		contactListView.loadData();
+		contactListView.loadData(inJsonStruct);
 		contactListView.initEvent();
 	}
 

@@ -249,12 +249,27 @@ img{
 }
 
 .smsContactSleeveCls{
-	min-width:550;
-	max-width:550;
+	min-width:100%;
+	//max-width:550;
 	min-height:74;
 	max-height:118;
+
+	width:100px;
 }
 
 .custom-c{
 	background: #6db2dc !important;
+}
+
+.ui-button-text {
+	line-height: 20px;
+	display: inline-block;
+	position: relative;
+	padding: 0px;
+	margin-right: 0.1em;
+	cursor: pointer;
+	text-align: center;
+	overflow: visible;
+	// resize a bit the height
+	height: 20px;
 }

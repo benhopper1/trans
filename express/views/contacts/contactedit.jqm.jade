@@ -58,6 +58,11 @@ body
 
 
 script.
+	$( "#pg_page_2").on( "pageshow", function( event, ui ){
+		console.log('PAGE SHOW--------------------------ContactManager');
+		$('#contactsMenu').ContactListView('setSelectedByIndex', 0);
+		//$( "#pg_page_2").fixedToolbars.hide(true)
+	});
 	//=========================================================
 	// JQM EXTENSION HorizontalRadioGroup
 	//=========================================================
@@ -390,6 +395,7 @@ script.
 	});
 
 
+	//$('#contactsMenu').ContactListView('setSelectedByIndex', 0);
 
 	//- this.deleteSelectedContact = function(){
 	//- 			$postAjax(
