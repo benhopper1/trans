@@ -27,6 +27,24 @@ body(style="")
 			-webkit-box-shadow:#999 2px 0px 3px;
 			margin-bottom:4px;
 		}
+		.magicSquare{
+			padding:4px;
+			display:inline-block;
+			font:12px/14px Arial, Helvetica, sans-serif;
+			color:#666;
+			border:1px solid #999;
+			background-color:#eee;
+			-moz-border-radius:00px;
+			-webkit-border-radius: 15px;
+			-moz-box-shadow:#999 2px 0px 3px;
+			-webkit-box-shadow:#999 2px 0px 3px;
+			margin-bottom:4px;
+		}
+		.imageAndText{
+			//position: absolute;
+			left: 5px ;
+			padding-left: 0px;
+		}
 
 
 	script(src="/public/js/mastermenu/src/js/jquery.mmenu.js" type="text/javascript")
@@ -58,7 +76,7 @@ body(style="")
 					ul(id="#{inItem.id}" data-options="#{inItem.dataOptions} " closeParentEvent="#{inItem.closeParentEvent}")
 						//add div
 						if inItem.insertDiv
-							div(id="#{inItem.insertDiv}")
+							div(id="#{inItem.insertDiv}" class="insert-div-cls")
 						//recurse here------
 						each item_2 in inItem.subMenu
 							+build(item_2)
@@ -100,7 +118,7 @@ body(style="")
 						//add div
 						if inItem.insertDiv
 							li
-								a(id="#{inItem.insertDiv}")
+								a(id="#{inItem.insertDiv}" class="insert-div-cls")
 				script.
 					$('##{inItem.id}').click(function(){
 						//turn back on
@@ -309,7 +327,7 @@ body(style="")
 						masterMenu.addHtml(
 							{
 								panelId:'mainMenu_sms',
-								newElementId:'smsContactId__' + inRows[inRowsIndex].id,
+								newElementId:'contactsMenu_sms_' + inRows[inRowsIndex].id,
 								actionRequest:
 									{
 										request:'smsContactSelect',
@@ -322,7 +340,8 @@ body(style="")
 											{
 												imageSource:inRows[inRowsIndex].imageUrl,
 												caption:inRows[inRowsIndex].name,
-												imageClass:'magicCirc'
+												imageClass:'magicSquare',
+												imageStyle:''
 											}
 									}
 								)
@@ -354,6 +373,8 @@ body(style="")
 			this.refresh = function(){
 				alert('REFRESH');
 				_this.loadSlider('sldDiv');
+				//$('.insert-div-cls')
+
 			}
 
 
@@ -392,7 +413,7 @@ body(style="")
 
 			//------startup 
 			_this.loadSlider('sldDiv');
-
+			//_this.loadSlider('sldDiv2');
 
 
 

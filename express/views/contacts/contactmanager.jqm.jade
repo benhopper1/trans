@@ -26,11 +26,11 @@ div(class="ui-grid-c" style="")
 			div(data-role="navbar")
 				ul
 					li
-						a(href="#tab_editContact" data-ajax="false") Edit Contact
+						a(id="tab_contactManager_edit" href="#tab_editContact" data-ajax="false") Edit Contact
 					li
-						a(href="#tab_import" data-ajax="false") Import
+						a(id="tab_contactManager_import" href="#tab_import" data-ajax="false") Import
 					li
-						a(href="#tab_export" data-ajax="false") Export
+						a(id="tab_contactManager_export" href="#tab_export" data-ajax="false") Export
 
 			//@@@@@@  TAB ---EDIT CONTACT----------------------------------------------
 			div(id="tab_editContact" class="" style="overflow: auto; ")
@@ -70,8 +70,14 @@ script.
 	});
 
 
-	var ContactManagerObject = function(){
+	var ContactManagerObject = function(){event
 		var _this = this;
+		//===========================================================
+		//>> BUTTON EVENTS
+		//===========================================================
+		$('#tab_contactManager_edit').click(function(){
+
+		});
 
 
 		this.load = function(){
@@ -89,6 +95,8 @@ script.
 
 						//DATA BINDER CALL ----->
 						//$('#contactsWindow').DataBinderObject('load', inData);
+						console.log('ContactListView onClick');
+						console.dir(inData);
 						eventObject.reportOn('contactMenu_itemClick', inData);
 					},
 					onLongClick:function(inContactId, inData, inElementId){

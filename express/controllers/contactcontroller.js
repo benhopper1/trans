@@ -155,6 +155,46 @@ module.exports.controller = function(app){
 	});
 
 
+	app.post('/contacts/jqm/widget_contacts_slider', function(req, res){
+		console.log('----------------------POST--------------------');
+		console.log('/slider post');
+		var options =
+			{
+				URL:configData.domain.address + ":" + configData.domain.port,
+				webSocketClient:configData.webSocketClient,
+				defaultUserImageUrl:configData.defaultUserImageUrl,
+				defaultMemberImageUrl:configData.defaultMemberImageUrl,
+				startPlay:false,
+				data:
+					{
+					},
+				sliderSize:
+					{
+						width:600
+					},
+				sliderDivs:
+					[
+						'<div><a u=image href="#"><img src="/public/images/ads/main_000.png"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/images/ads/main_002.png"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/01.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/images/ads/main_002.png"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/02.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/03.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/04.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/05.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/images/ads/main_000.png"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/06.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/07.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/08.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/10.jpg"></img></a></div>'
+					]
+			}
+		options = extend(options, req.body);
+		res.render('contacts/widget_contacts_slider.jqm.jade', options);
+	});
+
+
+
 	app.post('/contacts/widget_contacts_slider', function(req, res){
 		console.log('----------------------POST--------------------');
 		console.log('/slider post');

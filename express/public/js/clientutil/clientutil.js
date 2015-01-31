@@ -308,12 +308,13 @@ var $ajaxFilePostVariableRoute = function(inData){
 }
 
 var cleanPhoneNumber =function(inNumber){
+	return formatE164("US", inNumber).replace('+', '');
 	//US ONLY-----
-	var standardNo = inNumber.replace(/[^\d]/g,'');
+	/*var standardNo = inNumber.replace(/[^\d]/g,'');
 	if(standardNo.charAt(0) != '1'){
 		standardNo = "1" + standardNo;
 	}
-	return standardNo.slice(0,11);
+	return standardNo.slice(0,11);*/
 }
 
 var phoneNumberCompare = function(inNumberA, inNumberB){
@@ -321,8 +322,8 @@ var phoneNumberCompare = function(inNumberA, inNumberB){
 }
 
 var phoneDisplayFormat = function(inNumber){
-	//inNumber = inNumber.toString();
-	if(inNumber.length == 10){
+	return formatLocal("US", inNumber);
+	/*if(inNumber.length == 10){
 		inNumber = '1' + inNumber;
 		return inNumber.substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '1($1)$2-$3');
 	}
@@ -332,7 +333,7 @@ var phoneDisplayFormat = function(inNumber){
 		return '1' + inNumber.substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)$2-$3');
 	}
 
-	return inNumber;
+	return inNumber;*/
 }
 var mysqlEpochToLocalDateTime = function(inValue){
 	var utcSeconds = inValue;

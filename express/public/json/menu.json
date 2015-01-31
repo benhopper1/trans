@@ -176,12 +176,36 @@
 
 					]
 			},
+
+
+
+
+
 			{
-				"id":"tester_0",
+				"id":"mainMenu_userProfile",
+				"caption":"User Profile",
 				"parentId":"mm-m0-p0",
-				"dataOptions":"",
-				"index":0,
-				"caption":"tester_0"
+				"dataOptions":"onBackCloseWindow:true, onForwardOpenWindow:true, onForwardCloseCurrentWindow:false, onBackMenuAdvance:false",
+				"index":1,
+				"subMenu":
+					[
+						{
+							"id":"subMenu_sms_unkown0",
+							"parentId":"mm-m0-p0",
+							"dataOptions":"",
+							"caption":"unknown0",
+							"index":0,
+							"forceBack":true
+						},
+						{
+							"id":"subMenu_sms_unkown1",
+							"parentId":"mainMenu_sms",
+							"dataOptions":"",
+							"caption":"unknown1",
+							"index":1,
+							"forceBack":true
+						}
+					]
 			}
 		]
 }

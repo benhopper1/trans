@@ -197,7 +197,7 @@ script.
 						imageUrl:$('#contactEdit_image').attr('src'),
 						name:$('#contactEdit_name').val(),
 						emailAddress:$('#contactEdit_emailAddress').val(),
-						phoneNumber:$('#contactEdit_phoneNumber').getCleanPhoneNumber(),
+						phoneNumber:cleanPhoneNumber($('#contactEdit_phoneNumber').val()),
 						ext:$('#contactEdit_ext').val(),
 						companyName:$('#contactEdit_companyName').val(),
 						department:$('#contactEdit_department').val(),

@@ -37,7 +37,7 @@ var ContactListView = function(inJsonStruct){
 								class:'listViewClass',
 								imageUrl:inResponseText[contactIndex].imageUrl,
 								name:inResponseText[contactIndex].name,
-								number:formatPhoneNumber(inResponseText[contactIndex].phoneNumber),
+								number:phoneDisplayFormat(inResponseText[contactIndex].phoneNumber),
 								type:inResponseText[contactIndex].type,
 							}
 						);
@@ -101,7 +101,7 @@ var ContactListView = function(inJsonStruct){
 		return wrapper;
 	}
 
-	var formatPhoneNumber = function(inNumber){
+	/*var formatPhoneNumber = function(inNumber){
 		if(inNumber.length == 10){
 			return '1' + inNumber.substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)$2-$3');
 		}
@@ -109,7 +109,7 @@ var ContactListView = function(inJsonStruct){
 			return '1' + inNumber.substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)$2-$3');
 		}
 		return inNumber;
-	}
+	}*/
 
 
 

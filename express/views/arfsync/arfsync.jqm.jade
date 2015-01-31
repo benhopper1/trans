@@ -31,6 +31,8 @@ head
 	script(type='text/javascript', src='/js/qrcode/qrcode.js')
 
 	script(type='text/javascript', src='/js/commmanager/commmanager.js')
+
+	script(type='text/javascript', src='/public/js/phoneformat/phoneformat.js')
 	script(type='text/javascript', src='/js/clientutil/clientutil.js')
 
 	//arfsync.jqm   CSS ---------
@@ -676,6 +678,35 @@ body
 							$(document).on("pagehide","#pg_page_2",function(){ // When leaving pagetwo
 
 							});
+							//@@@@@@@@@@@@@@@@@@@@@@@@@@@ PAGE TWO -> CONTACT MANAGER @@@@@@@@@@@@@@@
+							$(document).on("pageshow","#page_smsManager",function(){
+								eventObject.reportOn('onOpenCloseToRemote',
+									{
+											open:true,
+											id:'mainMenu_sms'
+										}
+									);
+							});
+							$(document).on("pagehide","#page_smsManager",function(){
+
+							});
+							//@@@@@@@@@@@@@@@@@@@@@@@@@@@ PAGE  -> USER PROFILE  @@@@@@@@@@@@@@@
+							$(document).on("pageshow","#page_userProfile",function(){
+								eventObject.reportOn('onOpenCloseToRemote',
+									{
+											open:true,
+											id:'mainMenu_userProfile'
+										}
+									);
+							});
+							$(document).on("pagehide","#page_userProfile",function(){
+
+							});
+
+
+
+
+
 
 
 						});
@@ -1065,25 +1096,37 @@ body
 				//=========SMS========================
 					//==========OPEN==================
 				if(inData.id == 'mainMenu_sms' && inData.command == 'open'){
-					if(!(WindowStateObject.getState('mainMenu_sms'))){
+					//if(!(WindowStateObject.getState('mainMenu_sms'))){
 						PageLoaderObject.loadPage('smsManager');
-					}else{
-						console.log('ALREADY OPEN:' + 'mainMenu_sms');
-					}
+					//}else{
+					//	console.log('ALREADY OPEN:' + 'mainMenu_sms');
+					//}
 				}
 					//==========CLOSE==================
 				if(inData.id == 'mainMenu_sms' && inData.command == 'close'){
-					if(!(WindowStateObject.getState('mainMenu_sms'))){
-						//loadSmsWindow();
-					}else{
-						//console.log('ALREADY OPEN:' + 'mainMenu_sms');
-					}
-					widgetSmsMessageWindowScript.close();
+					$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_0', {transition:'turn', reverse:'true'});
 				}
 
-				if(inData.id == 'mainMenu_phone' && inData.command == 'open'){
-					openHandset();
+
+
+
+
+
+				//=========USER PROFILE=====================
+					//==========OPEN==================
+				if(inData.id == 'mainMenu_userProfile' && inData.command == 'open'){
+					//if(!(WindowStateObject.getState('mainMenu_userProfile'))){
+						PageLoaderObject.loadPage('userProfile');
+					//}else{
+					//	console.log('ALREADY OPEN:' + 'mainMenu_userProfile');
+					//}
 				}
+					//==========CLOSE==================
+				if(inData.id == 'mainMenu_userProfile' && inData.command == 'close'){
+					$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_0', {transition:'turn', reverse:'true'});
+				}
+
+
 			});
 
 		}
@@ -1188,80 +1231,6 @@ body
 
 
 
-
-
-
-
-		var doClick = function(){
-			console.log('doClick');
-			commManager.transactionToDeviceToken(
-				{
-					routing:
-						{
-							command:'openPhone'
-						},
-
-					onComplete:function(inDataLayer, inTransportLayer){
-						console.log('onComplete transactionToDeviceToken call back entered');
-					}
-				}
-			);
-		}
-
-		var doClick2 = function(){
-			console.log('doClick2');
-			commManager.transactionToDeviceToken(
-				{
-					routing:
-						{
-							command:'phoneToSpeaker'
-						},
-
-					onComplete:function(inDataLayer, inTransportLayer){
-						console.log('onComplete transactionToDeviceToken call back entered');
-					}
-				}
-			);
-		}
-
-		var doClick3 = function(){
-			console.log('doClick3');
-			commManager.transactionToDeviceToken(
-				{
-					routing:
-						{
-							command:'getContactInformation'
-						},
-
-					onComplete:function(inDataLayer, inTransportLayer){
-						console.log('onComplete transactionToDeviceToken call back entered');
-						console.dir(inDataLayer);
-						console.log('---------------------------------------');
-						console.dir(inDataLayer.contactInformation);
-
-						var memberPanel_ajxObj = new clientUtilModule.AjaxJsonPostObject(
-								{
-									url:'/widget_phoneContacts',
-									onAjaxSuccess:function(inResponseText){
-										$('#phoneContactDiv').html(inResponseText);
-									}
-								}
-						).send(
-							{
-								contactInformation:inDataLayer.contactInformation
-							}
-						);
-
-
-					}
-				}
-			);
-
-
-
-
-
-		}
 
 
 
@@ -1393,85 +1362,6 @@ body
 
 
 
-		//- var getAllPhoneContacts = function(inPostFunction){
-		//- 	var theArray;
-		//- 	commManager.sendTransactionSeries(
-		//- 		{
-		//- 			command:'getAllPhoneContacts',
-		//- 			data:
-		//- 				{
-		//- 					notUsed:'na'
-		//- 				},
-		//- 			onFirst:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
-		//- 				console.log("CALBACK onFirst");
-		//- 				theArray = [];
-		//- 			},
-
-		//- 			onLast:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
-		//- 				console.log("CALBACK onLast");
-		//- 				console.dir(theArray);
-		//- 			},
-
-		//- 			onAll:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
-		//- 				console.log("CALBACK onAll");
-
-		//- 				if(inDataLayer_json.dataArray){
-		//- 					for(index in inDataLayer_json.dataArray){
-		//- 						theArray.push(inDataLayer_json.dataArray[index]);
-		//- 					}
-		//- 				}
-
-		//- 				next();
-		//- 			},
-		//- 			onComplete:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
-		//- 				console.log("CALBACK onComplete");
-		//- 				console.dir(theArray);
-		//- 				if(inPostFunction){
-		//- 					inPostFunction(theArray);
-		//- 				}
-		//- 			}
-		//- 		}
-		//- 	);
-		//- }
-		//script(type="text/javascript" src="/public/js/perspective/PerspectivePageViewNavigation/js/classie.js")
-		//script(type="text/javascript" src="/public/js/perspective/PerspectivePageViewNavigation/js/menu.js")
-
-		//- //######################################################
-		//- //--- > R E M O T E   M E N U <-------------------------
-		//- //######################################################
-
-		//- var RemoteMenu = new function(){
-		//- 	var _this = this;
-		//- 	this.reportOnOpen = function(inId){
-		//- 		_this.updateRemote(inId, 'open');
-		//- 	}
-
-		//- 	this.reportOnClose = function(inId){
-		//- 		_this.updateRemote(inId, 'close');
-		//- 	}
-
-		//- 	this.updateRemote = function(inId, inCloseOrOpen){
-		//- 		commManager.transactionToDeviceToken(
-		//- 			{
-		//- 				routing:
-		//- 					{
-		//- 						command:'webMenu',
-		//- 						action:'openClosePanel'
-		//- 					},
-		//- 				data:
-		//- 					{
-		//- 						id:'mainMenu_contacts',
-		//- 						command:'open'
-		//- 					},
-
-		//- 				onComplete:function(inDataLayer, inTransportLayer){
-		//- 					console.log('onComplete transactionToDeviceToken call back entered');
-		//- 				}
-		//- 			}
-		//- 		);
-		//- 	}
-		//- 	}
-		//- }();
 
 		//--outward
 		eventObject.setOn('onOpenCloseToRemote', function(inData){

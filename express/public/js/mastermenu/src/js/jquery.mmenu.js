@@ -1454,7 +1454,7 @@ var MasterMenu = function(inJsonStruct){
 				}
 			options = $.extend(options, inJsonStruct.options);
 			var html = '' +
-			'<a href="#" class="">'																																	+ '' +
+			'<a href="#" class="imageAndText">'																																	+ '' +
 				'<img style="'+ options.imageStyle +'" src="' + options.imageSource + '" width="' + options.imageWidth + '" class="' + options.imageClass + '" >'	+ '' +
 				'</img>' + '&nbsp;&nbsp;&nbsp;&nbsp;' + options.caption 																							+ '' +
 			'</a>'
@@ -1503,7 +1503,8 @@ var MasterMenu = function(inJsonStruct){
 					{
 						sliderDivs:imageUrlArrayOfHtml,
 						information:options.informationArray,
-						sliderSize:options.sliderSize
+						sliderSize:options.sliderSize,
+						autoPlaySlides:false
 					},
 				onAjaxSuccess:function(inResponseText){
 					$('#' + options.sliderDivId).html(inResponseText);

@@ -20,6 +20,9 @@ html
 		link(rel='stylesheet', href='/public/js/easyui/themes/default/easyui.css')
 		link(rel='stylesheet', href='/public/js/easyui/themes/default/icon.css')
 
+		script(type='text/javascript', src='/public/js/phoneformat/phoneformat.js')
+
+
 		body(style="")
 
 			style.
@@ -203,37 +206,20 @@ html
 							$('#addEditUser_clear').click(function(){
 
 
-								$postAjax(
-									{
-										url:'/database/sms/getAllSmsByPhone',
-										send:
-											{
-												phoneNumber:'12564662496',
-												limit:25
-											},
-										onAjaxSuccess:function(inResponseText){
-											alert(inResponseText);
-											inResponseText = JSON.parse(inResponseText);
 
-											if(inPostFunction){inPostFunction(inResponseText.result);}
-										}
+							$postAjax(
+								{
+									url:'/database/phonecache/checkCacheNeeds',
+									send:
+										{
+										},
+									onAjaxSuccess:function(inHtml){
+										inResponseText = JSON.parse(inHtml).result;
+										console.log('SAVE');
+										console.dir(inResponseText);
 									}
-								);
-
-
-							//- 	{
-							//- 	body:inAllSmsResults[index].body, 
-							//- 	cleanContactPhoneNumber:inAllSmsResults[index].smsPhoneNumber,
-						 //- 		contactName:inAllSmsResults[index].contactName,
-						 //- 		contactPhoneNumber:inAllSmsResults[index].smsPhoneNumber,
-						 //- 		date:inAllSmsResults[index].date,
-							//- 	dateSent:inAllSmsResults[index].dateSent,
-						 //- 		id:inAllSmsResults[index].smsId,
-						 //- 		read:inAllSmsResults[index].read,
-						 //- 		thread:inAllSmsResults[index].thread,
-						 //- 		smsContext:inAllSmsResults[index].smsContext,
-							//- 	imageUrl:(inAllSmsResults[index].smsContext == 'inBox') ? _this.comboGetSelected().imageUrl : inAllSmsResults[index].screenImage
-							//- }
+								}
+							);
 
 
 

@@ -1,4 +1,4 @@
-$.fn.formatPhoneNumber = function () { 
+/*$.fn.formatPhoneNumber = function () { 
 	if($(this).val().length == 10){
 		$(this).val('1' + $(this).val().substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)$2-$3'));
 	}
@@ -7,19 +7,19 @@ $.fn.formatPhoneNumber = function () {
 
 		$(this).val('1' + $(this).val().substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)$2-$3'));
 	}
-}
+}*/
 
 
-$.fn.cleanPhoneNumber = function (){
+/*$.fn.cleanPhoneNumber = function (){
 	var standardNo = $(this).val().replace(/[^\d]/g,'');
 	if(standardNo.charAt(0) != '1'){
 		standardNo = "1" + standardNo;
 	}
 	$(this).val(standardNo.slice(0,11));
 	return $(this);
-}
+}*/
 
-$.fn.getCleanPhoneNumber = function (){
+/*$.fn.getCleanPhoneNumber = function (){
 	console.log('getCleanPhoneNumber' + $(this).val());
 	var standardNo = $(this).val().replace(/[^\d]/g,'');
 	if(standardNo.charAt(0) != '1'){
@@ -27,7 +27,7 @@ $.fn.getCleanPhoneNumber = function (){
 	}
 	console.log('getCleanPhoneNumber' + standardNo.slice(0,11));
 	return standardNo.slice(0,11);
-}
+}*/
 
 var constructor = new function(){
 	console.log('HOPPER JQUERY EXTENTION CONSTRUCTOR RUNNING');
@@ -185,7 +185,7 @@ var ContactListView = function(inJsonStruct){
 							class:'listViewClass',
 							imageUrl:inRecords[contactIndex].imageUrl,
 							name:inRecords[contactIndex].name,
-							number:formatPhoneNumber(inRecords[contactIndex].phoneNumber),
+							number:phoneDisplayFormat(inRecords[contactIndex].phoneNumber),
 							type:inRecords[contactIndex].type,
 						}
 					);
@@ -424,7 +424,7 @@ var ContactListView = function(inJsonStruct){
 		return html;
 	}
 
-	var formatPhoneNumber = function(inNumber){
+	/*var formatPhoneNumber = function(inNumber){
 		if(inNumber.length == 10){
 			return '1' + inNumber.substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)$2-$3');
 		}
@@ -432,7 +432,7 @@ var ContactListView = function(inJsonStruct){
 			return '1' + inNumber.substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)$2-$3');
 		}
 		return inNumber;
-	}
+	}*/
 
 	//============================
 	//---EVENT

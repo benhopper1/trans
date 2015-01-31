@@ -50,6 +50,9 @@ body
 		$('#contactImport_refresh').click(function(){
 			ImportObject.refresh();
 		});
+		$('#tab_contactManager_import').click(function(){
+			ImportObject.refresh();
+		});
 
 
 		var ImportObject = new function(){
@@ -58,8 +61,10 @@ body
 
 			this.import = function(inPostFunction){
 				var checkedRowsArray = $('#importListDiv').CheckboxLines('getDataArrayFromWrapperArray', $('#importListDiv').CheckboxLines('getCheckedData'));
-
+				console.log('checkedRowsArray');
+				console.dir(checkedRowsArray);
 				async.eachSeries(checkedRowsArray, function(aCheckedRow, next){
+					//moves the image file from cache to active
 					$postAjax(
 						{
 							url:'/database/phonecache/moveCachedContact',
@@ -69,7 +74,11 @@ body
 									filePathToCopy:aCheckedRow.imageUrl,
 								},
 							onAjaxSuccess:function(inResponseText){
+								// moving / cloning contact information....
 								var moveResult = inResponseText = JSON.parse(inResponseText).result;
+								//fix phoneNumber bug here---
+								//BUG:()
+								aCheckedRow.phoneNumber = cleanPhoneNumber(aCheckedRow.phoneNumber);
 								aCheckedRow.imageUrl = moveResult.newFilePath;
 								contactDataObject.insert(aCheckedRow, function(inData){
 									next();
