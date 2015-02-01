@@ -314,5 +314,22 @@ module.exports.controller = function(app) {
 		res.setHeader('Content-Type', 'application/json');
 	});
 
+	app.post('/database/deleteAllForUser', function(req, res){
+		console.log("/database/deleteAllForUser post");
+		console.log('---------userId---------------------------------:' +  req.cookies.userId);
+		req.body['userId'] = req.cookies.userId;
+		userModel.deleteAllForUser(req.body, function(err, result){
+			res.setHeader('Content-Type', 'application/json');
+			res.end(JSON.stringify(
+				{
+					hadError:((err)? true : false),
+					err:err,
+					result:result
+				}
+			));
+		});
+		res.setHeader('Content-Type', 'application/json');
+	});
+
 
 }

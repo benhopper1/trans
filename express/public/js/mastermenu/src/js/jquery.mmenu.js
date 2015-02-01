@@ -218,7 +218,7 @@
 			return 'close';
 		},
 		hopper:function(){
-			alert('from hopper44');
+			//alert('from hopper44');
 		},
 	
 		_init: function()
@@ -1291,6 +1291,11 @@ var MasterMenu = function(inJsonStruct){
 		delete eventCallBackList[inFunctionId];
 	}
 
+	this.reportOnActionRequestClick = function(inId, inAction, inData){
+		//alert('action:'  + inAction + 'data:' + inData);
+		MasterMenu.reportOnMenuActionRequestClick(inId, inAction, inData);
+	}
+
 	this.reportOnClick = function(inId, inIndex, inCaption){
 		MasterMenu.reportOnMenuClick(inId, inIndex, inCaption);
 		for(var eventCallBackListIndex in eventCallBackList){
@@ -1331,8 +1336,14 @@ var MasterMenu = function(inJsonStruct){
 
 	this.addHtml = function(inJsonStruct){
 		//inPanelId, inNewId, inHtml
-		var html = sprintf('<li id="%s" onclick="masterMenu.reportOnClick(\'' + inJsonStruct.newElementId + '\')">%s</li>', inJsonStruct.newElementId, inJsonStruct.html);
-		$('#' + inJsonStruct.panelId).append(html);
+		//alert(JSON.stringify(inJsonStruct));
+		if(inJsonStruct.actionRequest){
+			var html = sprintf('<li id="%s" onclick="masterMenu.reportOnActionRequestClick(  \'' + inJsonStruct.newElementId + '\',   \'' + inJsonStruct.actionRequest.request + '\' , \'' + inJsonStruct.actionRequest.data + '\'    )">%s</li>', inJsonStruct.newElementId, inJsonStruct.html);
+			$('#' + inJsonStruct.panelId).append(html);
+		}else{//actionRequestClick
+			var html = sprintf('<li id="%s" onclick="masterMenu.reportOnClick(\'' + inJsonStruct.newElementId + '\')">%s</li>', inJsonStruct.newElementId, inJsonStruct.html);
+			$('#' + inJsonStruct.panelId).append(html);
+		}
 	}
 
 	this.getHomePanelId = function(){
@@ -1390,7 +1401,12 @@ var MasterMenu = function(inJsonStruct){
 		}
 	}
 
-
+	MasterMenu.reportOnMenuActionRequestClick = function(inId, inAction, inData){
+		//onMenuClick
+		if(inJsonStruct.onActionRequestClick){
+			inJsonStruct.onActionRequestClick(inId, inAction, inData);
+		}
+	}
 
 	MasterMenu.reportOnMenuClick = function(inId, inIndex, inCaption){
 		//onMenuClick

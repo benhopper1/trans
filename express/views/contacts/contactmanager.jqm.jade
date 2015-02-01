@@ -26,7 +26,7 @@ div(class="ui-grid-c" style="")
 			div(data-role="navbar")
 				ul
 					li
-						a(id="tab_contactManager_edit" href="#tab_editContact" data-ajax="false") Edit Contact
+						a(id="tab_contactManager_edit" href="#tab_editContact" data-ajax="false") Create and Edit
 					li
 						a(id="tab_contactManager_import" href="#tab_import" data-ajax="false") Import
 					li
@@ -67,6 +67,17 @@ script.
 		console.log('PAGE CREATE---------------------------ContactManager');
 		contactManagerObject = new ContactManagerObject();
 		contactManagerObject.load();
+	});
+
+	eventObject.setOn('subMenu_contacts_createAndEdit', function(inData){
+		//alert(JSON.stringify(inData));
+		$('#tab_contactManager_edit').trigger('click');
+	});
+	eventObject.setOn('subMenu_contacts_import', function(inData){
+		$('#tab_contactManager_import').trigger('click');
+	});
+	eventObject.setOn('subMenu_contacts_export', function(inData){
+		$('#tab_contactManager_export').trigger('click');
 	});
 
 

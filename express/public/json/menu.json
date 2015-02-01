@@ -20,102 +20,30 @@
 				"subMenu":
 					[
 						{
-							"id":"subMenu_contacts_add",
+							"id":"subMenu_contacts_createAndEdit",
 							"dataOptions":"onBackCloseWindow:true, onForwardOpenWindow:true, onForwardCloseCurrentWindow:false, onBackMenuAdvance:false",
 							"parentId":"mainMenu_contacts",
-							"caption":"Add",
+							"caption":"Create And Edit",
 							"index":0,
 							"forceBack":true,
-							"closeParentEvent":"parentStayOpen",
-							"subMenu":
-								[
-									{
-										"id":"subMenu_contacts_add_save",
-										"dataOptions":"onBackCloseWindow:true, onForwardOpenWindow:true, onBackMenuAdvance:false",
-										"parentId":"subMenu_contacts_add",
-										"dataOptions":"",
-										"caption":"Save",
-										"index":0,
-										"forceBack":true
-									},
-									{
-										"id":"subMenu_contacts_add_clear",
-										"parentId":"subMenu_contacts_add",
-										"dataOptions":"",
-										"caption":"Clear",
-										"index":1,
-										"forceBack":true
-									},
-									{
-										"id":"subMenu_contacts_add_close",
-										"parentId":"subMenu_contacts_add",
-										"dataOptions":"",
-										"caption":"Close",
-										"index":2,
-										"forceBack":true
-									}
-
-								]
+							"closeParentEvent":"parentStayOpen"
 						},
 						{
-							"id":"subMenu_contacts_edit",
+							"id":"subMenu_contacts_import",
+							"caption":"Import",
 							"parentId":"mainMenu_contacts",
 							"dataOptions":"",
-							"caption":"Edit",
 							"index":1,
 							"forceBack":true
 						},
 						{
-							"id":"subMenu_contacts_delete",
+							"id":"subMenu_contacts_export",
+							"caption":"Export",
 							"parentId":"mainMenu_contacts",
 							"dataOptions":"",
-							"caption":"Delete",
 							"index":2,
-							"forceBack":true,
-							"subMenu":
-								[
-									{
-										"id":"subMenu_contacts_add_delete_yes",
-										"parentId":"subMenu_contacts_delete",
-										"dataOptions":"",
-										"caption":"Yes, delete.",
-										"index":0,
-										"forceBack":true
-									},
-									{
-										"id":"subMenu_contacts_add_delete_no",
-										"parentId":"subMenu_contacts_delete",
-										"dataOptions":"",
-										"caption":"No, do not delete.",
-										"index":1,
-										"forceBack":true
-									}
-								]
-						},
-						{
-							"id":"subMenu_contacts_spacer_0",
-							"type":"spacer",
-							"dataOptions":"",
-							"caption":"    ",
-							"index":1,
-							"height":"90px",
-							"forceBack":true
-						},
-						{
-							"id":"subMenu_contacts_tab_import",
-							"dataOptions":"",
-							"caption":"Import Tab",
-							"index":1,
-							"forceBack":true
-						},
-						{
-							"id":"subMenu_contacts_tab_export",
-							"dataOptions":"",
-							"caption":"Export Tab",
-							"index":1,
 							"forceBack":true
 						}
-
 					]
 			},
 
@@ -128,22 +56,7 @@
 				"index":1,
 				"subMenu":
 					[
-						{
-							"id":"subMenu_sms_unkown0",
-							"parentId":"mm-m0-p0",
-							"dataOptions":"",
-							"caption":"unknown0",
-							"index":0,
-							"forceBack":true
-						},
-						{
-							"id":"subMenu_sms_unkown1",
-							"parentId":"mainMenu_sms",
-							"dataOptions":"",
-							"caption":"unknown1",
-							"index":1,
-							"forceBack":true
-						}
+
 					]
 			},
 

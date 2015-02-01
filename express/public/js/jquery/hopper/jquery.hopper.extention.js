@@ -463,6 +463,13 @@ var ContactListView = function(inJsonStruct){
 		}
 
 	}
+	//				$('#' + $(options.divRef).attr('id') + '_' + contactListViewHash[contactListViewHashIndex].id).find('.trans-bkg-a-hv').trigger('click');
+	this.setSelectedById = function(inId){
+		var contactId = contactListViewHash[inId].id;
+		if(contactId){
+			$('#' + $(options.divRef).attr('id') + '_' + contactId).find('.trans-bkg-a-hv').trigger('click');
+		}
+	}
 
 	this.setSelectedByIndex = function(inIndex){
 		$('#' + $(options.divRef).attr('id') + '_' + contactListViewHash[Object.keys(contactListViewHash)[0]].id  ).find('.trans-bkg-a-hv').trigger('click');
@@ -546,6 +553,11 @@ $.fn.ContactListView = function(inAction, inJsonStruct){
 	if(inAction == 'addTempContacts'){
 		return contactListView.addTempContacts(inJsonStruct);
 	}
+
+	if(inAction == 'setSelectedById'){
+		return contactListView.setSelectedById(inJsonStruct);
+	}
+
 
 }
 

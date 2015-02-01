@@ -74,9 +74,9 @@ body
 		var getUserId =function(){return '#{userId}';}
 		var getDeviceId = function(){return '#{deviceId}';}
 		var getURL = function(){return '#{URL}';}
+		var getHomePageURL = function(){return '#{URL}/jqm/arfsync';}
 		var getDefaultUserImageUrl = function(){return '#{defaultUserImageUrl}';}
 		var getDefaultMemberImageUrl = function(){return '#{defaultMemberImageUrl}';}
-
 		if (screen.width <= 800) {
 			window.location = "/mobile/arfsync";
 		}
@@ -98,6 +98,7 @@ body
 				li
 					a(href="#" data-theme="a" id="btBar_main_handSet" data-icon="back" class="header-main-button") Hand Set
 
+	#allScreenMessageDiv
 
 
 
@@ -119,18 +120,18 @@ body
 						ul(data-role="listview" id="mainmenu" class=""  data-inset="true" )
 							li(id="contactManagerDiv" class="menu_li" )
 								a() Contact Manager
-									img(src="/public/images/ui/userconfig.png" )
+									img(src="/public/images/ui/members.png" )
 							//br
 							li(id="smsManagerDiv" class="menu_li")
 								a() Sms Manager
-									img(src="/public/images/ui/mobile-sms.png" )
+									img(src="/public/images/ui/android_sms.png" )
 							//br
 							li(id="handsetControllerDiv" class="menu_li")
 								a() Handset Controller
 									img(src="/public/images/ui/androidPhoneImg.png" )
 							li(id="userProfileDiv" class="menu_li")
 								a() User Profile
-									img(id="img_loginManager_userImg" src="/public/images/ui/androidPhoneImg.png" )
+									img(id="img_loginManager_userImg" src="/public/images/ui/unconnecteduser.png" )
 							//br
 							li(id="downloaddiv" class="menu_li")
 								a() Get Android App
@@ -271,6 +272,7 @@ body
 		//>--- GLOBAL DECLARE SECTION-------------------------------------------
 		//======================================================================
 		var GLOBAL_USER_IMAGE_URL;
+		var GLOBAL_USER_NAME;
 		var commManager;
 		var deviceTokenId;
 		var contactsObject;
@@ -478,7 +480,7 @@ body
 					PageLoaderObject.loadPage('smsManager');
 				});
 				$('#handsetControllerDiv').click(function(){
-					openHandset();
+					//openHandset();
 				});
 				$('#userProfileDiv').click(function(){
 					PageLoaderObject.loadPage('userProfile');
@@ -603,6 +605,7 @@ body
 							userObject = new UserObject(function(userErr, userData){
 									//$('#qrAccord').hide(1000);
 									GLOBAL_USER_IMAGE_URL = userData.screenImage;
+									GLOBAL_USER_NAME = userData.userName;
 									console.log('userData:');
 									console.dir(userData);
 
@@ -622,8 +625,13 @@ body
 									//=============================================
 									// LOGIN READY 
 									//=============================================
-									$('#img_loginManager_userImg').attr('src',GLOBAL_USER_IMAGE_URL)
+									//$('#img_loginManager_userImg').attr('src',GLOBAL_USER_IMAGE_URL)
+
+									//=======================================================
+									// GLOBAL LOGIN EVENT -----------------------------------
+									//=======================================================
 									eventObject.reportOn('loginReady', {});
+
 								});
 							});
 
@@ -719,9 +727,14 @@ body
 					//#############################################################################################################
 
 					onFamilyDeviceConnect:function(inMsg, inLocal, inData, inRefObj){
+						//commManagerInstance.setConnectedDeviceTokenId(inCredentialsArray[index].deviceTokenId)
+						//alert("onFamilyDeviceConnect" + JSON.stringify(inData));
+						eventObject.reportOn('reconnect', inData);
 					},
 
 					onFamilyDeviceDisconnect:function(inMsg, inLocal, inData, inRefObj){
+						//alert("onFamilyDevice DIS connect" + JSON.stringify(inData));
+						eventObject.reportOn('disconnect', inData);
 					}
 				}
 			);
@@ -1047,6 +1060,12 @@ body
 					eventObject.reportOn(inTransportLayer_json.dataLayer.id, inTransportLayer_json.dataLayer);
 				}
 
+				if(inTransportLayer_json.dataLayer.action == 'actionRequestClick'){
+					console.log('ID == ' + inTransportLayer_json.dataLayer.id);
+					//$('#' + inTransportLayer_json.dataLayer.id).trigger('click');
+					eventObject.reportOn(inTransportLayer_json.dataLayer.actionRequest, inTransportLayer_json.dataLayer.data);
+				}
+
 				if(inTransportLayer_json.dataLayer.action == 'actionRequest'){
 					console.log('action request entering event bus');
 					eventObject.reportOn(inTransportLayer_json.dataLayer.request, inTransportLayer_json.dataLayer.data);
@@ -1252,22 +1271,6 @@ body
 			);
 		}
 
-		//- var loadSmsWindow = function(){
-		//- 	$( "#smsWindowDiv" ).load( "/widget_smsmessagewindow", function(){
-		//- 		widgetSmsMessageWindowScript.load();
-		//- 		widgetSmsMessageWindowScript.show();
-
-		//- 	});
-
-		//- 	//- $.get( "/widget_smsmessagewindow", function(data){
-		//- 	//- 		$("#smsWindowDiv").append(data);
-		//- 	//- });
-		//- }
-
-		//- var loadContactManager = function(){
-		//- 		//$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_2', {transition:'turn', reverse:'true'});
-		//- }
-
 
 
 		var chunkArray;
@@ -1445,23 +1448,148 @@ body
 			//alert('babbyttttt');
 		});
 
+		//==================================================================================================
+		// WELCOME MSG -------------------------------------------------------------------------------------
+		//==================================================================================================
+		var WelcomeMessage = new function(){
+			var _this = this;
+
+			//@@@@@@@-- event --@@@@@@@@@@@@@@@@@@
+			eventObject.setOn('loginReady', function(){
+				_this.show();
+			});
+
+			this.show = function(){
+				$('#masterDiv').hide(1000, function(){
+					//$('#img_loginManager_userImg').toggle( "explode" );
+					$('#img_loginManager_userImg').fadeOut(2000, function(){
+						$('#img_loginManager_userImg').attr('src',GLOBAL_USER_IMAGE_URL);
+						$('#img_loginManager_userImg').fadeIn(2000);
+					});
+
+					$postAjax(
+						{
+							url:'/jqm/message',
+							send:
+								{
+									messageId:'main_welcome',
+									imageUrl:GLOBAL_USER_IMAGE_URL,
+									name:GLOBAL_USER_NAME,
+								},
+							onAjaxSuccess:function(inResult){
+								$('#masterDiv').html(inResult);
+								$('#masterDiv').fadeIn(3000);
+								//noMessageHtml = inResult; TODO: add script to edit html in dom
+								return;
+							}
+						}
+					);
+				});
+			}
+		}
+
+		//==================================================================================================
+		// DISCONNECT MSG ----------------------------------------------------------------------------------
+		//==================================================================================================
+		var DisconnectMessage = new function(){
+			var _this = this;
+			var disconnectedDeviceId;
+
+			//@@@@@@@-- event --@@@@@@@@@@@@@@@@@@
+			eventObject.setOn('disconnect', function(inData){
+				disconnectedDeviceId = inData.routingLayer.fromDeviceTokenId;
+				PageLoaderObject.loadPage('loginManager');
+				_this.show();
+			});
+
+			//testinONLY--------TODO:remove this event
+			$('#handsetControllerDiv').click(function(){
+				_this.show();
+			});
 
 
-		//=================================================================
-			// JQM LOADS-------------------------------------------------------
-			//=================================================================
-			//- $('#tab_export').load("/jqm/contactexport ", function(){
-			//- 	console.log('loaded');
-			//- 	$('#tab_export').trigger('create');
+			this.show = function(){
+				$postAjax(
+					{
+						url:'/jqm/message',
+						send:
+							{
+								messageId:'lost_connect',
+								imageUrl:GLOBAL_USER_IMAGE_URL,
+								name:GLOBAL_USER_NAME,
+							},
+						onAjaxSuccess:function(inResult){
+							$('#allScreenMessageDiv').html(inResult);
+							return;
+						}
+					}
+				);
+			}
 
-			//- });
-			//- $('#tab_import').load("/jqm/contactimport ", function(){
-			//- 	console.log('loaded');
-			//- 	$('#tab_import').trigger('create');
+			this.getDisconnectedDeviceTokenId = function(){
+				return disconnectedDeviceId;
+			}
+		}
 
-			//- });
-			//- $('#tab_editContact').load("/jqm/contactedit ", function(){
-			//- 	console.log('loaded');
-			//- 	$('#tab_editContact').trigger('create');
 
-			//- });
+
+
+		//==================================================================================================
+		// DISCONNECT MSG ----------------------------------------------------------------------------------
+		//==================================================================================================
+		var ReconnectMessage = new function(){
+			var _this = this;
+			var reconnectedDeviceId;
+			//@@@@@@@-- event --@@@@@@@@@@@@@@@@@@
+			eventObject.setOn('reconnect', function(inData){
+				reconnectedDeviceId = inData.routingLayer.fromDeviceTokenId;
+				if(DisconnectMessage.getDisconnectedDeviceTokenId() != reconnectedDeviceId){return;}
+				console.log('reconnectedDeviceId:' + reconnectedDeviceId);
+				commManager.setConnectedDeviceTokenId(reconnectedDeviceId);
+				_this.show();
+			});
+
+			//testinONLY--------TODO:remove this event
+			$('#handsetControllerDiv').click(function(){
+				_this.show();
+			});
+
+
+			this.show = function(){
+				openWebMenuOnPhone();
+				$postAjax(
+					{
+						url:'/jqm/message',
+						send:
+							{
+								messageId:'reconnect',
+								imageUrl:GLOBAL_USER_IMAGE_URL,
+								name:GLOBAL_USER_NAME,
+							},
+						onAjaxSuccess:function(inResult){
+							$('#allScreenMessageDiv').html(inResult);
+							//$('#masterDiv').fadeIn(3000);
+							//noMessageHtml = inResult; TODO: add script to edit html in dom
+							return;
+						}
+					}
+				);
+			}
+		}
+
+
+		//DEVELOPMENT DELETE ALL FOR USER (ONLY FOR DEVELOPMENT) TODO:REMOVE
+		$('#bt_test').click(function(){
+			$postAjax(
+				{
+					url:'/database/deleteAllForUser',
+					send:{},
+					onAjaxSuccess:function(inResult){
+						//$('#noSmsLogInfo').html(inResult);
+						//noMessageHtml = inResult; TODO: add script to edit html in dom
+						alert('All Files Have Been Deleted From Server!!!!');
+						return;
+					}
+				}
+			);
+		});

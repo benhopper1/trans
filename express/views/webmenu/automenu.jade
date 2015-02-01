@@ -41,9 +41,11 @@ body(style="")
 			margin-bottom:4px;
 		}
 		.imageAndText{
-			//position: absolute;
-			left: 5px ;
-			padding-left: 0px;
+			left:10px;
+			//vertical-align: middle;
+			//margin-bottom: 0.75em;
+			//left: 5px ;
+			//padding-left: 0px;
 		}
 
 
@@ -205,22 +207,22 @@ body(style="")
 
 
 
-				masterMenu.addHtml(
-					{
-						panelId:'mainMenu_sms',
-						newElementId:'newId',
-						html:masterMenu.getHtmlTemplate(
-							{
-								template:'imageAndText',
-								options:
-									{
-										imageSource:'/public/images/ui/chrome.png',
-										caption:'The Caption'
-									}
-							}
-						)
-					}
-				);
+				//- masterMenu.addHtml(
+				//- 	{
+				//- 		panelId:'mainMenu_sms',
+				//- 		newElementId:'newId',
+				//- 		html:masterMenu.getHtmlTemplate(
+				//- 			{
+				//- 				template:'imageAndText',
+				//- 				options:
+				//- 					{
+				//- 						imageSource:'/public/images/ui/chrome.png',
+				//- 						caption:'The Caption'
+				//- 					}
+				//- 			}
+				//- 		)
+				//- 	}
+				//- );
 				//_this.loadScreenTwo('<h1>Ben Hopper Was Here</h1>');
 				//_this.showScreenTwo();
 				//$( "#my-menu" ).hide( 1000 );
@@ -330,8 +332,8 @@ body(style="")
 								newElementId:'contactsMenu_sms_' + inRows[inRowsIndex].id,
 								actionRequest:
 									{
-										request:'smsContactSelect',
-										data:'fsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd'
+										request:'contactClick',
+										data:inRows[inRowsIndex].id
 									},
 								html:masterMenu.getHtmlTemplate(
 									{
@@ -340,8 +342,8 @@ body(style="")
 											{
 												imageSource:inRows[inRowsIndex].imageUrl,
 												caption:inRows[inRowsIndex].name,
-												imageClass:'magicSquare',
-												imageStyle:''
+												//imageClass:'',
+												//imageStyle:''
 											}
 									}
 								)
@@ -564,7 +566,20 @@ body(style="")
 						masterMenu.openPanel(inJdata.openingPanelId)
 					}
 				},
-
+				onActionRequestClick:function(inId, inAction, inData){
+					console.log('ON MENU CLICK:' + inId);
+					if(!(typeof Android === 'undefined')){
+						Android.onActionRequestClick(JSON.stringify(
+							{
+								id:inId,
+								action:inAction,
+								data:inData
+							}
+						));
+					}else{
+						console.log('----------ANDROID------(not defined)----------------');
+					}
+				},
 
 
 				onMenuClick:function(inId, inIndex, inCaption){
@@ -582,6 +597,20 @@ body(style="")
 					}
 				},
 
+				onContactClick:function(inId, inIndex, inCaption){
+					console.log('ON onContactClick:' + inId);
+					if(!(typeof Android === 'undefined')){
+						Android.onContactClick(JSON.stringify(
+							{
+								id:inId,
+								index:inIndex,
+								caption:inCaption
+							}
+						));
+					}else{
+						console.log('----------ANDROID------(not defined)----------------');
+					}
+				},
 
 
 			}

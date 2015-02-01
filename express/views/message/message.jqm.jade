@@ -8,7 +8,7 @@ if data.messageId == 'test'
 		h1 test messgae-----
 
 //=====================================================================
-// TEST MSG
+// sms_nolog MSG
 //=====================================================================
 if data.messageId == 'sms_nolog'
 
@@ -17,6 +17,91 @@ if data.messageId == 'sms_nolog'
 			h6 No Messages in log for #{data.name}
 			img(src="#{data.imageUrl}" class="magicSquare" style="height:150px;")
 
+//=====================================================================
+// main_welcome MSG
+//=====================================================================
+if data.messageId == 'main_welcome'
 
+	div(class="" data-position-to="window" class="" style="")
+		center(style="height:80%;overflow-y: none")
+			h1(style="text-shadow: 2px 2px #cecbca;") Welcome to ArfSync
+			img(id="msgMemberImg_001" src="#{data.imageUrl}" class="" style="height:150px;")
+			h3(style="text-shadow: 2px 2px #cecbca;") #{data.name}
+
+	script.
+		//$('#msgMemberImg_001').show(5000);
+
+//=====================================================================
+// main_welcome MSG
+//=====================================================================
+if data.messageId == 'loading_please_wait'
+
+	div(class="" data-position-to="window" class="" style="")
+		center(style="height:80%;overflow-y: none")
+			h1(style="text-shadow: 2px 2px #cecbca;") Loading Please Wait
+			img(id="msgMemberImg_001" src="#{data.imageUrl}" class="" style="height:150px;")
+			h3(style="text-shadow: 2px 2px #cecbca;") #{data.name}
+
+	script.
+		//$('#msgMemberImg_001').show(5000);
+
+//=====================================================================
+// lost_connect MSG
+//=====================================================================
+if data.messageId == 'lost_connect'
+	center(id="lost_connect_div" style="z-index: 100000000;")
+		div(class="" data-position-to="window" class="ui-overlay-shadow" style="background: url('/public/images/ui/whitecloudsimage.jpg');")
+			center(style="height:80%;overflow-y: none")
+				h1(style="text-shadow: 2px 2px #cecbca;") Lost Connection
+				h3(style="text-shadow: 2px 2px #cecbca;") Wiping Personal Data From Browser
+
+				h6(style="text-shadow: 2px 2px #cecbca;") Reseting Browser
+				h4(id="countDownTimerIndex" style="text-shadow: 2px 2px #cecbca;") 
+				//img(id="msgMemberImg_001" src="#{data.imageUrl}" class="" style="height:150px;")
+				//h3(style="text-shadow: 2px 2px #cecbca;") #{data.name}
+
+	script.
+		//$('#msgMemberImg_001').show(5000);
+		var time_index = 30;
+		$('#lost_connect_div').center();
+		//var stop = false;
+		var doCountDown = function(){
+			setTimeout(function(){
+				 var t = time_index--;
+				 $('#countDownTimerIndex').html(t + '');
+				 if(t == 0){
+				 	//location.reload();
+				 	window.location.href=getHomePageURL();
+				 	$('#lost_connect_div').hide(10000);
+				 	//stop = true;
+				 }
+				 //if(!(stop)){
+			 	if(doCountDown){
+			 		doCountDown();
+		 		}
+			 	//}
+			}, 1000);
+		}
+
+		doCountDown();
+
+//=====================================================================
+// reconnect MSG
+//=====================================================================
+if data.messageId == 'reconnect'
+	//center(id="reconnectDiv" style="z-index: 100000001;")
+	//div(id="reconnectDiv" class="" data-position-to="window" class="ui-overlay-shadow" style="background: url('/public/images/ui/whitecloudsimage.jpg');")
+	center(id="reconnectDiv" style="height:80%;overflow-y: none")
+		h1(style="text-shadow: 2px 2px #cecbca;color: red;") Device Has Reconnected
+		//h3(style="text-shadow: 2px 2px #cecbca;") 
+
+	script.
+		$('#lost_connect_div').remove();
+		if(!(typeof doCountDown === 'undefined')){
+			doCountDown = false;
+		}
+		setTimeout(function(){
+			$('#reconnectDiv').remove();
+		}, 7000);
 
 

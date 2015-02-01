@@ -465,6 +465,26 @@ var Model = function(){
 		});
 	}
 
+	this.deleteAllForUser = function(inParams, inPostFunction){
+		var fieldData = 
+			{
+				userId:false,
+			}
+		fieldData = extend(fieldData, inParams);
+
+		if(!(fieldData.userId)){
+			if(inPostFunction){
+				var err = 'No User Id, records will not mutated';
+				inPostFunction(err, false, false);
+			}
+		}
+		var sqlString = "CALL sp_deleteAllForUserId(" + connection.escape(parseInt(fieldData.userId)) + ");";
+		console.log('sql:' + sqlString);
+		connection.query(sqlString, function(err, result){
+			console.log('error' + err);
+			if(inPostFunction){inPostFunction(err, result);}
+		});
+	}
 
 }
 
