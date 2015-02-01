@@ -64,7 +64,12 @@ script.
 	});
 
 	eventObject.setOn('contactClick', function(inData){
+		console.log('contactClick YES   ');
 		$('#contactsMenu_sms').ContactListView('setSelectedById', inData);
+	});
+
+	eventObject.setOn('contactManager_onChange', function(inJstruct){
+		$('#contactsMenu_sms').ContactListView('refresh');
 	});
 
 

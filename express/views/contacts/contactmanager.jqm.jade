@@ -9,7 +9,8 @@ div(class="ui-grid-c" style="")
 		//div(id="contactsWindow2" data-role="main"  class="ui-overlay-shadow ui-shadow" style="padding-top: 25px;width:95%; ")
 		//div( id="contactsMenu_col" data-role="collapsible" data-collapsed="false" class="ui-overlay-shadow ui-shadow")
 		//h3 Contact List
-		div(class="ui-content" data-position-to="window" style="width:90%;direction: ltr;")
+		div(class="ui-content" id="contactsContent" data-position-to="window" style="width:90%;direction: ltr;")
+			h4(id="noContactDiv" style="text-shadow: 2px 2px #cecbca;color: grey;") No Contacts In Your Database
 			a(href="#contactPanel_0" data-ajax="false" style="")
 			ul(data-role="listview" id="contactsMenu" class=""   data-inset="true" style="width:100%; ")
 			//- div(class="" data-position-to="window" class="" style="direction: ltr;height:90%; width:90%")
@@ -112,6 +113,28 @@ script.
 					},
 					onLongClick:function(inContactId, inData, inElementId){
 						eventObject.reportOn('contactMenu_onLongClick', inData);
+					},
+					onAfterDataLoad:function(inData){
+						if(Object.keys(inData).length < 1){
+							$('#noContactDiv').show(5000);
+						}else{
+							$('#noContactDiv').hide(5000);
+						}
+					},
+					onAddTempContacts:function(inTempContactsArray){
+						console.log('onAddTempContacts inTempContactsArray:');
+						console.dir(inTempContactsArray);
+					},
+					onChange:function(inAction, inRecord){
+						console.log('ACTION:' + inAction);
+						console.log('RECORD:');
+						console.dir(inRecord);
+						eventObject.reportOn('contactManager_onChange', 
+							{
+								action:inAction,
+								record:inRecord,
+							}
+						);
 					}
 				}
 			);
@@ -132,4 +155,6 @@ script.
 			setHeight();
 		}
 	}
+
+
 

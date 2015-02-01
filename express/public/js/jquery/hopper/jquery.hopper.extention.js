@@ -114,6 +114,9 @@ var ContactListView = function(inJsonStruct){
 			autoScrollOnSelect:false,
 			onLongClick:false,
 			onClick:false,
+			onAfterDataLoad:false,
+			onAddTempContacts:false,
+			onChange:false,
 
 		}
 	options = $.extend(options, inJsonStruct);
@@ -128,6 +131,7 @@ var ContactListView = function(inJsonStruct){
 		$(contactListViewHash[inId].jRef).remove();
 		delete contactListViewHash[inId];
 		$(theDivRef).listview().listview('refresh');
+		if(options.onChange){options.onChange('delete', {id:inId});}
 	}
 
 	this.toggleState = function(inJref){
@@ -177,7 +181,7 @@ var ContactListView = function(inJsonStruct){
 				if(!(theRecord)){
 					//need to add, it does not exist.....
 					//alert('please add:');
-					console.dir(theRecord);
+					//console.dir(theRecord);
 					inRecords[contactIndex].md5Hash = $.getHash.md5(JSON.stringify(inRecords[contactIndex]));
 					var html = createHtml(
 						{
@@ -210,6 +214,8 @@ var ContactListView = function(inJsonStruct){
 					});
 					//contactListViewHash[Object.keys(contactListViewHash)[Object.keys(contactListViewHash).length -1].id]
 					_this.setSelectedByIndex(0);
+					//was added-----
+					if(options.onChange){options.onChange('add', inRecords[contactIndex]);}
 
 
 				}else{
@@ -222,6 +228,8 @@ var ContactListView = function(inJsonStruct){
 						contactListViewHash[inRecords[contactIndex].id] = inRecords[contactIndex];
 						contactListViewHash[inRecords[contactIndex].id].md5Hash = inComingHashCode;
 						$(theDivRef).listview().listview('refresh');
+						//was edit
+						if(options.onChange){options.onChange('edit', inRecords[contactIndex]);}
 					}
 				}
 			}
@@ -248,18 +256,23 @@ var ContactListView = function(inJsonStruct){
 			console.log('removeArray');
 			console.dir(removeArray);
 
-
+			//var willDelete = removeArray.length > 0;
 			for(var removeArrayIndex in removeArray){
 				//$(removeArray[removeArrayIndex].jRef).remove();
 				//alert('jref:' + $(contactListViewHash[removeArray[removeArrayIndex]].jRef).attr('id'));
 				$(contactListViewHash[removeArray[removeArrayIndex]].jRef).remove();
 				delete contactListViewHash[removeArray[removeArrayIndex]];
+				if(options.onChange){options.onChange('delete', {});}
 			}
 			$(theDivRef).listview().listview('refresh');
+			//if(willDelete){
+				
+			//}
 			//$('table tbody').trigger('footable_redraw');
+			if(options.onAfterDataLoad){options.onAfterDataLoad(contactListViewHash);}
 		});
 
-	}
+	}//end refresh
 
 	this.scrollToSelected = function(){
 		console.log('scrollToSelected');
@@ -315,8 +328,10 @@ var ContactListView = function(inJsonStruct){
 						options.onLongClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
 					}
 			});
+			if(onChange){onChange('add', inRecords[contactIndex]);}
 		}
 		$(theDivRef).listview().listview('refresh');
+		if(options.onAddTempContacts){options.onAddTempContacts(resultContacts);}
 		return resultContacts;
 	}
 
@@ -358,6 +373,7 @@ var ContactListView = function(inJsonStruct){
 			$(theDivRef).listview().listview('refresh');
 			if(inPostFunction){inPostFunction();}
 			//$('table tbody').trigger('footable_redraw');
+			if(options.onAfterDataLoad){options.onAfterDataLoad(contactListViewHash);}
 		});
 	}
 
@@ -454,7 +470,7 @@ var ContactListView = function(inJsonStruct){
 		var inName = options2.name;
 		var inType = options2.type;
 
-		for(var contactListViewHashIndex in contactListViewHash){			
+		for(var contactListViewHashIndex in contactListViewHash){
 			if((inName == contactListViewHash[contactListViewHashIndex].name) && (inType == contactListViewHash[contactListViewHashIndex].type)){
 				$('#' + $(options.divRef).attr('id') + '_' + contactListViewHash[contactListViewHashIndex].id).find('.trans-bkg-a-hv').trigger('click');
 				if(options.autoScrollOnSelect){ _this.scrollToSelected(); }
@@ -465,6 +481,7 @@ var ContactListView = function(inJsonStruct){
 	}
 	//				$('#' + $(options.divRef).attr('id') + '_' + contactListViewHash[contactListViewHashIndex].id).find('.trans-bkg-a-hv').trigger('click');
 	this.setSelectedById = function(inId){
+		if(!(inId in contactListViewHash)){return false;}
 		var contactId = contactListViewHash[inId].id;
 		if(contactId){
 			$('#' + $(options.divRef).attr('id') + '_' + contactId).find('.trans-bkg-a-hv').trigger('click');
@@ -472,6 +489,7 @@ var ContactListView = function(inJsonStruct){
 	}
 
 	this.setSelectedByIndex = function(inIndex){
+		if(!(inIndex < contactListViewHash.length)){return false;}
 		$('#' + $(options.divRef).attr('id') + '_' + contactListViewHash[Object.keys(contactListViewHash)[0]].id  ).find('.trans-bkg-a-hv').trigger('click');
 		if(options.autoScrollOnSelect){ _this.scrollToSelected(); }
 		return ;

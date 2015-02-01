@@ -50,7 +50,7 @@ if data.messageId == 'loading_please_wait'
 //=====================================================================
 if data.messageId == 'lost_connect'
 	center(id="lost_connect_div" style="z-index: 100000000;")
-		div(class="" data-position-to="window" class="ui-overlay-shadow" style="background: url('/public/images/ui/whitecloudsimage.jpg');")
+		div(class="" data-position-to="window" class="ui-overlay-shadow" style="background: url('/public/images/ui/whitecloudsimage.jpg');background-repeat:repeat-y;	background-position:center center; background-attachment:scroll;")
 			center(style="height:80%;overflow-y: none")
 				h1(style="text-shadow: 2px 2px #cecbca;") Lost Connection
 				h3(style="text-shadow: 2px 2px #cecbca;") Wiping Personal Data From Browser
@@ -103,5 +103,10 @@ if data.messageId == 'reconnect'
 		setTimeout(function(){
 			$('#reconnectDiv').remove();
 		}, 7000);
+
+
+
+
+
 
 

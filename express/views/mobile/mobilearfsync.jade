@@ -159,9 +159,10 @@ script.
 
 		$postAjax(
 			{
-				url:'/contacts/widget_contacts_slider',
+				url:'/contacts/mobile/widget_contacts_slider',
 				send:
 					{	
+						autoPlaySlides:true,
 						startPlay:true,
 						sliderSize:
 							{
@@ -187,9 +188,9 @@ script.
 				onAjaxSuccess:function(inResponseText){
 					console.log("ajax back with slider html :)");
 					$('#slider').html(inResponseText);
-					//setTimeout(function(){
-						//ContactsSlider.startAutoSlide();
-					//}, 3000);
+					setTimeout(function(){
+						ContactsSlider.startAutoSlide();
+					}, 3000);
 				}
 			}
 		);
