@@ -17,7 +17,20 @@ module.exports.controller = function(app) {
 
 	app.get('/user/widget_userForm', function(req, res){
 		console.log("/widget_contactsform get");
-		res.render('users/widget_userform.jade',req.body);
+		res.render('users/widget_userform.jade',
+			{
+				userId:req.cookies.userId,
+				deviceId:"815",//req.cookies.deviceId,
+				URL:configData.domain.address + ":" + configData.domain.port,
+				androidAppRoute:configData.androidAppRoute,
+				webSocketClient:configData.webSocketClient,
+				defaultUserImageUrl:configData.defaultUserImageUrl,
+				defaultMemberImageUrl:configData.defaultMemberImageUrl,
+				data:
+					{
+					}
+			}
+		);
 	});
 
 
