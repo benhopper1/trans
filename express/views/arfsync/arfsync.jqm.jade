@@ -27,8 +27,9 @@ head
 
 	script(src="/public/js/footable/js/footable.js")
 
-	script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
-	script(type='text/javascript', src='/js/qrcode/qrcode.js')
+	script(type='text/javascript', src='/js/qrcode/jquery.composite.qrcode.js')
+	//script(type='text/javascript', src='/js/qrcode/jquery.qrcode.js')
+	//script(type='text/javascript', src='/js/qrcode/qrcode.js')
 
 	script(type='text/javascript', src='/js/commmanager/commmanager.js')
 
@@ -597,8 +598,13 @@ body
 
 
 
-
+						console.log('##############################################################################');
+						console.log('############ SECURITY VERIFICATION (start)' + now() + '	   			  #########');
+						console.log('##############################################################################');
 						sessionSetupAndValidation("loginByScan", waitingDeviceTokenId, function(inJsonStruct){
+							console.log('##############################################################################');
+							console.log('############ SECURITY VERIFICATION (done)' + now() + '	   			  #########');
+							console.log('##############################################################################');
 							createFilters();
 
 							contactsObject = new ContactsObject();
@@ -1075,6 +1081,19 @@ body
 					console.log('action onPanelOpenClose entering event bus');
 					eventObject.reportOn('onPanelOpenClose', inTransportLayer_json.dataLayer);
 				}
+
+			});
+
+			//=========================================================
+			// FILTER PHONE TO BROWSER ONSCREEN MESSAGE
+			//=========================================================
+			filterObj.add('phoneMessage', function(inMsg, inLocal, inTransportLayer_json, inRefObj){
+				console.log('FILTER == phoneMessage'  );
+				if(inTransportLayer_json.dataLayer.action == 'openMessage'){
+					//EXAMPLE:: setOn(phoneMessage_openMessage)
+					eventObject.reportOn('phoneMessage_' + inTransportLayer_json.dataLayer.action , inTransportLayer_json.dataLayer);
+				}
+
 
 			});
 

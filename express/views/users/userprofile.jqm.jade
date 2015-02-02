@@ -136,7 +136,7 @@ script.
 					country:$('#userProfile_country').val(),
 					screenImage:$('#userProfile_image').attr('src'),
 				}
-			alert("storing data:" + JSON.stringify(userData));
+			//alert("storing data:" + JSON.stringify(userData));
 			return userData;
 		}
 
@@ -146,7 +146,7 @@ script.
 					url:'/database/updateUser',
 					send:inUserData,
 					onAjaxSuccess:function(inResponseText){
-						alert(inResponseText);
+						//alert(inResponseText);
 						inResponseText = JSON.parse(inResponseText);
 						_this.storeRevertData();
 						if(inPostFunction){inPostFunction(inResponseText);}

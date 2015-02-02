@@ -470,3 +470,15 @@ $.fn.qrcode = function(options) {
 // @include "qrcode.js"
 
 }());
+
+
+
+
+
+
+
+
+
+
+
+
