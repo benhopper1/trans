@@ -10,6 +10,11 @@ module.exports.controller = function(app){
 		res.render('angtest/angtest.jade',{});
 	});
 
+	app.post('/angtest', function(req, res){
+		console.log("/angtest POST");
+		res.render('angtest/angtest.jade',{});
+	});
+
 	var counter = 0;
 	app.post('/testrest', function(req, res){
 		console.log("/testrest post");

@@ -9,6 +9,8 @@ body(style="")
 	script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
 	//script(type='text/javascript', src='/public/js/jquery/v2.1.3/jquery.min.js')
 	script(type='text/javascript', src='/js/clientutil/clientutil.js')
+	script(type="text/javascript" src="/public/js/slider/js/jssor.slider.mini.js")
+	link(rel="stylesheet" href="/public/js/slider/css/slider.css")
 
 	//https://github.com/jackncoke/jquery-mmenu/blob/master/source/jquery.mmenu.js
 	//script(src="/public/js/mastermenu/src/js/jquery.mmenu.min.js" type="text/javascript")
@@ -29,6 +31,20 @@ body(style="")
 		}
 		.magicSquare{
 			padding:4px;
+			display:inline-block;
+			font:12px/14px Arial, Helvetica, sans-serif;
+			color:#666;
+			border:1px solid #999;
+			background-color:#eee;
+			-moz-border-radius:00px;
+			-webkit-border-radius: 15px;
+			-moz-box-shadow:#999 2px 0px 3px;
+			-webkit-box-shadow:#999 2px 0px 3px;
+			margin-bottom:4px;
+		}
+		.magicSquarePnt{
+			padding:4px;
+			cursor:pointer;
 			display:inline-block;
 			font:12px/14px Arial, Helvetica, sans-serif;
 			color:#666;
@@ -194,6 +210,7 @@ body(style="")
 		var backThis;
 		var WebMenu = function(){
 			var _this = this;
+			var contactsSlider;
 			
 			setTimeout(function(){
 				console.log('setTimeout EXECUTED-----------------------------------------------------------') ;
@@ -286,6 +303,78 @@ body(style="")
 				$( "#my-menu" ).show( 1000 );
 			}
 
+			this.contactManagerOnChange = function(inJsonStruct){
+				var data = inJsonStruct;
+				//var data = JSON.parse(inJsonStruct);
+				var action = data.action;
+				var record = data.record;
+
+				if(action == 'delete'){
+					console.log('DELETE:' + record.id);
+					contactsSlider.removeSlide(record.id);
+					contactsSlider.redraw();
+					// - SMS ---------------
+					masterMenu.remove('contactsMenu_sms_' + record.id);
+				}
+
+				if(action == 'add'){
+					console.log('ADD:' + record.id);
+					contactsSlider.addImageSlide(record.id, record.imageUrl);
+					contactsSlider.redraw();
+					// - SMS ---------------
+					masterMenu.addHtml(
+						{
+							panelId:'mainMenu_sms',
+							newElementId:'contactsMenu_sms_' + record.id,
+							actionRequest:
+								{
+									request:'contactClick',
+									data:record.id
+								},
+							html:masterMenu.getHtmlTemplate(
+								{
+									template:'imageAndText',
+									options:
+										{
+											imageSource:record.imageUrl,
+											caption:record.name,
+										}
+								}
+							)
+						}
+					);
+				}
+
+				if(action == 'edit'){
+					console.log('EDIT:' + record.id);
+					contactsSlider.addImageSlide(record.id, record.imageUrl);
+					contactsSlider.redraw();
+					// - SMS ---------------
+					masterMenu.remove('contactsMenu_sms_' + record.id);
+					masterMenu.addHtml(
+						{
+							panelId:'mainMenu_sms',
+							newElementId:'contactsMenu_sms_' + record.id,
+							actionRequest:
+								{
+									request:'contactClick',
+									data:record.id
+								},
+							html:masterMenu.getHtmlTemplate(
+								{
+									template:'imageAndText',
+									options:
+										{
+											imageSource:record.imageUrl,
+											caption:record.name,
+										}
+								}
+							)
+						}
+					);
+				}
+			}
+
 
 			this.openClosePanel = function(inJsonStruct){
 				console.log('openCloseMenu');
@@ -318,12 +407,40 @@ body(style="")
 			}
 
 			this.loadSlider = function(inSliderDivId){
+
+
+
+
+				contactsSlider = new ContactsSlider(
+					{
+						containerId:inSliderDivId,
+						width:600,
+						onSwipe:function(inIndex){
+							//alert('you' + inIndex);
+						},
+						onClick:function(inIndex, inLookupId){
+							//alert('inIndex, inLookupId' +inIndex +' , '+inLookupId);
+						},
+						imageClass:' magicSquarePnt'
+					}
+				);
+
+
+				contactsSlider.setSlideSize('300px', '150px');
+
+
+
+
+
+
+
 				console.log('--------loadSlider---------------------');
 				_this.getContacts( function(inRows){
 					var imageUrlArray = [];
 					for(var inRowsIndex in inRows){
 						if(inRows[inRowsIndex].imageUrl){
 							imageUrlArray.push(inRows[inRowsIndex].imageUrl);
+							contactsSlider.addImageSlide(inRows[inRowsIndex].id, inRows[inRowsIndex].imageUrl);
 						}
 
 						//for sms contacts injection...
@@ -352,20 +469,24 @@ body(style="")
 						);
 
 					}
-					masterMenu.slider(
-						{
-							sliderDivId:inSliderDivId,
-							sliderUrl:'/contacts/widget_contacts_slider',
-							imageUrlArray:imageUrlArray,
-							informationArray:inRows,
-							divHeight:'25px',
-							class:'magicCirc contactImage',
-							sliderSize:
-								{
-									width:200
-								}
-						}
-					);
+					contactsSlider.redraw();
+
+
+
+					//- masterMenu.slider(
+					//- 	{
+					//- 		sliderDivId:inSliderDivId,
+					//- 		sliderUrl:'/contacts/widget_contacts_slider',
+					//- 		imageUrlArray:imageUrlArray,
+					//- 		informationArray:inRows,
+					//- 		divHeight:'25px',
+					//- 		class:'magicCirc contactImage',
+					//- 		sliderSize:
+					//- 			{
+					//- 				width:200
+					//- 			}
+					//- 	}
+					//- );
 				});
 			}
 

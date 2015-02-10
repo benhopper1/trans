@@ -215,7 +215,8 @@ var ContactListView = function(inJsonStruct){
 					//contactListViewHash[Object.keys(contactListViewHash)[Object.keys(contactListViewHash).length -1].id]
 					_this.setSelectedByIndex(0);
 					//was added-----
-					if(options.onChange){options.onChange('add', inRecords[contactIndex]);}
+					var passingRecord = $.extend(inRecords[contactIndex],{jRef:false});
+					if(options.onChange){options.onChange('add', passingRecord);}
 
 
 				}else{
@@ -261,8 +262,21 @@ var ContactListView = function(inJsonStruct){
 				//$(removeArray[removeArrayIndex].jRef).remove();
 				//alert('jref:' + $(contactListViewHash[removeArray[removeArrayIndex]].jRef).attr('id'));
 				$(contactListViewHash[removeArray[removeArrayIndex]].jRef).remove();
+				var deletionId = contactListViewHash[removeArray[removeArrayIndex]].id;
+				var deletionName = contactListViewHash[removeArray[removeArrayIndex]].name;
+				var deletionType = contactListViewHash[removeArray[removeArrayIndex]].type;
+				var deletionPhoneNumber = contactListViewHash[removeArray[removeArrayIndex]].phoneNumber;
 				delete contactListViewHash[removeArray[removeArrayIndex]];
-				if(options.onChange){options.onChange('delete', {});}
+				if(options.onChange){
+					options.onChange('delete', 
+						{
+							id:deletionId,
+							name:deletionName,
+							type:deletionType,
+							phoneNumber:deletionPhoneNumber,
+						}
+					);
+				}
 			}
 			$(theDivRef).listview().listview('refresh');
 			//if(willDelete){
@@ -328,7 +342,7 @@ var ContactListView = function(inJsonStruct){
 						options.onLongClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
 					}
 			});
-			if(onChange){onChange('add', inRecords[contactIndex]);}
+			if(options.onChange){options.onChange('add', inRecords[contactIndex]);}
 		}
 		$(theDivRef).listview().listview('refresh');
 		if(options.onAddTempContacts){options.onAddTempContacts(resultContacts);}

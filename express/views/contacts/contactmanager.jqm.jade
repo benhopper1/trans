@@ -150,7 +150,9 @@ script.
 			eventObject.setOn('contactSliderSelected', function(inData){
 				console.dir(inData);
 				console.log('name(frm phone):' + inData.name);
-				$('#contactsMenu').ContactListView('setSelectedByNameAndType', inData);
+
+				//$('#contactsMenu').ContactListView('setSelectedByNameAndType', inData);
+				$('#contactsMenu').ContactListView('setSelectedById',inData.lookupId);
 			});
 			setHeight();
 		}

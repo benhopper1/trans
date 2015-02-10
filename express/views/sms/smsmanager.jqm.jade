@@ -69,7 +69,24 @@ script.
 	});
 
 	eventObject.setOn('contactManager_onChange', function(inJstruct){
+		console.log('eventObject.setOn');
+		console.dir(inJstruct);
 		$('#contactsMenu_sms').ContactListView('refresh');
+		if(inJstruct.action == 'add'){
+			$('#contactsMenu_sms_popup').CheckboxLines('addItem',
+				{
+					lookupId:inJstruct.record.id,
+					caption:'<img src="'  + inJstruct.record.imageUrl + '" style="height:40px; float:left" class="magicSquare"/><h4>&nbsp;&nbsp;&nbsp;' + inJstruct.record.name + '<br>&nbsp;&nbsp;&nbsp;' + phoneDisplayFormat(inJstruct.record.phoneNumber) + '</h4>',
+					isChecked:false,
+					formStyle:'border:0;width:400px;',
+					data:inJstruct.record,
+				}
+			);
+		}
+		if(inJstruct.action == 'delete'){
+			$('#contactsMenu_sms_popup').CheckboxLines('remove', inJstruct.record.id);
+		}
+
 	});
 
 
@@ -201,6 +218,8 @@ script.
 										}
 									);
 								}
+							}else{
+
 							}
 							$('#contactsMenu_sms_popup').CheckboxLines('setCheckbox',
 								{
@@ -521,8 +540,9 @@ script.
 				centerHtml += '<img id="sms_upper_img0" src="' + inContacts[inContactsIndex].data.imageUrl + '" class="magicSquare" style="height:30px">';
 			}
 			var caption = (inContacts.length > 1)? 'Group of Sms Recipients:' : 'The Sms Recipient:';
+			caption = '';
 			var headerHtml = 
-					'<div style="width:100%" class="ui-button-text"><a id="bt_smsGroupBuild" style="float:left;" href="" data-inline="true" data-role="button" data-mini="true" data-icon="user" data-iconpos="notext"></a><h5">' + caption + '</h4><div>' +
+					'<div style="width:100%" class="ui-button-text"><a id="bt_smsGroupBuild" style="float:left;" href="" data-inline="true" data-role="button" data-mini="true" data-icon="user" data-iconpos="notext"></a><h6">' + caption + '</h6><div>' +
 					centerHtml 
 			;
 			$('#smsContactSleeve').html(headerHtml);

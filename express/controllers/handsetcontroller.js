@@ -24,6 +24,35 @@ module.exports.controller = function(app){
 		);
 	});
 
+	app.get('/handset/jqm/handsetcontroller', function(req, res){
+		if(req.cookies.userId){
+			console.log("/jqm/smsManager");
+			res.render('handset/handset.jqm.jade',
+				{
+					userId:req.cookies.userId,
+					deviceId:"815",//req.cookies.deviceId,
+					URL:configData.domain.address + ":" + configData.domain.port,
+					androidAppRoute:configData.androidAppRoute,
+					webSocketClient:configData.webSocketClient,
+					defaultUserImageUrl:configData.defaultUserImageUrl,
+					defaultMemberImageUrl:configData.defaultMemberImageUrl,
+					data:
+						{
+						}
+				}
+			);
+		}else{
+			//============================================================
+			//YOUR NOT LOGED IN ------------------------------------------
+			//============================================================
+			console.log("/handset/jqm/handsetcontroller    YOUR NOT LOGED IN????");
+			/*res.render('contacts/widget_contactscollection.jade',
+				{
+
+				}
+			);*/
+		}
+	});
 
 
 

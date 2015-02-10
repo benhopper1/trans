@@ -4,5 +4,5 @@
 /*.bmp
 /*.tiff
 
-/characters
-/users
+!default.*
+!memberdefault.*

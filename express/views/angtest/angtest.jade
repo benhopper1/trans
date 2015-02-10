@@ -137,18 +137,20 @@ html
 				input(id="upload" type="file" name="uploadedFile" style="display: none;" onchange="console.log('changed!!!')")
 
 			div(id="page_userForm" data-role="page" data-dialog="true" data-theme="b" style="" class=".center-me")
-				center
-					img(src="/public/images/ui/arfsync_logo.png")
 
 				div(id="contactsWindow" data-role="main"  class="ui-content" style="")
 					form(method="post" id="userForm")
 						div(class="ui-field-contain")
 							input(tabindex="1" type="text" id="widget_userForm_firstName" 	name="fname" 		placeholder="First Name...")
 							input(tabindex="2" type="text" id="widget_userForm_lastName" 	name="lName" 		placeholder="Last Name...")
-							center
-								h6 (click to change)
-								img(id="widget_userForm_image" name="uImg" class="magicSquarePnt contactAddImage" src="/public/images/contacts/default.jpg" style="height:100px;" onclick="Widget_userFormScript.chooseFile();")
-								h5 This is you 
+
+
+
+
+							br
+							br
+							br
+
 							input(data-icon="action" id="addEditUser_save" 	type="button" value="Save")
 							input(data-icon="back" id="addEditUser_clear" 	type="button" value="Cancel")
 
@@ -160,31 +162,11 @@ html
 				var Widget_userFormScript;
 				$(document).ready(function(){
 
-					//$("div").data("test", { first: 16, last: "pizza!" });
-					//alert($('div').data('test').first);
 
 					Widget_userFormScript = new function(){
 						var _this = this;
 
-						$('#upload').change(function(){
-							//new image to dispay.
-							_this.uploadImage();
-						});
 						this.load = function(){
-							$('#userForm_window').window({
-								title:'User Form',
-								closed:true,
-								width:'100%',
-								height:'100%',
-								modal:true,
-								minimizable:false,
-								maximizable:false,
-								onBeforeClose: function(){
-								},
-								onBeforeOpen: function(){
-								},
-							});
-
 
 							//==============================================
 							// EVENT SETUP
@@ -194,116 +176,35 @@ html
 							});
 
 
-
-						
-
-
-
-
-
-
-
 							$('#addEditUser_clear').click(function(){
 
 
 
-							$postAjax(
-								{
-									url:'/database/phonecache/checkCacheNeeds',
-									send:
-										{
-										},
-									onAjaxSuccess:function(inHtml){
-										inResponseText = JSON.parse(inHtml).result;
-										console.log('SAVE');
-										console.dir(inResponseText);
+								$postAjax(
+									{
+										url:'/database/phonecache/checkCacheNeeds',
+										send:
+											{
+											},
+										onAjaxSuccess:function(inHtml){
+											inResponseText = JSON.parse(inHtml).result;
+											console.log('SAVE');
+											console.dir(inResponseText);
+										}
 									}
-								}
-							);
-
-
-
-
-
-
-
+								);
 
 
 
 							});
-							
-						}
+						}//end of load
 
-						this.updateImageSource = function(inSrc){
-							$('#widget_userForm_image').attr('src', inSrc);
-						}
 
-						this.cancel = function(){
-							window.location = "/user/mobilelogin";
-						}
-
-						this.close = function(){
-							$('#userForm_window').window('close');
-						}
-
-						this.show = function(){
-							$('#userForm_window').window('open');
-						}
-
-						this.chooseFile = function(){
-							$('#upload').trigger('click');
-						}
-
-						this.uploadImage = function(){
-							$ajaxFilePostVariableRoute(
-								{
-									uploadRoute:'/upload/phone/cache',
-									fileInputElement:'upload',
-
-									options:
-										{
-											command:'imageStore',
-											theme:'normalUserImage'
-										},
-
-									onComplete:function(inResponse){
-										if(inResponse.domainFilePath){
-											$('#widget_userForm_image').attr('src', inResponse.domainFilePath);
-										}
-									}
-								}
-							);
-						}
-
-						this.addToStore = function(){
-							//alert('SAVE');
-							//return;
-							$postAjax(
-								{
-									url:'/database/phonecache/getExportableData',
-									send:
-										{
-										},
-									onAjaxSuccess:function(inHtml){
-										inResponseText = JSON.parse(inHtml).result;
-										console.log('SAVE');
-										console.dir(inResponseText);
-									}
-								}
-							);
-
-						}
 
 						_this.load();
-						_this.show();
+
 					}();
 
 				});
 
-				//
 
-				$('#widget_userForm_phone').blur(function(){
-					//alert('blured!!!');
-					$(this).val('tttttt');
-
-				});

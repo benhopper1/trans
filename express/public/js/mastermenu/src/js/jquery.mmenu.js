@@ -1346,6 +1346,10 @@ var MasterMenu = function(inJsonStruct){
 		}
 	}
 
+	this.remove = function(inEleId){
+		$('#' + inEleId).remove();
+	}
+
 	this.getHomePanelId = function(){
 		//TODO:
 		return false;
@@ -1479,7 +1483,7 @@ var MasterMenu = function(inJsonStruct){
 		}
 	}
 
-
+	//TODO:remove slider section, not used any more!!!!!!!!!!!!!!!
 	//===================================================
 	//---- S L I D E R-----------------------------------
 	//===================================================

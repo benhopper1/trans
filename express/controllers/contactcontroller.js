@@ -451,4 +451,82 @@ module.exports.controller = function(app){
 
 
 
+
+
+	app.post('/contacts/v002/widget_contacts_slider', function(req, res){
+		console.log('----------------------POST--------------------');
+		console.log('/slider post  v002');
+		var options =
+			{
+				URL:configData.domain.address + ":" + configData.domain.port,
+				webSocketClient:configData.webSocketClient,
+				defaultUserImageUrl:configData.defaultUserImageUrl,
+				defaultMemberImageUrl:configData.defaultMemberImageUrl,
+				startPlay:false,
+				autoPlaySlides:false,
+				data:
+					{
+					},
+				sliderSize:
+					{
+						width:600
+					},
+				sliderDivs:
+					[
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/01.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/02.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/03.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/04.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/05.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/06.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/07.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/08.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/10.jpg"></img></a></div>'
+					]
+			}
+		options = extend(options, req.body);
+		res.render('contacts/v002/widget_contacts_slider.jade', options);
+	});
+
+	app.get('/contacts/v002/widget_contacts_slider', function(req, res){
+		console.log('----------------------POST--------------------');
+		console.log('/slider post  v002');
+		var options =
+			{
+				URL:configData.domain.address + ":" + configData.domain.port,
+				webSocketClient:configData.webSocketClient,
+				defaultUserImageUrl:configData.defaultUserImageUrl,
+				defaultMemberImageUrl:configData.defaultMemberImageUrl,
+				startPlay:false,
+				autoPlaySlides:false,
+				data:
+					{
+					},
+				sliderSize:
+					{
+						width:600
+					},
+				sliderDivs:
+					[
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/01.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/02.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/03.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/04.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/05.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/06.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/07.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/08.jpg"></img></a></div>',
+						'<div><a u=image href="#"><img src="/public/js/slider/img/landscape/10.jpg"></img></a></div>'
+					]
+			}
+		options = extend(options, req.body);
+		res.render('contacts/v002/widget_contacts_slider.jade', options);
+	});
+
+
+
+
+
+
+
 }

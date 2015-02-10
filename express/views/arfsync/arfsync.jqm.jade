@@ -10,6 +10,8 @@ head
 
 	//script(type='text/javascript', src='/js/jquery/jquery-2.0.3.min.js')
 
+
+
 	link(href="/public/js/footable/css/footable.core.css" rel="stylesheet" type="text/css")
 
 	link(rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css")
@@ -22,7 +24,7 @@ head
 	script(src="/public/js/jquery/hopper/jquery.hopper.extension.dynamictable.js")
 	//script(src="/public/js/jquery/hopper/jquery.hopper.extension.footable.js")
 
-
+	
 
 
 	script(src="/public/js/footable/js/footable.js")
@@ -70,7 +72,6 @@ head
 
 
 body
-
 	script.
 		var getUserId =function(){return '#{userId}';}
 		var getDeviceId = function(){return '#{deviceId}';}
@@ -261,6 +262,11 @@ body
 	div(id="page_smsManager" data-role="page"  data-fullscreen="true" data-theme="a"  class=".center-me" data-dialog="false")
 		#smsManager_contents
 
+	//=================================================================================================================================================================================
+	//-)--> PAGE 5---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//=================================================================================================================================================================================
+
+	div(id="page_handsetController" data-role="page"  data-fullscreen="true" data-theme="a"  class=".center-me" data-dialog="true")
 
 
 
@@ -276,13 +282,10 @@ body
 		var GLOBAL_USER_NAME;
 		var commManager;
 		var deviceTokenId;
-		var contactsObject;
-		var storageObject;
 
 		var LoginManagerObject;
 		var eventObject = new EventOrigin();//TODO: move inside create event
 		var widgetSmsMessageWindowScript;
-		var deviceQuerySync;
 
 
 		//======================================================================
@@ -340,7 +343,7 @@ body
 			PageLoaderObject.loadPage('smsManager');
 		});
 		$('#btBar_main_handSet').click(function(){
-			PageLoaderObject.loadPage('handset');
+			PageLoaderObject.loadPage('handsetController');
 		});
 
 
@@ -406,6 +409,16 @@ body
 
 								loadedHash['smsManager'] = true;
 							},
+							handsetController:function(){
+								$('#page_handsetController').load("/handset/jqm/handsetcontroller ", function(){
+									console.log('loading /handset/jqm/handsetcontroller');
+									$('#page_handsetController').trigger('create');
+									$(':mobile-pagecontainer').pagecontainer('change', '#page_handsetController', {transition:'turn', reverse:'true'});
+
+								});
+
+								loadedHash['handsetController'] = true;
+							},
 
 
 
@@ -425,6 +438,10 @@ body
 								console.dir('changeing to page smsManager');
 								$(':mobile-pagecontainer').pagecontainer('change', '#page_smsManager', {reload:false,transition:'turn', reverse:'true'});
 								$('#smsManager_contents').trigger('create');
+							},
+							handsetController:function(){
+								$('#page_handsetController').trigger('create');
+								$(':mobile-pagecontainer').pagecontainer('change', '#page_handsetController', {transition:'turn', reverse:'true'});
 							},
 						},
 
@@ -481,7 +498,7 @@ body
 					PageLoaderObject.loadPage('smsManager');
 				});
 				$('#handsetControllerDiv').click(function(){
-					//openHandset();
+					PageLoaderObject.loadPage('handsetController');
 				});
 				$('#userProfileDiv').click(function(){
 					PageLoaderObject.loadPage('userProfile');
@@ -605,66 +622,24 @@ body
 							console.log('##############################################################################');
 							console.log('############ SECURITY VERIFICATION (done)' + now() + '	   			  #########');
 							console.log('##############################################################################');
+
 							createFilters();
-
-							contactsObject = new ContactsObject();
 							userObject = new UserObject(function(userErr, userData){
-									//$('#qrAccord').hide(1000);
-									GLOBAL_USER_IMAGE_URL = userData.screenImage;
-									GLOBAL_USER_NAME = userData.userName;
-									console.log('userData:');
-									console.dir(userData);
 
-									//=======================================
-									//SetUp PAGE_2 Welcome Screen
-									//=======================================
-									$('#img_loggedInUser').attr('src', userData.screenImage);
+								GLOBAL_USER_IMAGE_URL = userData.screenImage;
+								GLOBAL_USER_NAME = userData.userName;
 
-									$('#lb_loggedInUserName').text(userData.fullName);
+								$('#img_loggedInUser').attr('src', userData.screenImage);
+								$('#lb_loggedInUserName').text(userData.fullName);
 
-									contactsObject.refresh(function(contactErr, contactData){
-									console.log('contactsObject callback');
-									console.dir(contactData);
+								openWebMenuOnPhone();
 
-									openWebMenuOnPhone();
+								//=======================================================
+								// CAUSE GLOBAL LOGIN EVENT -----------------------------
+								//=======================================================
+								eventObject.reportOn('loginReady', {});
 
-									//=============================================
-									// LOGIN READY 
-									//=============================================
-									//$('#img_loginManager_userImg').attr('src',GLOBAL_USER_IMAGE_URL)
-
-									//=======================================================
-									// GLOBAL LOGIN EVENT -----------------------------------
-									//=======================================================
-									eventObject.reportOn('loginReady', {});
-
-								});
 							});
-
-							deviceQuerySync = new DeviceQuerySync(commManager);
-							storageObject = new StorageObject();
-							storageObject.getSmsLastId(function(inResultOflastId){
-								console.log('lastResultId---------------------');
-								console.dir(inResultOflastId);
-								deviceQuerySync.sms_getAllMessages(inResultOflastId, function(inSmsArray){
-									storageObject.addManySms(inSmsArray, function(inResult){
-
-
-									});
-								});
-							});
-
-
-							storageObject.getPhoneLogLastId(function(inResultOflastId){
-								deviceQuerySync.phoneLog_getAll(inResultOflastId, function(inCallLogArray){
-									storageObject.addManyPhoneLog(inCallLogArray, function(inResult){
-										console.log('storageObject.addManyPhoneLog complete');
-										console.dir(inResult);
-									});
-								});
-							});
-
-
 
 
 
@@ -716,7 +691,18 @@ body
 							$(document).on("pagehide","#page_userProfile",function(){
 
 							});
+							//@@@@@@@@@@@@@@@@@@@@@@@@@@@ PAGE  -> HANDSET CONTROLLER @@@@@@@@@@
+							$(document).on("pageshow","#page_handsetController",function(){
+								eventObject.reportOn('onOpenCloseToRemote',
+									{
+											open:true,
+											id:'mainMenu_handsetController'
+										}
+									);
+							});
+							$(document).on("pagehide","#page_handsetController",function(){
 
+							});
 
 
 
@@ -733,13 +719,10 @@ body
 					//#############################################################################################################
 
 					onFamilyDeviceConnect:function(inMsg, inLocal, inData, inRefObj){
-						//commManagerInstance.setConnectedDeviceTokenId(inCredentialsArray[index].deviceTokenId)
-						//alert("onFamilyDeviceConnect" + JSON.stringify(inData));
 						eventObject.reportOn('reconnect', inData);
 					},
 
 					onFamilyDeviceDisconnect:function(inMsg, inLocal, inData, inRefObj){
-						//alert("onFamilyDevice DIS connect" + JSON.stringify(inData));
 						eventObject.reportOn('disconnect', inData);
 					}
 				}
@@ -747,120 +730,7 @@ body
 		});
 
 
-		//#############################################################################################################
-		//--------C o n t a c t s   O b j e c t ---------------------------------------------------------
-		//#############################################################################################################
-		var ContactsObject = function(){
-			var _this = this;
-			var contactHash;
 
-			this.refresh = function(inPostFunction){
-				loadData(inPostFunction);
-			}
-
-			this.getContactByPhone = function(inNumber){
-				if(inNumber){
-					if(contactHash){
-						var theContact = contactHash[cleanPhoneNumber(inNumber)];
-						if(theContact){
-							return theContact;
-						}else{
-							//create blank contact
-							return false;
-						}
-					}
-				}
-			}
-			var uId = 0;
-			this.createUnknownContact = function(inJsonStruct){
-				if(!(inJsonStruct.phoneNumber)){return false;}
-				inJsonStruct.phoneNumber = cleanPhoneNumber(inJsonStruct.phoneNumber);
-				var params = 
-					{
-						cleanPhoneNumber: (inJsonStruct.cleanPhoneNumber) ? inJsonStruct.cleanPhoneNumber : inJsonStruct.phoneNumber,
-						companyName: "",
-						department: "",
-						emailAddress: "",
-						id: 'unknown_' + uId++,
-						imageUrl: "/public/images/characters/unknown.png",
-						name: "Unknown",
-						phoneNumber: "",
-						refNumber: "",
-						title: "",
-						userId: false
-					}
-				params = $.extend(params,inJsonStruct);
-				contactHash[inJsonStruct.phoneNumber] = params;
-				return params;
-			}
-
-			this.getAllContacts = function(){
-				if(contactHash){
-					return contactHash;
-				}
-			}
-
-			this.getAllContactsAsArray = function(){
-				var theArray = [];
-				if(contactHash){
-					for(key in contactHash){
-						theArray.push(contactHash[key]);
-					}
-				}
-				return theArray;
-			}
-
-			this.getImageUrlByPhone = function(){
-				if(inNumber){
-					if(contactHash){
-						var theContact = contactHash[cleanPhoneNumber(inNumber)];
-						if(theContact){
-							var theImageUrl = theContact.imageUrl;
-							if(theImageUrl){
-								return theContact.imageUrl;
-							}
-						}
-					}
-				}
-				return false;
-			}
-
-			var loadData = function(inPostFunction){
-				$postAjax(
-					{
-						url:'/database/getContacts',
-						send:
-							{
-
-							},
-						onAjaxSuccess:function(inResponseText){
-
-							inResponseText = JSON.parse(inResponseText);
-							var contactInfoHashByPhone = {};
-							if(inResponseText.hadError == false){
-								//console.log('inResponseText.hadError == false');
-								if(inResponseText.rows){
-									for(rowIndex in inResponseText.rows){
-										if(inResponseText.rows[rowIndex].phoneNumber){
-											var cleanedPhoneNumber = cleanPhoneNumber(inResponseText.rows[rowIndex].phoneNumber);
-											inResponseText.rows[rowIndex].cleanPhoneNumber = cleanedPhoneNumber;
-											contactInfoHashByPhone[cleanedPhoneNumber] = inResponseText.rows[rowIndex];
-										}
-									}
-									contactHash = contactInfoHashByPhone;
-								}
-							}
-							console.log('####################################################');
-							console.log('------> CONTACT OBJECTS LOADED.... <----------------');
-							console.log('####################################################');
-							if(inPostFunction){
-								inPostFunction(inResponseText.hadError, contactInfoHashByPhone);
-							}
-						}
-					}
-				);
-			}
-		}//end contactsObj...
 
 
 		//#############################################################################################################
@@ -896,7 +766,7 @@ body
 							},
 						onAjaxSuccess:function(inResponseText){
 							inResponseText = JSON.parse(inResponseText);
-							var contactInfoHashByPhone = {};
+							//var contactInfoHashByPhone = {};
 							if(inResponseText.hadError == false){
 								console.log('inResponseText.hadError == false');
 								if(inResponseText.rows){
@@ -919,29 +789,11 @@ body
 			loadData(inPostFunction);
 		}//end userObj...
 
-		//#############################################################################################################
-		//--------M E N U   O B J E C T ---------------------------------------------------------
-		//#############################################################################################################
-		//- var MenuObject = function(){
-		//- 	var _this = this;
-
-		//- 	this.load = function(){
-		//- 		$('#main_menu_lb_0').linkbutton(
-		//- 			{
-		//- 				text:'Send Sms',
-		//- 				iconCls:'icon-ok',
-		//- 				iconAlign:'left',
-		//- 				width:80
-		//- 			}
-		//- 		);
-		//- 	}
-		//- }
-
-
 
 		//------
+		var filterObj;
 		var createFilters = function(){
-			var filterObj = new commManager.FilterObject();
+			filterObj = new commManager.FilterObject();
 			filterObj.add('notification', function(inMsg, inLocal, inTransportLayer_json, inRefObj){
 
 
@@ -949,60 +801,12 @@ body
 				if(inTransportLayer_json.dataLayer.action == 'outgoingSms'){
 					console.log('outgoingSms--------------------');
 					eventObject.reportOn('outgoingSms', inTransportLayer_json);
-					// reread sync between db and phn
-					storageObject.getSmsLastId(function(inResultOflastId){
-						deviceQuerySync.sms_getAllMessages(inResultOflastId, function(inSmsArray){
-							storageObject.addManySms(inSmsArray, function(inResult){
-								if(widgetSmsMessageWindowScript){
-									if(widgetSmsMessageWindowScript){
-										if(widgetSmsMessageWindowScript.comboGetSelected()){
-											var selectedPhone = widgetSmsMessageWindowScript.comboGetSelected().phoneNumber;
-											if(selectedPhone){
-												if(inTransportLayer_json.dataLayer){
-													if(inTransportLayer_json.dataLayer.phoneNumber){
-														if(inTransportLayer_json.dataLayer.phoneNumber == selectedPhone){
-															console.log('widgetSmsMessageWindowScript.refreshGrid()--------------------');
-															widgetSmsMessageWindowScript.refreshGrid();
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							});
-						});
-					});
 				}//endOutgoingSms---
 
 
 
 
 				if(inTransportLayer_json.dataLayer.action == 'incomingSms'){
-					//eventObject.reportOn('incomingSms', inTransportLayer_json);
-					storageObject.getSmsLastId(function(inResultOflastId){
-						deviceQuerySync.sms_getAllMessages(inResultOflastId, function(inSmsArray){
-							storageObject.addManySms(inSmsArray, function(inResult){
-								if(widgetSmsMessageWindowScript){
-									if(widgetSmsMessageWindowScript){
-										if(widgetSmsMessageWindowScript.comboGetSelected()){
-											var selectedPhone = widgetSmsMessageWindowScript.comboGetSelected().phoneNumber;
-											if(selectedPhone){
-												if(inTransportLayer_json.dataLayer){
-													if(inTransportLayer_json.dataLayer.phoneNumber){
-														if(inTransportLayer_json.dataLayer.phoneNumber == selectedPhone){
-															console.log('widgetSmsMessageWindowScript.refreshGrid()--------------------');
-															widgetSmsMessageWindowScript.refreshGrid();
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							});
-						});
-					});
 					//- $.messager.show(
 					//- 	{
 					//- 		timeout:5000,
@@ -1256,10 +1060,7 @@ body
 			console.log('pageLoad_id:' + $(data.toPage).attr('id'));
 			eventObject.reportOn('onPageload', $(data.toPage).attr('id'));
 		});
-		//- $(document).on("pagechange",function(event, data){
-		//- 	console.log('id:' + $(data.toPage).attr('id'));
-		//- 	eventObject.reportOn('onPageChange', $(data.toPage).attr('id'));
-		//- });
+
 
 
 
@@ -1292,45 +1093,45 @@ body
 
 
 
-		var chunkArray;
-		var getAllSmsByNumber = function(){
-			commManager.sendTransactionSeries(
-				{
-					command:'getAllSmsByNumber', //'GetAllSmsByNumber',
-					data:
-						{
-							phoneNumber:"256-606-6202"
+		//- var chunkArray;
+		//- var getAllSmsByNumber = function(){
+		//- 	commManager.sendTransactionSeries(
+		//- 		{
+		//- 			command:'getAllSmsByNumber', //'GetAllSmsByNumber',
+		//- 			data:
+		//- 				{
+		//- 					phoneNumber:"256-606-6202"
 
-						},
-					onFirst:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
-						console.log("CALBACK onFirst");
-						chunkArray = [];
-					},
+		//- 				},
+		//- 			onFirst:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+		//- 				console.log("CALBACK onFirst");
+		//- 				chunkArray = [];
+		//- 			},
 
-					onLast:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
-						console.log("CALBACK onLast");
-						console.dir(chunkArray);
-					},
+		//- 			onLast:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+		//- 				console.log("CALBACK onLast");
+		//- 				console.dir(chunkArray);
+		//- 			},
 
-					onAll:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
-						console.log("CALBACK onAll");
+		//- 			onAll:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+		//- 				console.log("CALBACK onAll");
 
-						if(inDataLayer_json.dataArray){
-							for(index in inDataLayer_json.dataArray){
-								chunkArray.push(inDataLayer_json.dataArray[index]);
-							}
-						}
+		//- 				if(inDataLayer_json.dataArray){
+		//- 					for(index in inDataLayer_json.dataArray){
+		//- 						chunkArray.push(inDataLayer_json.dataArray[index]);
+		//- 					}
+		//- 				}
 
-						next();
-					},
-					onComplete:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
-						console.log("CALBACK onComplete");
-						console.dir(chunkArray);
-					}
+		//- 				next();
+		//- 			},
+		//- 			onComplete:function(inTransportLayer_json, inCommand, inTransactionSeriesId, inFrame, inDataLayer_json, next){
+		//- 				console.log("CALBACK onComplete");
+		//- 				console.dir(chunkArray);
+		//- 			}
 
-				}
-			);
-		}
+		//- 		}
+		//- 	);
+		//- }
 
 		var imageShakeByPhone = function(inPhone){
 			//$('img').addClass('shake');
@@ -1351,12 +1152,12 @@ body
 			
 		}
 
-		var openHandset = function(){
-			//testHandset
-			$.get( "/phone/widget_phonewindow", function(data){
-				$("#welcome_phoneWindowDiv").append(data);
-			});
-		}
+		//- var openHandset = function(){
+		//- 	//testHandset
+		//- 	$.get( "/phone/widget_phonewindow", function(data){
+		//- 		$("#welcome_phoneWindowDiv").append(data);
+		//- 	});
+		//- }
 
 
 
@@ -1432,6 +1233,35 @@ body
 				}
 			);
 		});
+
+
+		//REMOTE MENU LINK -> CONTACT MANAGER CHANGE <-------------------------------------
+		eventObject.setOn('contactManager_onChange', function(inJstruct){
+			console.log('----EVENT OBJECT--------------------');
+			console.log('REMOTE MENU LINK -> contactManager_onChange ');
+			console.dir(inJstruct);
+			commManager.transactionToDeviceToken(
+				{
+					routing:
+						{
+							command:'webMenu',
+							action:'contactManager_onChange'
+						},
+					data:inJstruct,
+			onComplete:function(inDataLayer, inTransportLayer){
+						console.log('onComplete transactionToDeviceToken COMPLETED call back entered');
+					}
+				}
+			);
+		});
+
+
+
+
+
+
+
+
 
 		//=========================================================
 		// WINDOW STATES Object
@@ -1521,12 +1351,6 @@ body
 				_this.show();
 			});
 
-			//testinONLY--------TODO:remove this event
-			$('#handsetControllerDiv').click(function(){
-				_this.show();
-			});
-
-
 			this.show = function(){
 				$postAjax(
 					{
@@ -1568,12 +1392,6 @@ body
 				_this.show();
 			});
 
-			//testinONLY--------TODO:remove this event
-			$('#handsetControllerDiv').click(function(){
-				_this.show();
-			});
-
-
 			this.show = function(){
 				openWebMenuOnPhone();
 				$postAjax(
@@ -1587,8 +1405,6 @@ body
 							},
 						onAjaxSuccess:function(inResult){
 							$('#allScreenMessageDiv').html(inResult);
-							//$('#masterDiv').fadeIn(3000);
-							//noMessageHtml = inResult; TODO: add script to edit html in dom
 							return;
 						}
 					}
@@ -1612,3 +1428,6 @@ body
 				}
 			);
 		});
+
+
+
