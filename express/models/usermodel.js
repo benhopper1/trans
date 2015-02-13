@@ -396,6 +396,7 @@ var Model = function(){
 	}
 
 	this.sendMailActivateCode = function(inDestinationAddess, inCode, inUserId){
+		console.dir('sendMailActivateCode:' + inDestinationAddess+ inCode+inUserId);
 		var transporter = nodemailer.createTransport(configData.mail.accountSetup.transporter);
 		var activateLink = _this.getHost() + '/' + 'user/activateAccount?code=' + inCode + '&userId=' + inUserId;
 		transporter.sendMail(
