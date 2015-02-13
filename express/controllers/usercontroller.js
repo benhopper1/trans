@@ -16,10 +16,10 @@ configData = JSON.parse(configData);
 module.exports.controller = function(app) {
 
 	app.get('/user/widget_userForm', function(req, res){
-		if(userModel.verifySession(req,res)){
+		//if(userModel.verifySession(req,res)){
 			res.render('users/widget_userform.jade',
 				{
-					userId:req.session.userData.userId,
+					//userId:req.session.userData.userId,
 					deviceId:"815",
 					URL:configData.domain.address + ":" + configData.domain.port,
 					androidAppRoute:configData.androidAppRoute,
@@ -31,12 +31,12 @@ module.exports.controller = function(app) {
 						}
 				}
 			);
-		}else{
+		/*}else{
 			//============================================================
 			//YOUR NOT LOGED IN ------------------------------------------
 			//============================================================
 			console.log("/jqm/contactimport    YOUR NOT LOGED IN????");
-		}
+		}*/
 	});
 
 
