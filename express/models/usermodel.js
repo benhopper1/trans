@@ -5,15 +5,37 @@ var Connection = require(__dirname + '/connection.js');
 var nodemailer = require(basePath + '/node_modules/nodemailer');
 var uuid = require(basePath + '/node_modules/node-uuid');
 var extend = require(basePath + '/node_modules/node.extend');
+var finish = require(basePath + '/node_modules/finish');
 
 connection = Connection.getInstance('arf').getConnection();
 
 
+
 //model----------------
 var Model = function(){
-	var configData = fs.readFileSync('main.conf', 'utf8');
 	var _this = this;
+	var configData = fs.readFileSync('main.conf', 'utf8');
 	configData = JSON.parse(configData);
+
+	//===========================================================
+	//CONTACT MODEL
+	//===========================================================
+	var ContactModel = require('../models/contactmodel.js');
+	var contactModel = new ContactModel();
+
+
+	//===========================================================
+	//SMS MODEL
+	//===========================================================
+	var SmsModel = require('../models/smsmodel.js');
+	var smsModel = new SmsModel();
+
+
+
+
+	var userHash = {};
+
+
 
 	var domainAddress = configData.domain.address;
 	var domainPort = configData.domain.port;
@@ -25,6 +47,14 @@ var Model = function(){
 		return domainAddress;
 	}
 
+
+	/*this.sessionSecurity = function(req, res){
+		if(req.session.userData && req.session.userData.userGuid){
+			return true;
+		}else{
+			userHash[]
+		}
+	}*/
 
 	this.verifyUserPassword = function(inUserName, inPassword, inPostFunction){
 		var sqlString = "SELECT * from tb_user WHERE userName = "+ connection.escape(inUserName) + " AND password = " + connection.escape(inPassword) + " ";
@@ -207,7 +237,9 @@ var Model = function(){
 
 
 	this.getUserDataById = function(inUserId, inPostFunction){
-		var sqlString = "SELECT * from vw_userData WHERE id=" + connection.escape(inUserId);
+		console.log('getUserDataById');
+		var sqlString = "SELECT * from vw_userData WHERE id=" + connection.escape(parseInt(inUserId));
+		console.log('sql:' + sqlString);
 		connection.query(sqlString, function(inErr, inRows, inFields){
 			if(inPostFunction){inPostFunction(inErr, inRows[0], inFields);}
 		});
@@ -216,6 +248,7 @@ var Model = function(){
 	this.verifyDeviceId = function(inUserId, inDeviceId, inPostFunction){
 		var sqlString = "SELECT * from tb_userDeviceList WHERE userId = " + connection.escape(inUserId) + " AND id = " + connection.escape(inDeviceId);
 		connection.query(sqlString, function(err, rows, fields){
+			console.dir(rows);
 			if(inPostFunction){inPostFunction((rows.length > 0));}
 		});
 	}
@@ -297,6 +330,35 @@ var Model = function(){
 		});
 	}
 
+	this.createSession = function(req, inJstruct){
+		var securityData = 
+			{
+				userId:false,
+				userGuid:false,
+				deviceId:false,
+				userGroup:false,
+				status:false,
+			}
+		securityData = extend(securityData, inJstruct);
+		console.log('createSession:');
+		console.dir(securityData);
+		req.session.userData = securityData;
+
+		console.log('Actual req.session');
+		console.dir(req.session);
+
+	}
+
+	this.verifySession = function(req, res){
+		if(req.session && req.session.userData){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+
+	//TODO remove this method not used.....
 	this.processCookie = function(inData){
 		if(typeof inData.userRecord === 'undefined'){console.log('fail no id?? / cookie but no query result');return;}
 		if(inData.userRecord.id){
@@ -356,7 +418,7 @@ var Model = function(){
 
 		var sqlString = 
 			"SELECT * from tb_user WHERE " 										+
-				"id = "+ connection.escape(fieldData.userId) 				+
+				"id = "+ connection.escape(parseInt(fieldData.userId)) 			+
 				" AND " 														+
 				"activateCode = " + connection.escape(fieldData.code)
 		;
@@ -370,7 +432,7 @@ var Model = function(){
 					"UPDATE tb_user" 													+ " " +
 						"SET active = "+ connection.escape(1) 							+ " " +
 					"WHERE " 															+ " " +
-						"id = "+ connection.escape(fieldData.userId) 				+ " " +
+						"id = "+ connection.escape(parseInt(fieldData.userId))			+ " " +
 						"AND"	 														+ " " +
 						"activateCode = " + connection.escape(fieldData.code)
 			;
@@ -484,6 +546,39 @@ var Model = function(){
 			console.log('error' + err);
 			if(inPostFunction){inPostFunction(err, result);}
 		});
+	}
+
+	this.userStartUp = function(inUserId, inPostFunction){
+		var jData = fs.readFileSync(basePath + '/public/json/userstartup.json', 'utf8');
+		jData = JSON.parse(jData);
+
+		console.dir(jData);
+
+
+		finish.map(jData.characters, function(value, done){
+			value.userId = inUserId;
+			contactModel.addContact(value, function(err, result){
+				done(null, value);
+			});
+		},
+		//completed Function(PART:0)---------------------------
+		function(err, results){
+					finish.map(jData.sms, function(value_1, done){
+						value_1.userId = inUserId;
+						smsModel.addSms(value_1, function(err, result){
+							done(null, value_1);
+						});
+				},
+
+				//completed Function(PART:1)--------------------------------
+				function(err, results){
+					if(inPostFunction){
+						inPostFunction(err, result);
+					}
+				});//finsh_1
+
+		});//finsh_0
+
 	}
 
 }

@@ -1,0 +1,4 @@
+exlclude node_modules...
+-/home/ben/git_project/trans/express/node_modules/*.*,-/home/ben/git_project/trans/websocket/node_modules/*.*,-/home/ben/git_project/trans/express/backup/*.*
+
+

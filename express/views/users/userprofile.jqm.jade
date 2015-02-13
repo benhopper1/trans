@@ -136,23 +136,11 @@ script.
 					country:$('#userProfile_country').val(),
 					screenImage:$('#userProfile_image').attr('src'),
 				}
-			//alert("storing data:" + JSON.stringify(userData));
 			return userData;
 		}
 
 		this.updateDatabase = function(inUserData, inPostFunction){
-			$postAjax(
-				{
-					url:'/database/updateUser',
-					send:inUserData,
-					onAjaxSuccess:function(inResponseText){
-						//alert(inResponseText);
-						inResponseText = JSON.parse(inResponseText);
-						_this.storeRevertData();
-						if(inPostFunction){inPostFunction(inResponseText);}
-					}
-				}
-			);
+			userDataObject.edit(inUserData, inPostFunction);
 		}
 
 		this.revertData = function(){

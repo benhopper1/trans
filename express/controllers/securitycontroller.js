@@ -4,6 +4,8 @@ var configData = fs.readFileSync(path.dirname(require.main.filename) + '/main.co
 configData = JSON.parse(configData);
 var basePath = path.dirname(require.main.filename);
 
+var UserModel = require(basePath + '/models/usermodel');
+var userModel = new UserModel();
 
 
 module.exports.controller = function(app){
@@ -83,9 +85,35 @@ module.exports.controller = function(app){
 						}
 						if(inMessage.userId){
 							res.cookie('userId', inMessage.userId, { maxAge: (60000 * 60 * 24), httpOnly: true });
-							if(inPostFunction){
+
+							userModel.getUserDataById(inMessage.userId, function(err, record, fields){
+
+								//========================================================
+								//SESSION SETUP
+								//========================================================
+								console.log('Security Mobile Login');
+								userModel.createSession(req, 
+									{
+										userId:record.id,
+										userGuid:record.userGuid,
+										deviceId:false,
+										userGroup:record.userGroup,
+										status:record.status,
+									}
+								);
+
+
+								if(inPostFunction){
+									inPostFunction(true, inMessage.userId);
+								}
+							});
+							//var sessionSecurityOk = userModel.sessionSecurity(req, res);
+							//console.log('sessionSecurityOk:' + sessionSecurityOk);
+
+
+							/*if(inPostFunction){
 								inPostFunction(true, inMessage.userId);
-							}
+							}*/
 						}
 
 					}

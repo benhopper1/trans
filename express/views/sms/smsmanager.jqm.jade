@@ -171,6 +171,8 @@ script.
 			if(initGaurd){return;}
 			initGaurd = true;
 
+
+
 			$('#contactsMenu_sms').ContactListView('create', 
 				{
 					test:'hopperTestrVal55',
@@ -433,12 +435,13 @@ script.
 					imageUrl:'',
 					date:'',
 					body:'',
+					class:'',
 				}
 			fieldData = $.extend(fieldData, inParams);
 			var result = 
 				[
 					'',
-					'<center><img src="' + fieldData.imageUrl + '" height="60px" class="magicSquare"></img></center>',
+					'<center><img src="' + fieldData.imageUrl + '" height="60px" class="magicSquare ' + fieldData.class + '"></img></center>',
 					'<center><h6>' + fieldData.date + '</h6></center>',
 					(fieldData.body.length < 21)? fieldData.body : fieldData.body.substring(0, 20) + '...',
 					'<h6>' + fieldData.body + '</h6>',
@@ -616,6 +619,7 @@ script.
 						if(contact){
 							_this.addContactToHotLinks(contact);
 						}else{
+							// contact not in contacts list??? Generate tmp one
 							//alert('unknown number!! incomingSms:' + JSON.stringify(inTransportLayer_Json.dataLayer));
 							var theContacts = $('#contactsMenu_sms').ContactListView('addTempContacts',
 								[
@@ -674,7 +678,8 @@ script.
 											{
 												imageUrl:selectedContactData.imageUrl,
 												date:now(),
-												body:inTransportLayer_Json.dataLayer.msg
+												body:inTransportLayer_Json.dataLayer.msg,
+												class:'hopper',
 											}
 										),
 										data:selectedContactData,
@@ -730,7 +735,8 @@ script.
 											{
 												imageUrl:GLOBAL_USER_IMAGE_URL,
 												date:now(),
-												body:inTransportLayer_Json.dataLayer.msg
+												body:inTransportLayer_Json.dataLayer.msg,
+												class:'hopper',
 											}
 										),
 										data:selectedContactData,

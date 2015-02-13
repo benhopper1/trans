@@ -47,11 +47,6 @@ body
 							input(data-icon="back" id="bt_contactEdit_clear" 	data-mini="true" type="button" value="Clear")
 						div(class="ui-block-c" style="width:33%")
 							input(data-icon="delete" id="bt_contactEdit_delete" 	data-mini="true" type="button" value="Delete Contact")
-					//label(for="fs_contactEdit_isActive") Active Contact:
-					//input(type="checkbox" id="fs_contactEdit_isActive" data-role="flipswitch")
-					//select(id="select-based-flipswitch" data-role="flipswitch")
-						//option(value="active") Active
-						//option(value="delete") Delete
 
 
 
@@ -61,7 +56,6 @@ script.
 	$( "#pg_page_2").on( "pageshow", function( event, ui ){
 		console.log('PAGE SHOW--------------------------ContactManager');
 		$('#contactsMenu').ContactListView('setSelectedByIndex', 0);
-		//$( "#pg_page_2").fixedToolbars.hide(true)
 	});
 	//=========================================================
 	// JQM EXTENSION HorizontalRadioGroup
@@ -98,7 +92,6 @@ script.
 
 				],
 			onSelect:function(inCaption){
-				//alert(inCaption);
 			}
 		}
 	);
@@ -134,22 +127,18 @@ script.
 		);
 	});
 
-	//$(document).on("pageshow","#pg_page_2",function(){
-	//});
+
 
 
 	contactDataObject.getEventObject().setOn('onAfterInsert', function(inData){
-		//alert('onAfterInsert');
 		console.dir(inData);
 		$('#contactsMenu').ContactListView('refresh');
 	});
 	contactDataObject.getEventObject().setOn('onAfterEdit', function(inData){
-		//alert('onAfterEdit');
 		console.dir(inData);
 		$('#contactsMenu').ContactListView('refresh');
 	});
 	contactDataObject.getEventObject().setOn('onAfterDelete', function(inData){
-		//alert('onAfterEdit');
 		console.dir(inData);
 		$('#contactsMenu').ContactListView('refresh');
 	});
@@ -219,6 +208,8 @@ script.
 				$('#contactEdit_title').val('');
 				$('#contactEdit_ref').val('');
 				$('#contactEdit_type').HorizontalRadioGroup('setSelected', 0);
+
+				//$('#contactModeSelect').ComboBox('selectByIndex', 0);
 				return true;
 			},
 			saveProcess:function(inSerializedData, inSaveType, next, cancel){
@@ -229,6 +220,7 @@ script.
 						type:inSerializedData.type
 					}
 				);
+
 
 				if(theId){
 					//could be edit and must be same id being edited, not an insert
@@ -263,7 +255,6 @@ script.
 				}
 			},
 			onSave:function(inData){
-				//alert('Data Saved' + JSON.stringify(inData));
 			},
 			whenDirtyTransition:function(inData, save, next){
 				console.dir(inData);
@@ -355,63 +346,25 @@ script.
 		$('#contactModeSelect').ComboBox('selectByIndex', 0);
 	});
 
+	$('#bt_contactEdit_delete').click(function(){
+		var data = $('#contactsWindow').DataBinderObject('toJson');
+		if(data){
+			contactDataObject.delete(data, function(inData){
+				$('#contactsMenu').ContactListView('setSelectedByIndex', 0);
+			});
+			$('#contactsWindow').DataBinderObject('clear');
+
+		}
+
+	});
 
 	eventObject.setOn('contactMenu_itemClick', function(inData){
 		$('#contactsWindow').DataBinderObject('load', inData);
 		$('#contactModeSelect').ComboBox('changeCaption', {index:0,caption:'Editing ' + inData.name});
 		$('#contactModeSelect').ComboBox('selectByIndex', 0);
 	});
-	eventObject.setOn('contactMenu_onLongClick', function(inData){
-		//alert('contactMenu_onLongClick');
-		console.dir(inData);
-		contactDataObject.delete(inData, function(inData){
-			//alert(JSON.stringify(inData));
-		})
+
+	contactDataObject.getEventObject().setOn('onAfterDelete', function(){
+		console.log('hkjdkasjhksdjfhskdfhskdjfhksjdhfksjdhfkjsdhkfjshkdjfhksdjfhksjdhfksjdhfkj');
+		$('#contactsMenu').ContactListView('setSelectedByIndex', 0);
 	});
-
-	$('#btBar_contactManager_back5').click(function(){
-		//- $('html, body').animate({
-		//- 	scrollTop: $('#bt_contactEdit_clear').offset().top
-		//- });
-		//- $('#txt').animate({
-		//- 	scrollTop: $('#contactsMenu_362').offset().top
-		//- });
-		$('#contactsMenu').ContactListView('scrollToSelected');
-
-		
-	});
-	$('#btBar_contactManager_back3').click(function(){
-	});
-
-	$('#btBar_contactManager_back4').click(function(){
-		$('#contactsWindow').DataBinderObject('setDirtyMark');
-	});
-
-	$( "#contactsMenu_275" ).bind( "taphold", function(){
-		//alert('LONG HOLD');
-		contactDataObject.delete({id:'275'}, function(inData){
-			//alert(JSON.stringify(inData));
-		})
-	});
-
-
-	//$('#contactsMenu').ContactListView('setSelectedByIndex', 0);
-
-	//- this.deleteSelectedContact = function(){
-	//- 			$postAjax(
-	//- 				{
-	//- 					url:'database/deleteContact',
-	//- 					send:
-	//- 						{
-	//- 							id:$('#widgetContactsCollectionDataGrid').datagrid('getSelected').id
-	//- 						},
-	//- 					onAjaxSuccess:function(inResponseText){
-	//- 						inResponseText = JSON.parse(inResponseText);
-	//- 						console.dir(inResponseText);
-	//- 						_this.gridDeleteRow(_this.getSelectedRowIndexFromGrid());
-	//- 						_this.gridSelectFirstRow();
-	//- 						eventObject.reportOn('refreshOnRemote', '');
-	//- 					}
-	//- 				}
-	//- 			);
-	//- 		}

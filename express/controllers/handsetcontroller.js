@@ -10,26 +10,32 @@ module.exports.controller = function(app){
 
 
 	app.get('/handset/widget_handset', function(req, res){
-		console.log("/phone/widget_documentReport get ");
-		res.render('handset/handset.jade',
-			{
-				userId:req.cookies.userId,
-				deviceId:"815",//req.cookies.deviceId,
-				URL:configData.domain.address + ":" + configData.domain.port,
-				webSocketClient:configData.webSocketClient,
-				defaultUserImageUrl:configData.defaultUserImageUrl,
-				defaultMemberImageUrl:configData.defaultMemberImageUrl,
-				data:req.query
-			}
-		);
+		if(userModel.verifySession(req,res)){
+			res.render('handset/handset.jade',
+				{
+					userId:req.session.userData.userId,
+					deviceId:"815",//req.cookies.deviceId,
+					URL:configData.domain.address + ":" + configData.domain.port,
+					webSocketClient:configData.webSocketClient,
+					defaultUserImageUrl:configData.defaultUserImageUrl,
+					defaultMemberImageUrl:configData.defaultMemberImageUrl,
+					data:req.query
+				}
+			);
+		}else{
+			//============================================================
+			//YOUR NOT LOGED IN ------------------------------------------
+			//============================================================
+			console.log("/jqm/contactimport    YOUR NOT LOGED IN????");
+		}
 	});
 
 	app.get('/handset/jqm/handsetcontroller', function(req, res){
-		if(req.cookies.userId){
+		if(req.session.userData.userId){
 			console.log("/jqm/smsManager");
 			res.render('handset/handset.jqm.jade',
 				{
-					userId:req.cookies.userId,
+					userId:req.session.userData.userId,
 					deviceId:"815",//req.cookies.deviceId,
 					URL:configData.domain.address + ":" + configData.domain.port,
 					androidAppRoute:configData.androidAppRoute,

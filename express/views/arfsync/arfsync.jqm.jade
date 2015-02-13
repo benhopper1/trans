@@ -24,7 +24,11 @@ head
 	script(src="/public/js/jquery/hopper/jquery.hopper.extension.dynamictable.js")
 	//script(src="/public/js/jquery/hopper/jquery.hopper.extension.footable.js")
 
-	
+
+	//script(src="/public/js/scrollto/vendor/jquery.js")
+	script(src="/public/js/scrollto/lib/jquery-scrollto.js")
+
+
 
 
 	script(src="/public/js/footable/js/footable.js")
@@ -381,9 +385,9 @@ body
 										$('#tab_editContact').trigger('create');
 
 									});
-									loadedHash['contactManager'] = true;
 
-								$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_2', {reload:false, transition:'turn', reverse:'true'});
+									loadedHash['contactManager'] = true;
+									$(':mobile-pagecontainer').pagecontainer('change', '#pg_page_2', {reload:false, transition:'turn', reverse:'true'});
 								});
 							},
 							userProfile:function(){
@@ -394,30 +398,31 @@ body
 								});
 							},
 							smsManager:function(){
-								$('#smsManager_contents').load("/jqm/smsManager ", function(){
-									console.log('loading userprofile');
+								console.log('checklll');
+								$('#smsManager_contents').load("/jqm/smsManager ", function(response, status, xhr){
+									console.log('loading smsManager');
+									console.log('response:' + response);
+									console.log('status:' + status);
+									console.log('xhr:' + xhr);
 									$('#smsManager_contents').trigger('create');
 
 									//load popup----
 									$('#contactPopup_sms').load("/jqm/contactselectpopup ", function(){
 										console.log('popup thingy loaded!');
 									});
-
+									loadedHash['smsManager'] = true;
 									$(':mobile-pagecontainer').pagecontainer('change', '#page_smsManager', {transition:'turn', reverse:'true'});
 
 								});
 
-								loadedHash['smsManager'] = true;
 							},
 							handsetController:function(){
 								$('#page_handsetController').load("/handset/jqm/handsetcontroller ", function(){
 									console.log('loading /handset/jqm/handsetcontroller');
 									$('#page_handsetController').trigger('create');
 									$(':mobile-pagecontainer').pagecontainer('change', '#page_handsetController', {transition:'turn', reverse:'true'});
-
+									loadedHash['handsetController'] = true;
 								});
-
-								loadedHash['handsetController'] = true;
 							},
 
 
@@ -790,6 +795,14 @@ body
 		}//end userObj...
 
 
+
+
+
+
+
+
+
+
 		//------
 		var filterObj;
 		var createFilters = function(){
@@ -1039,8 +1052,82 @@ body
 			}
 		);
 
+		//=====================================================================================================================
+		//DATA OBJECT
+		//=====================================================================================================================
+		
+		var userDataObject = new DatabaseObject(
+			{
+				editProcess:function(inData, inPostFunction){
+					$postAjax(
+						{
+							url:'/database/updateUser',
+							send:inData,
+							onAjaxSuccess:function(inResponseText){
+								//inResponseText = JSON.parse(inResponseText);
+								inPostFunction(inData);
+							}
+						}
+					);
+				},
+				selectProcess:function(inData, inPostFunction){
+					$postAjax(
+						{
+							url:'/database/getUserData',
+							send:
+								{
+
+								},
+							onAjaxSuccess:function(inResponseText){
+								inResponseText = JSON.parse(inResponseText).rows;
+								inPostFunction(inResponseText);
+							}
+						}
+					);
+				},
+				insertProcess:function(inData, inPostFunction){
+					//- $postAjax(
+					//- 	{
+					//- 		url:'/database/addContact',
+					//- 		send:inData,
+					//- 			//{
+					//- 			//},
+					//- 		onAjaxSuccess:function(inResponseText){
+					//- 			inResponseText = JSON.parse(inResponseText);
+					//- 			inPostFunction(inResponseText);
+					//- 		}
+					//- 	}
+					//- );
+				},
+				deleteProcess:function(inData, inPostFunction){
+					//- $postAjax(
+					//- 	{
+					//- 		url:'/database/deleteContact',
+					//- 		send:
+					//- 			{
+					//- 				id:inData.id
+					//- 			},
+					//- 		onAjaxSuccess:function(inResponseText){
+					//- 			inResponseText = JSON.parse(inResponseText);
+					//- 			inPostFunction(inResponseText);
+					//- 		}
+					//- 	}
+					//- );
+				},
+			}
+		);
 
 
+		userDataObject.getEventObject().setOn('onAfterEdit', function(inData){
+			var oldImageUrl = GLOBAL_USER_IMAGE_URL + '';
+			GLOBAL_USER_IMAGE_URL = inData.screenImage;
+
+			$('img').each(function(){
+				if(oldImageUrl == $(this).attr('src')){
+					$(this).attr('src', GLOBAL_USER_IMAGE_URL);
+				}
+			});
+		});
 
 
 

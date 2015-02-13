@@ -4,10 +4,34 @@ var configData = fs.readFileSync(path.dirname(require.main.filename) + '/main.co
 configData = JSON.parse(configData);
 
 module.exports.controller = function(app){
+	app.get('/angtestSession', function(req, res){
+		console.dir(req.session);
+		req.session.user = 
+			{
+				test0:'test0value',
+				test1:'test1value',
+			}
+		res.end();
+	});
 
 	app.get('/angtest', function(req, res){
 		console.log("/angtest");
-		res.render('angtest/angtest.jade',{});
+		console.log('session');
+		console.dir(req.session);
+		/*req.session.user = 
+			{
+				test0:'test0value',
+				test1:'test1value',
+			}
+		;*/
+		res.locals.user = 'billy';
+		res.render('angtest/angtest.jade',
+			{
+				body:req.body,
+				//req:req,
+				test:'ben'
+			}
+		);
 	});
 
 	app.post('/angtest', function(req, res){

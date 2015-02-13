@@ -8,9 +8,9 @@ html
 		meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
 
 
-		link(rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css")
-		script(src="http://code.jquery.com/jquery-1.11.1.min.js")
-		script(src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js")
+		link(rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css")
+		script(src="https://code.jquery.com/jquery-1.11.1.min.js")
+		script(src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js")
 		script(src="/public/js/jquery/hopper/jquery.hopper.extention.js")
 
 		script(type='text/javascript', src='/js/clientutil/clientutil.js')
@@ -159,6 +159,13 @@ html
 				//input(data-icon="action" id="bt_login_postMail" 	type="button" value="Login" style="")
 
 			script.
+				var renderData = !{JSON.stringify(body)}
+
+				console.log('renderData');
+				console.dir(renderData);
+
+
+
 				var Widget_userFormScript;
 				$(document).ready(function(){
 
@@ -172,7 +179,8 @@ html
 							// EVENT SETUP
 							//==============================================
 							$('#addEditUser_save').click(function(){
-								_this.addToStore();
+								//_this.addToStore();
+								
 							});
 
 
@@ -182,7 +190,7 @@ html
 
 								$postAjax(
 									{
-										url:'/database/phonecache/checkCacheNeeds',
+										url:'/user/userStartUp',
 										send:
 											{
 											},

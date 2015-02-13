@@ -18,9 +18,9 @@ module.exports.controller = function(app){
 
 	app.get('/jqm/arfsync', function(req, res){
 		console.log("/jqm/arfsync");
-		req.session.destroy(function(err) {
+		/*req.session.destroy(function(err) {
 			console.log('Session Started');
-		})
+		})*/
 		if(app.isMobile(req.headers['user-agent'])){
 			res.render('mobile/mobilearfsync.jade',
 				{

@@ -132,6 +132,7 @@ var ContactListView = function(inJsonStruct){
 		delete contactListViewHash[inId];
 		$(theDivRef).listview().listview('refresh');
 		if(options.onChange){options.onChange('delete', {id:inId});}
+		_this.setSelectedByIndex(0);
 	}
 
 	this.toggleState = function(inJref){
@@ -212,10 +213,10 @@ var ContactListView = function(inJsonStruct){
 							options.onLongClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
 						}
 					});
-					//contactListViewHash[Object.keys(contactListViewHash)[Object.keys(contactListViewHash).length -1].id]
 					_this.setSelectedByIndex(0);
-					//was added-----
-					var passingRecord = $.extend(inRecords[contactIndex],{jRef:false});
+
+					var passingRecord = $.extend({}, inRecords[contactIndex]);
+					passingRecord.jRef = false;
 					if(options.onChange){options.onChange('add', passingRecord);}
 
 
@@ -234,6 +235,16 @@ var ContactListView = function(inJsonStruct){
 					}
 				}
 			}
+
+
+			/*var _contactListArray = [];
+			for(var contactListViewHashIndex in _contactListArray){
+				contactListArray.push(_contactListArray[contactListViewHashIndex].id);
+			}
+			var theDiff = arrayDiff(_contactListArray, inRecords);
+			alert(JSON.stringify(theDiff));*/
+
+
 
 			var dbArray = [];
 			for(var inRecordsIndex in inRecords){
@@ -259,9 +270,10 @@ var ContactListView = function(inJsonStruct){
 
 			//var willDelete = removeArray.length > 0;
 			for(var removeArrayIndex in removeArray){
-				//$(removeArray[removeArrayIndex].jRef).remove();
-				//alert('jref:' + $(contactListViewHash[removeArray[removeArrayIndex]].jRef).attr('id'));
 				$(contactListViewHash[removeArray[removeArrayIndex]].jRef).remove();
+
+				//$('#' + $(theDivRef).attr('id') + contactListViewHash[removeArray[removeArrayIndex]].id).remove();
+
 				var deletionId = contactListViewHash[removeArray[removeArrayIndex]].id;
 				var deletionName = contactListViewHash[removeArray[removeArrayIndex]].name;
 				var deletionType = contactListViewHash[removeArray[removeArrayIndex]].type;
@@ -277,6 +289,9 @@ var ContactListView = function(inJsonStruct){
 						}
 					);
 				}
+			}
+			if(removeArray.length ){
+				_this.setSelectedByIndex(0);
 			}
 			$(theDivRef).listview().listview('refresh');
 			//if(willDelete){
@@ -297,11 +312,15 @@ var ContactListView = function(inJsonStruct){
 			console.log('lastSelected');
 			console.dir(lastSelected);
 			console.dir($(theDivRef).parent());
-			$(theDivRef).parent().animate(
+			/*$(theDivRef).parent().animate(
 				{
 					scrollTop: $('#' + uid + '_' + theSelectedId).offset().top
-				}
-			);
+				},
+				100
+			);*/
+			$('#' + uid + '_' + theSelectedId).ScrollTo({
+				onlyIfOutside: true
+			});
 		}
 
 	}
@@ -499,11 +518,14 @@ var ContactListView = function(inJsonStruct){
 		var contactId = contactListViewHash[inId].id;
 		if(contactId){
 			$('#' + $(options.divRef).attr('id') + '_' + contactId).find('.trans-bkg-a-hv').trigger('click');
+			if(options.autoScrollOnSelect){ _this.scrollToSelected(); }
 		}
 	}
 
 	this.setSelectedByIndex = function(inIndex){
-		if(!(inIndex < contactListViewHash.length)){return false;}
+		if(Object.keys(contactListViewHash).length){return false;}
+
+		if(inIndex > Object.keys(contactListViewHash).length-1){return false;}
 		$('#' + $(options.divRef).attr('id') + '_' + contactListViewHash[Object.keys(contactListViewHash)[0]].id  ).find('.trans-bkg-a-hv').trigger('click');
 		if(options.autoScrollOnSelect){ _this.scrollToSelected(); }
 		return ;
@@ -966,6 +988,10 @@ $.fn.DataBinderObject = function(inAction, inJsonStruct){
 	if(inAction == 'setMode'){
 		return dataBinderObject.setMode(inJsonStruct);
 	}
+
+	if(inAction == 'toJson'){
+		return dataBinderObject.toJson();
+	}
 }
 
 
@@ -1254,7 +1280,9 @@ var ComboBox = function(inJsonStruct){
 	}
 
 	this.selectByIndex = function(inIndex){
+		//alert('select6777');
 		var lookupId = options.id + '_opt_' + inIndex;
+		//var lookupId = options.id + '_' + inIndex;
 		$('#' + lookupId).prop('selected', 'selected');
 		$('#' + options.id).selectmenu('refresh');
 		if(options.onSelect){

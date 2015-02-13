@@ -35,7 +35,7 @@ module.exports.controller = function(app){
 
 		//-----P O S T ---------------------------------
 	app.post('/upload', function(req, res){
-		console.log('USERID=>:' + req.cookies.userId);
+		console.log('USERID=>:' + req.session.userData.userId);
 
 		var form = new multiparty.Form();
 		form.parse(req, function(err, fields, files){
@@ -89,7 +89,7 @@ module.exports.controller = function(app){
 
 		//-----P O S T ---------------------------------
 	app.post('/uploadAsTemp', function(req, res){
-		console.log('USERID=>:' + req.cookies.userId);
+		console.log('USERID=>:' + req.session.userData.userId);
 
 		var form = new multiparty.Form();
 		form.parse(req, function(err, fields, files){
@@ -160,7 +160,7 @@ module.exports.controller = function(app){
 
 
 	app.post('/upload/contact/image', function(req, res){
-		console.log('USERID=>:' + req.cookies.userId);
+		console.log('USERID=>:' + req.session.userData.userId);
 
 		var form = new multiparty.Form();
 		form.parse(req, function(err, fields, files){
@@ -269,7 +269,7 @@ module.exports.controller = function(app){
 	});
 
 	app.post('/upload/user/image', function(req, res){
-		console.log('USERID=>:' + req.cookies.userId);
+		console.log('USERID=>:' + req.session.userData.userId);
 
 		var form = new multiparty.Form();
 		form.parse(req, function(err, fields, files){
@@ -389,7 +389,7 @@ module.exports.controller = function(app){
 
 
 	app.post('/upload/phone/cache', function(req, res){
-		console.log('USERID=>:' + req.cookies.userId);
+		console.log('USERID=>:' + req.session.userData.userId);
 
 		var form = new multiparty.Form();
 		form.parse(req, function(err, fields, files){
@@ -460,7 +460,7 @@ module.exports.controller = function(app){
 								hashCode_2:fieldsHash.hashCode_2,
 								hashCode_3:fieldsHash.hashCode_3,
 
-								userId:req.cookies.userId,
+								userId:req.session.userData.userId,
 	  						}, 
 	  						function(err, result){
 	  							res.setHeader('Content-Type', 'application/json');
@@ -481,8 +481,8 @@ module.exports.controller = function(app){
 
 	app.post('/database/fileCache/add', function(req, res){
 		console.log("/database/phonelog/getLast");
-		console.log('---------userId---------------------------------:' +  req.cookies.userId);
-		req.body['userId'] = req.cookies.userId; 
+		console.log('---------userId---------------------------------:' +  req.session.userData.userId);
+		req.body['userId'] = req.session.userData.userId; 
 		fileCacheModel.add(req.body, function(err, result){
 			res.setHeader('Content-Type', 'application/json');
 			res.end(JSON.stringify(
@@ -497,8 +497,8 @@ module.exports.controller = function(app){
 
 	app.post('/database/fileCache/getByHashCodes', function(req, res){
 		console.log("/database/fileCache/getByHashCodes");
-		console.log('---------userId---------------------------------:' +  req.cookies.userId);
-		req.body['userId'] = req.cookies.userId; 
+		console.log('---------userId---------------------------------:' +  req.session.userData.userId);
+		req.body['userId'] = req.session.userData.userId; 
 		fileCacheModel.getByHashCodes(req.body, function(err, result){
 			res.setHeader('Content-Type', 'application/json');
 			res.end(JSON.stringify(

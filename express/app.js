@@ -31,7 +31,16 @@ var bodyParser = require('./node_modules/body-parser');
 var logger = require('./node_modules/morgan');
 var methodOverride = require('./node_modules/method-override');
 var cookieParser = require('./node_modules/cookie-parser');
-var expressSession = require('./node_modules/express-session');
+//var expressSession = require('./node_modules/express-session');
+
+//============================================================
+//  Sesion Library
+//============================================================
+var session = require('./node_modules/client-sessions');
+
+
+
+
 var router = require('./node_modules/router')();
 
 //TODO: --build db connection HERE--------
@@ -68,7 +77,19 @@ app.use(bodyParser.json({limit:'50mb'}));
 app.use(methodOverride());
 app.use(cookieParser('server secret here'));
 
-app.use(expressSession(
+
+//============================================================
+//  Session Config
+//============================================================
+app.use(session({
+	cookieName: 'session',
+	secure:false,
+	secret: 'random_string_goes_here',
+	duration: 24 *(60 * 60 * 1000),
+	activeDuration: 5 * 60 * 1000,
+}));
+
+/*app.use(expressSession(
 	{
 		cookie:
 			{
@@ -78,7 +99,7 @@ app.use(expressSession(
 		saveUninitialized: true, 
 		resave: true
 	}
-));
+));*/
 
 app.use(router);
 
