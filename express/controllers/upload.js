@@ -160,7 +160,7 @@ module.exports.controller = function(app){
 
 
 	app.post('/upload/contact/image', function(req, res){
-		console.log('USERID=>:' + req.session.userData.userId);
+		//console.log('USERID=>:' + req.session.userData.userId);
 
 		var form = new multiparty.Form();
 		form.parse(req, function(err, fields, files){
