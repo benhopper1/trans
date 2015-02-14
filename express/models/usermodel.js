@@ -627,6 +627,7 @@ var Model = function(){
 	}
 
 	this.userStartUp = function(inUserId, inPostFunction){
+		console.log('userStartUp ENTERED');
 		var jData = fs.readFileSync(basePath + '/public/json/userstartup.json', 'utf8');
 		jData = JSON.parse(jData);
 
@@ -634,6 +635,7 @@ var Model = function(){
 
 		finish.map(jData.characters, function(value, done){
 			value.userId = inUserId;
+			console.log('finish.map, adding contact');
 			contactModel.addContact(value, function(err, result){
 				done(null, value);
 			});
@@ -642,6 +644,7 @@ var Model = function(){
 		function(err, results){
 					finish.map(jData.sms, function(value_1, done){
 						value_1.userId = inUserId;
+						console.log('finish.map, adding addSms');
 						smsModel.addSms(value_1, function(err, result){
 							done(null, value_1);
 						});
@@ -650,7 +653,7 @@ var Model = function(){
 				//completed Function(PART:1)--------------------------------
 				function(err, results){
 					if(inPostFunction){
-						inPostFunction(err, result);
+						inPostFunction(err, results);
 					}
 				});//finsh_1
 
