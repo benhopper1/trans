@@ -512,7 +512,12 @@ var Model = function(){
 			console.log('sql(II):' + sqlString);
 			// PART II
 			connection.query(sqlString, function(err, result){
-				if(inPostFunction){inPostFunction(err, result);}
+				if(!(err)){
+					//add newbi stuff to database for new user account.....
+					_this.userStartUp(fieldData.userId, inPostFunction);
+				}
+
+				//if(inPostFunction){inPostFunction(err, result);}
 			});
 
 			}else{
@@ -626,7 +631,6 @@ var Model = function(){
 		jData = JSON.parse(jData);
 
 		console.dir(jData);
-
 
 		finish.map(jData.characters, function(value, done){
 			value.userId = inUserId;
