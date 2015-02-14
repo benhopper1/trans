@@ -2,10 +2,14 @@ var path = require('path');
 var basePath = path.dirname(require.main.filename);
 var fs = require('fs');
 var Connection = require(__dirname + '/connection.js');
-var nodemailer = require(basePath + '/node_modules/nodemailer');
+//var nodemailer = require(basePath + '/node_modules/nodemailer');
 var uuid = require(basePath + '/node_modules/node-uuid');
 var extend = require(basePath + '/node_modules/node.extend');
 var finish = require(basePath + '/node_modules/finish');
+
+var Mail = require(basePath + '/library/mail/mail.js');
+
+var querystring = require('querystring')
 
 connection = Connection.getInstance('arf').getConnection();
 
@@ -16,6 +20,15 @@ var Model = function(){
 	var _this = this;
 	var configData = fs.readFileSync('main.conf', 'utf8');
 	configData = JSON.parse(configData);
+
+	var mail = new Mail(
+		{
+			user:configData.mail.user,
+			password:configData.mail.password,
+			host:configData.mail.host,
+			ssl:configData.mail.ssl,
+		}
+	);
 
 	//===========================================================
 	//CONTACT MODEL
@@ -397,16 +410,75 @@ var Model = function(){
 
 	this.sendMailActivateCode = function(inDestinationAddess, inCode, inUserId){
 		console.dir('sendMailActivateCode:' + inDestinationAddess+ inCode+inUserId);
-		var transporter = nodemailer.createTransport(configData.mail.accountSetup.transporter);
 		var activateLink = _this.getHost() + '/' + 'user/activateAccount?code=' + inCode + '&userId=' + inUserId;
-		transporter.sendMail(
+		console.log('activateLink:' + activateLink);
+
+
+		//querystring = require('querystring')
+
+		/*var dict_0 = 
+			{ 
+				code:inCode,
+			}
+
+		var dict_1 = 
+			{
+				userId:inUserId
+			}
+
+
+		var url = _this.getHost() + '/' + 'user/activateAccount/code=' + querystring.stringify(dict_0) + '?userId' + querystring.stringify(dict_1);   //'http://google.com/?q=' + querystring.stringify(dict);
+		url = encodeURIComponent(url);
+		url = url.replace(/'/g,"%27");
+*/
+
+		/*var html = 
+			'<div>' 					+
+				'<h1>Welcome to 22 ArfSync</h1>' 	+
+				'<a href="' + activateLink + '"></a>' 			+ 
+			'</div>'
+		;*/
+		//<a href="' + activateLink + '"></a>
+		var html = '<html>'					+
+					'<head></head>'					+
+						'<body>'					+
+							'<h1>You are ArfSync\'s newest valued customer</h1>' + 
+							'<br><br>' + 
+							'<a href="' + activateLink + '" >Click to Activate Your ArfSync Account</a>'					+
+							//'<img src="http://192.168.0.16:35001/jqm/arfsync/public/images/ui/android_sms.png" />'					+
+						'</body>'					+
+					'</html>'
+		;
+
+
+		mail.send(
+			{
+
+				text:'Welcome to ArfSync 33  ' + activateLink,
+				fromCaption:configData.mail.fromCaption,
+				to:inDestinationAddess,
+				//cc:'else <else@your-email.com>',
+				subject:'ArfComm Activation',
+				//html:'<div>Welcome to <h1>ArfSync</h1>  Click link to activate your account \n ' + activateLink + '</div>',
+				html:html,
+
+			}, function(err, message){
+				console.log('MAIL SENT');
+				console.dir(err);
+				console.dir(message);
+			}
+		);
+
+
+		//var transporter = nodemailer.createTransport(configData.mail.accountSetup.transporter);
+		/*transporter.sendMail(
 			{
 			    from: 'arfcomm@gmail.com',
 			    to: inDestinationAddess,
 			    subject: 'ArfComm Activation Code',
 			    text: 'Click link to activate your account \n ' + activateLink
 			}
-		);
+		);*/
 	}
 
 	this.activateUserAccount = function(inParams, inPostFunction){

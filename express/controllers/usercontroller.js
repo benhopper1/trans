@@ -163,7 +163,7 @@ module.exports.controller = function(app) {
 
 	app.get('/user/activateAccount', function(req, res){
 		var queryObject = url.parse(req.url,true).query;
-		if(userModel.verifySession(req,res)){
+		//if(userModel.verifySession(req,res)){
 			userModel.activateUserAccount(queryObject, function(err, result){
 				if(!(err)){
 					res.render('users/checkaccount.jade',
@@ -182,12 +182,12 @@ module.exports.controller = function(app) {
 					);
 				}
 			});
-		}else{
+		//}else{
 			//============================================================
 			//YOUR NOT LOGED IN ------------------------------------------
 			//============================================================
-			console.log("/jqm/contactimport    YOUR NOT LOGED IN????");
-		}
+		//	console.log("/jqm/contactimport    YOUR NOT LOGED IN????");
+		//}
 
 	});
 
