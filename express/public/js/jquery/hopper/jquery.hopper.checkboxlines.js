@@ -21,6 +21,7 @@ var CheckboxLines = function(inJrefOfThis, inJsonStruct){
 		}
 	options = $.extend(options, inJsonStruct);
 	theDivRef = options.divRef;
+	//heDivRef = $.extend({}, options.divRef); //worked but changed back
 
 	this.test = function(){
 		alert('checkboxLines TEST');
@@ -56,6 +57,23 @@ var CheckboxLines = function(inJrefOfThis, inJsonStruct){
 	//create the container here
 	createContainer();
 
+	this.editItem = function(inJ){
+		var itemOptions = 
+			{
+				caption:'noCaption',
+				lookupId:false,
+				data:false,
+			}
+		itemOptions = $.extend(itemOptions, inJ);
+		var storedData = $(inJrefOfThis).data("itemHash")[itemOptions.lookupId];
+		if(storedData){
+			storedData.data = itemOptions.data;
+		}
+		$('.sms-pop-' + itemOptions.lookupId).html(itemOptions.caption);
+	}
+
+
+
 	this.addItem = function(inJ){
 		var tmpGuid = new Date().getTime() + '';
 		var itemOptions = 
@@ -69,7 +87,7 @@ var CheckboxLines = function(inJrefOfThis, inJsonStruct){
 			}
 		itemOptions = $.extend(itemOptions, inJ);
 		var html = '' + 
-			'<label style="background-color: transparent !important;" for="' + itemOptions.id + '">' + itemOptions.caption + '</label>' + '' + 
+			'<label class="sms-pop-' + itemOptions.lookupId + '" style="background-color: transparent !important;" for="' + itemOptions.id + '">' + itemOptions.caption + '</label>' + '' + 
 			'<input type="checkbox" name="' + itemOptions.id + '" id="' + itemOptions.id + '" lookupId="' + itemOptions.lookupId + '"/>'
 		;
 
@@ -174,6 +192,7 @@ var CheckboxLines = function(inJrefOfThis, inJsonStruct){
 
 	this.remove = function(inLookupId){
 		var dataWrapper = $(inJrefOfThis).data('itemHash')[inLookupId];
+		if(!(dataWrapper)){return false;}
 		$(dataWrapper.divInputRef).parent().remove();
 		delete $(inJrefOfThis).data('itemHash')[inLookupId];
 		//$(divForm).checkboxradio('refresh');
@@ -257,5 +276,8 @@ $.fn.CheckboxLines = function(inAction, inJsonStruct){
 		return checkboxLines.getDataArrayFromWrapperArray(inJsonStruct);
 	}
 
-	
+	if(inAction == 'editItem'){
+		return checkboxLines.editItem(inJsonStruct);
+	}
+
 }

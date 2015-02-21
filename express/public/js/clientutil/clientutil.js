@@ -307,7 +307,8 @@ var $ajaxFilePostVariableRoute = function(inData){
 	client.send(formData);
 }
 
-var cleanPhoneNumber =function(inNumber){
+var cleanPhoneNumber = function(inNumber){
+	if(!(inNumber)){return false;}
 	return formatE164("US", inNumber).replace('+', '');
 	//US ONLY-----
 	/*var standardNo = inNumber.replace(/[^\d]/g,'');
@@ -322,6 +323,7 @@ var phoneNumberCompare = function(inNumberA, inNumberB){
 }
 
 var phoneDisplayFormat = function(inNumber){
+	//inNumber = cleanPhoneNumber(inNumber);
 	return formatLocal("US", inNumber);
 	/*if(inNumber.length == 10){
 		inNumber = '1' + inNumber;
@@ -340,6 +342,11 @@ var mysqlEpochToLocalDateTime = function(inValue){
 	var newDate = new Date(0); // The 0 there is the key, which sets the date to the epoch
 	newDate.setUTCSeconds(utcSeconds);
 	return newDate.toLocaleString();
+}
+
+var copyObject = function(inObject){
+	return $.extend(true, {},inObject);
+	//return JSON.parse(JSON.stringify(inObject));
 }
 
 
@@ -488,6 +495,24 @@ var $json = new function(){
 		}
 		recurse(inJsonStruct, "");
 		return result;
+	}
+
+	this.toArray = function(inJsonStruct){
+		var resultArray = [];
+		var tmpHash = _this.toFlatHash(inJsonStruct);
+		for(var theIndex in tmpHash){
+			resultArray.push(tmpHash[theIndex]);
+		}
+
+		return resultArray;
+	}
+
+	this.arrayToHash = function(inArray){
+		var tmpHash = [];
+		for(var inArrayIndex in inArray){
+			tmpHash[inArray[inArrayIndex].id] = inArray[inArrayIndex];
+		}
+		return tmpHash;
 	}
 
 
@@ -743,6 +768,10 @@ var Backstack = function(inJsonStruct){
 		if(!(inData)){return false;}
 
 		var existVal = exist(inData);
+		console.log('existVal' + existVal);
+		console.log('!(inJsonStruct.overWriteOnPush)' + inJsonStruct.overWriteOnPush);
+		console.log('inData:');
+		console.dir(inData);
 		if(existVal == -1 || !(inJsonStruct.overWriteOnPush)){
 			stack.push(inData);
 			if(inJsonStruct.onPush){
@@ -791,9 +820,15 @@ var Backstack = function(inJsonStruct){
 	}
 
 	var exist = function(inItem){
+		console.log('stack exist:');
+		console.dir(stack);
 		for(index in stack){
 			//if(JSON.stringify(stack[index]) == JSON.stringify(inItem)){
-			if(stack[index].toString() == inItem.toString()){
+			console.log('text_0:' + stack[index].toString());
+			console.log('text_1' + inItem.toString());
+			//if(stack[index].toString() == inItem.toString()){
+			//if($(stack[index]).not(inItem).length === 0 && $(inItem).not(stack[index]).length === 0){
+			if($.compareObject(stack[index], inItem)){
 				console.log('exist true');
 				return index;
 			}

@@ -64,65 +64,20 @@ script.
 	});
 
 	eventObject.setOn('contactClick', function(inData){
-		console.log('contactClick YES   ');
 		$('#contactsMenu_sms').ContactListView('setSelectedById', inData);
 	});
 
-	eventObject.setOn('contactManager_onChange', function(inJstruct){
-		console.log('eventObject.setOn');
-		console.dir(inJstruct);
-		$('#contactsMenu_sms').ContactListView('refresh');
-		if(inJstruct.action == 'add'){
-			$('#contactsMenu_sms_popup').CheckboxLines('addItem',
-				{
-					lookupId:inJstruct.record.id,
-					caption:'<img src="'  + inJstruct.record.imageUrl + '" style="height:40px; float:left" class="magicSquare"/><h4>&nbsp;&nbsp;&nbsp;' + inJstruct.record.name + '<br>&nbsp;&nbsp;&nbsp;' + phoneDisplayFormat(inJstruct.record.phoneNumber) + '</h4>',
-					isChecked:false,
-					formStyle:'border:0;width:400px;',
-					data:inJstruct.record,
-				}
-			);
-		}
-		if(inJstruct.action == 'delete'){
-			$('#contactsMenu_sms_popup').CheckboxLines('remove', inJstruct.record.id);
-		}
-
-	});
-
-
 
 	$( "#page_smsManager").on( "pageshow", function( event, ui ){
-		//alert(now());
-		console.log('PAGE SHOW---------------------------SMS');
 		SmsManagerObject.load();
-		setHeight();
-		$('#smsManager_contents').trigger('create');
 	});
 	$( "#page_smsManager").on( "pagecreate", function( event, ui ){
-		//alert('pageshow');
-		console.log('PAGE CREATE---------------------------SMS');
 		setHeight();
 		$('#smsManager_contents').trigger('create');
-		//SmsManagerObject.load();
-		//dynamicTableDiv_table.footable();
 	});
 
 	$('#bt_smsManager_send').click(function(){
-		//- var test = 
-		//- 	[
-		//- 		{
-		//- 			phoneNumber:'12564662496',
-		//- 			message:$('#ta_smsMessage').val(),
-		//- 		},
-		//- 	]
-		//- ;
-
-
 		var selectedContacts = SmsManagerObject.getSelectedContacts();
-		console.log('selectedContacts');
-		console.dir(selectedContacts);
-
-
 		var sendDataArray = [];
 		for(var contactIndex in selectedContacts){
 			sendDataArray.push(
@@ -132,29 +87,22 @@ script.
 				}
 			);
 		}
-		console.dir(sendDataArray);
 		if(sendDataArray.length < 1){return;}
 		SmsManagerObject.sendManySms(sendDataArray, function(e){
-			console.log('e:');
-			console.dir(e);
 		})
 
 		$('#ta_smsMessage').val(''); //clear
 	});
 
 
-
-
+	//===================================================================================
+	//  SMS MANAGER OBJECT --------------------------------------------------------------
+	//===================================================================================
 	var SmsManagerObject = new function(){
 		var _this = this;
-		//var toContactHash = {};
 		var toContactsArray = [];
 		var currentContactBackstack;
 
-
-		//===================================================
-		//>----EVENTS 
-		//===================================================
 
 
 		this.clear = function(){
@@ -162,6 +110,7 @@ script.
 		}
 
 		this.addContactToHotLinks = function(inContact){
+			$.debug('addContactToHotLinks', inContact);
 			if(!(inContact)){return false;}
 			currentContactBackstack.push(inContact);
 		}
@@ -179,14 +128,8 @@ script.
 					useCheckbox:false,
 					autoScrollOnSelect:true,
 					onClick:function(inContactId, inData, inElementId){
-						// CSS Last Selected------>
-						//var oldSelected = $( '.lastSelected' ).parent().attr('contactId');
-						//alert(oldSelected);
 						$( '.trans-bkg-a-hv' ).removeClass( 'lastSelected' )
 						$( '#' + inElementId + ' a').addClass( 'lastSelected' );
-						console.log('contactClicky');
-						console.dir(inData);
-
 						SmsManagerObject.refresh(
 							{
 								limit:125,
@@ -194,21 +137,8 @@ script.
 							}
 						);
 
-
-
-						SmsManagerObject.updateUpperDisplay(
-							{
-								//userImageUrl:inData.imageUrl,
-								contactImageUrl:inData.imageUrl,
-								direction:'fromUser'
-							}
-						);
-
-
 						// WHEN no group being used add to popup as checked item....
 						var groupOfSelectedContacts = $('#contactsMenu_sms_popup').CheckboxLines('getCheckedData');
-						console.log('groupOfSelectedContacts');
-						console.dir(groupOfSelectedContacts);
 						if(groupOfSelectedContacts.length < 2){
 							if(groupOfSelectedContacts.length == 1){
 								if(groupOfSelectedContacts[0].data.id){
@@ -234,12 +164,22 @@ script.
 
 					},
 					onLongClick:function(inContactId, inData, inElementId){
-						//eventObject.reportOn('contactMenu_onLongClick', inData);
 					}
 				}
 			);
 
-			$('#contactsMenu_sms').ContactListView('loadData');
+			$('#contactsMenu_sms').ContactListView('loadData', 
+				{
+					useUnionCache:true,
+					onFinish:function(){
+						$('#contactsMenu_sms').ContactListView('setSelectedByIndex', 0);
+						//- CACHE EVENT-------------------------------------------------------------
+						ContactDataCache.getEventObject().setOn('onChange', function(inData){
+							$('#contactsMenu_sms').ContactListView('refresh', {useUnionCache:true});
+						});
+					}
+				}
+			);
 
 
 
@@ -257,10 +197,7 @@ script.
 							},
 							{
 								caption:'Contact',
-								attributes:
-									{
-										//'data-toggle':true,
-									},
+								attributes:{},
 								style:'',
 							},
 							{
@@ -270,10 +207,7 @@ script.
 							},
 							{
 								caption:'Brief',
-								attributes:
-									{
-										//'data-toggle':true,
-									},
+								attributes:{},
 								style:'',
 							},
 							{
@@ -292,20 +226,9 @@ script.
 
 					},
 					onClick:function(inIndex, inData, inJref){
-						//alert('onClick' + inIndex + JSON.stringify(inData));
-						//$('#dynamicTableDiv').DynamicTable('clear');
 					}
 				}
 			);
-
-			//- $('#dynamicTableDiv').DynamicTable('clear');
-			//- $('#dynamicTableDiv').DynamicTable('addRow', 
-			//- 	{
-			//- 		rowArray:
-			//- 		),
-			//- 		data:{}
-			//- 	}
-			//- );
 
 			$('.footable').footable(
 				{
@@ -322,15 +245,13 @@ script.
 			//-->BACKSTACK
 			currentContactBackstack = new Backstack(
 				{
-					limit:4,
-
+					limit:10,
+					overWriteOnPush:true,
 					onPush:function(inItem){
-						console.log('onPush callback' + inItem);
-						console.dir(inItem);
 						$('#hotLinks').prepend(
 							'<div id="widgetSmsMessage_currentContact_' + inItem.id + '" class="magicSquarePnt hot-link-contact" style="width:100px;" phoneNumber="' + inItem.phoneNumber + '">' 		+
 								'<center>'														+
-									'<img class=" shake member-img" src="' + inItem.imageUrl + '" contactId="' + inItem.id + '" phone="' + inItem.phoneNumber + '" style="width:75px;"/>' +
+									'<img class=" shake member-img " src="' + inItem.imageUrl + '" contactId="' + inItem.id + '" phone="' + inItem.phoneNumber + '" style="height:75px; width:75px;  object-fit: cover;"/>' +
 									'<br>'								   +
 									'<h4>' + phoneDisplayFormat(inItem.phoneNumber) + '</h4>'  +
 								'</center>'														+
@@ -338,11 +259,7 @@ script.
 						);
 						//-- on click of current contact---------
 						$('.hot-link-contact').click(function(){
-							//user clicks on hot link!!!!!!!!!!!!!!!!!
-							//alert('hotLink!!!' + $(this).attr('phoneNumber'));
 							var resultContact = $('#contactsMenu_sms').ContactListView('findFirstByPhoneNumber', $(this).attr('phoneNumber'));
-							console.log('resultContact');
-							console.dir(resultContact);
 							$('#contactsMenu_sms').ContactListView('setSelectedByNameAndType',
 								{
 									name:resultContact.name,
@@ -354,8 +271,6 @@ script.
 					},
 
 					onPop:function(inItem){
-						console.log('onPop onCallback' + inItem);
-						console.dir(inItem);
 						if(!(inItem)){return false;}
 						if(!(inItem.id)){return false;}
 						$('#widgetSmsMessage_currentContact_' + inItem.id).remove();
@@ -365,16 +280,85 @@ script.
 
 			_this.drawToContactSleeve([]);
 
+			// CACHE EVENTS & SETUP----------------------------------------------------------------------
+			ContactDataCache.subscribe(
+				{
+					onInsert:function(inRecord){
+						$('#contactsMenu_sms_popup').CheckboxLines('addItem',
+							{
+								lookupId:inRecord.id,
+								data:inRecord,
+								caption:'<img src="'  + inRecord.imageUrl + '" style="height:40px; width:40px;  object-fit: cover; float:left" class="magicSquare"/><h4>&nbsp;&nbsp;&nbsp;' + inRecord.name + '&nbsp;&nbsp;&nbsp;' + inRecord.type + '<br>&nbsp;&nbsp;&nbsp;' + phoneDisplayFormat(inRecord.phoneNumber) + '</h4>',
+								isChecked:false,
+								formStyle:'border:0;width:400px;'
+							}
+						);
+					},
 
-		}
+					onEdit:function(inRecord){
+						$('#contactsMenu_sms_popup').CheckboxLines('editItem', 
+							{
+								caption:'<img src="'  + inRecord.imageUrl + '" style="height:40px; width:40px;  object-fit: cover; float:left" class="magicSquare"/><h4>&nbsp;&nbsp;&nbsp;' + inRecord.name + '&nbsp;&nbsp;&nbsp;' + inRecord.type + '<br>&nbsp;&nbsp;&nbsp;' + phoneDisplayFormat(inRecord.phoneNumber) + '</h4>',
+								lookupId:inRecord.id,
+								data:inRecord,
+							}
+						);
+					},
+
+					onDelete:function(inRecord){
+						$('#contactsMenu_sms_popup').CheckboxLines('remove', inRecord.id);
+					},
+
+					onTempContactInsert:function(inRecord){
+						//alert(JSON.stringify(inRecord));
+						//alert('ContactDataCache.subscribe_onTempContactInsert');
+						//check if exist 
+						//ContactDataCache.addtempContact()
+						console.log('addContactToHotLinks Cache event');
+						_this.addContactToHotLinks(inRecord);
+
+					},
+
+					onTempContactDelete:function(inRecord){
+						//alert('ContactDataCache.subscribe_onTempContactDelete');
+					}
+				}
+			);
+
+			ContactDataCache.getCache(
+				{
+					cacheOption:'getUnionCachedDataArray',
+					forceRefresh:false,
+					onFinish:function(inRecords){
+						for(var inRecordsIndex in inRecords){
+							$('#contactsMenu_sms_popup').CheckboxLines('addItem',
+								{
+									lookupId:inRecords[inRecordsIndex].id,
+									data:inRecords[inRecordsIndex],
+									caption:'<img src="'  + inRecords[inRecordsIndex].imageUrl + '" style="height:40px; width:40px;  object-fit: cover; float:left" class="magicSquare"/><h4>&nbsp;&nbsp;&nbsp;' + inRecords[inRecordsIndex].name + '&nbsp;&nbsp;&nbsp;' + inRecords[inRecordsIndex].type + '<br>&nbsp;&nbsp;&nbsp;' + phoneDisplayFormat(inRecords[inRecordsIndex].phoneNumber) + '</h4>',
+									isChecked:false,
+									formStyle:'border:0;width:400px;'
+								}
+							);
+						}
+						//hotlink init data
+						var smsLogArray = EventLogObject.getEventsByType('incomingSms');
+						for(var theIndex in smsLogArray){
+							var theContact = ContactDataCache.getContactByPhoneNumber(smsLogArray[theIndex].data.phoneNumber);
+							console.log('addContactToHotLinks from getCache');
+							_this.addContactToHotLinks(theContact);
+						}
+					}
+				}
+			);
+			//CACHE-----------------------------------------------------------------------------------
+		}//end of load
 
 		this.refresh = function(inParams, inPostFunction){
-			//from db
-			//$('#dynamicTable_content_sms_div').addClass( "show-page-loading-msg" );
 			$.mobile.loading('show');
 			var fieldData = 
 				{
-					limit:1000,
+					limit:30, //TODO:need serverside injection from conf file
 					contactData:
 						{
 							imageUrl:'#{defaultMemberImageUrl}',
@@ -394,11 +378,9 @@ script.
 					onAjaxSuccess:function(inResponseText){
 						var smsArray = JSON.parse(inResponseText).result;
 						$('#dynamicTableDiv').DynamicTable('clear');
-						//$('.footable').trigger('footable_redraw');
 						if(smsArray.length > 0){
 							SmsManagerObject.noMessageClear();
 							for(var smsArrayIndex in smsArray){
-								console.log('smsArray[smsArrayIndex].smsContext' + smsArray[smsArrayIndex].smsContext);
 								var theImageUrl = (smsArray[smsArrayIndex].smsContext == 'inBox') ? fieldData.contactData.imageUrl : smsArray[smsArrayIndex].screenImage;
 								$('#dynamicTableDiv').DynamicTable('addRow', 
 									{
@@ -414,16 +396,11 @@ script.
 								);
 							}
 							$('.footable').trigger('footable_redraw');
-							console.log('redrawing footable');
 						}else{
 							SmsManagerObject.noMessageShow();
 						}
 
 						$.mobile.loading('hide');
-
-
-
-						//if(inPostFunction){inPostFunction(inResponseText);}
 					}
 				}
 			);
@@ -441,7 +418,7 @@ script.
 			var result = 
 				[
 					'',
-					'<center><img src="' + fieldData.imageUrl + '" height="60px" class="magicSquare ' + fieldData.class + '"></img></center>',
+					'<center><img src="' + fieldData.imageUrl + '" style="height:60px; width:60px;  object-fit: cover;" class="magicSquare ' + fieldData.class + '"></img></center>',
 					'<center><h6>' + fieldData.date + '</h6></center>',
 					(fieldData.body.length < 21)? fieldData.body : fieldData.body.substring(0, 20) + '...',
 					'<h6>' + fieldData.body + '</h6>',
@@ -449,50 +426,6 @@ script.
 			return result
 		}
 
-		this.updateUpperDisplay = function(inParams){
-			//- var fieldData = 
-			//- 	{
-			//- 		userImageUrl:GLOBAL_USER_IMAGE_URL,
-			//- 		contactImageUrl:'',
-			//- 		direction:'fromUser' //toUser' // fromUser
-			//- 	}
-			//- fieldData = $.extend(fieldData, inParams);
-			//- //$('#sms_upper_img0').attr('src',fieldData.userImageUrl);
-			//- if(fieldData.direction == 'toUser'){
-			//- 	$('#sms_upper_img1').attr('src', '/public/images/ui/left_arr.png');
-			//- }else{
-			//- 	$('#sms_upper_img1').attr('src','/public/images/ui/right_arr.png');
-			//- }
-			//- $('#sms_upper_img2').attr('src',fieldData.contactImageUrl);
-		}
-
-		//- this.setHeight = function(){
-		//- 	var screen = $.mobile.getScreenHeight();
-		//- 	var header = 159;//$(".ui-header").hasClass("ui-header-fixed") ? $(".ui-header").outerHeight()  - 1 : $(".ui-header").outerHeight();
-		//- 	var footer = 0;//$(".ui-footer").hasClass("ui-footer-fixed") ? $(".ui-footer").outerHeight() - 1 : $(".ui-footer").outerHeight();
-			
-		//- 	/* content div has padding of 1em = 16px (32px top+bottom). This step
-		//- 		can be skipped by subtracting 32px from content var directly. 
-		//- 	*/
-		//- 	var contentCurrent = $(".ui-content").outerHeight() - $(".ui-content").height();
-
-		//- 	var content = screen - header - footer - contentCurrent;
-
-		//- 	$(".ui-content").height(content);
-		//- }
-
-		//- this.getContentHeight = function(){
-		//- 	var header = $.mobile.activePage.find("div[data-role='header']:visible");
-		//- 	var footer = $.mobile.activePage.find("div[data-role='footer']:visible");
-		//- 	var content = $.mobile.activePage.find("div[data-role='content']:visible:visible");
-		//- 	var viewport_height = $(window).height();
-
-		//- 	var content_height = viewport_height - header.outerHeight() - footer.outerHeight();
-		//- 	if((content.outerHeight() - header.outerHeight() - footer.outerHeight()) <= viewport_height) {
-		//- 		content_height -= (content.outerHeight() - content.height());
-		//- 	}
-		//- 	return content_height;
-		//- }
 
 		var noMessageHtml = false;
 		this.noMessageShow = function(){
@@ -505,7 +438,7 @@ script.
 						imageUrl:getDefaultMemberImageUrl()
 					}
 				options = $.extend(options, lastSelected)
-
+				//TODO change to object requiring only one load...
 				$postAjax(
 					{
 						url:'/jqm/message',
@@ -517,7 +450,6 @@ script.
 							},
 						onAjaxSuccess:function(inResult){
 							$('#noSmsLogInfo').html(inResult);
-							//noMessageHtml = inResult; TODO: add script to edit html in dom
 							return;
 						}
 					}
@@ -529,18 +461,14 @@ script.
 		}
 
 		this.noMessageClear = function(){
-			console.log('noMessageClear');
 			$('#noSmsLogInfo').html('');
 		}
 
 		this.drawToContactSleeve = function(inContacts){
-			console.log('inContacts');
-			console.dir(inContacts);
 			toContactsArray = inContacts;
 			var centerHtml = '';
 			for(var inContactsIndex in inContacts){
-				//inContacts[inContactsIndex]
-				centerHtml += '<img id="sms_upper_img0" src="' + inContacts[inContactsIndex].data.imageUrl + '" class="magicSquare" style="height:30px">';
+				centerHtml += '<img id="sms_upper_img0" src="' + inContacts[inContactsIndex].data.imageUrl + '" class="magicSquare" style="height:30px; width:30px;  object-fit: cover;">';
 			}
 			var caption = (inContacts.length > 1)? 'Group of Sms Recipients:' : 'The Sms Recipient:';
 			caption = '';
@@ -591,7 +519,6 @@ script.
 							smsMessage:inMessage
 						},
 					onComplete:function(inDataLayer, inTransportLayer){
-						console.log('onComplete sendSms transactionToDeviceToken call back entered');
 						if(inPostFunction){inPostFunction(inDataLayer, inTransportLayer);}
 					}
 				}
@@ -607,24 +534,21 @@ script.
 		//====================  event Listeners ============================================================
 		//==================================================================================================
 		eventObject.setOn('incomingSms', function(inTransportLayer_Json){
-			console.log('-----------------------------------------------------------');
-			console.log('eventObject in widget_sms.. callback incomingSms:');
-			console.dir(inTransportLayer_Json);
 			if(inTransportLayer_Json){
 				if(inTransportLayer_Json.dataLayer){
 					if(inTransportLayer_Json.dataLayer.phoneNumber){
 						imageShakeByPhone(inTransportLayer_Json.dataLayer.phoneNumber);
-						//var contact = contactsObject.getContactByPhone(inTransportLayer_Json.dataLayer.phoneNumber);
 						var contact = $('#contactsMenu_sms').ContactListView('findFirstByPhoneNumber',inTransportLayer_Json.dataLayer.phoneNumber);
 						if(contact){
-							_this.addContactToHotLinks(contact);
+							//_this.addContactToHotLinks(contact);
+							$.debug('addtempContact', contact);
+							ContactDataCache.addtempContact(contact);
 						}else{
-							// contact not in contacts list??? Generate tmp one
-							//alert('unknown number!! incomingSms:' + JSON.stringify(inTransportLayer_Json.dataLayer));
 							var theContacts = $('#contactsMenu_sms').ContactListView('addTempContacts',
 								[
 									{
 										//id: -- using oject default func...
+										id:(ContactDataCache.getContactByPhoneNumber(inTransportLayer_Json.dataLayer.phoneNumber))? (ContactDataCache.getContactByPhoneNumber(inTransportLayer_Json.dataLayer.phoneNumber)).phoneNumber : false,
 										class:'listViewClass',
 										imageUrl:getDefaultMemberImageUrl(),
 										name:inTransportLayer_Json.dataLayer.name,
@@ -639,22 +563,18 @@ script.
 							$('#contactsMenu_sms_popup').CheckboxLines('addItem',
 								{
 									lookupId:theContacts[0].id,
-									caption:'<img src="'  + theContacts[0].imageUrl + '" style="height:40px; float:left" class="magicSquare"/><h4>&nbsp;&nbsp;&nbsp;' + theContacts[0].name + '<br>&nbsp;&nbsp;&nbsp;' + phoneDisplayFormat(theContacts[0].phoneNumber) + '</h4>',
+									caption:'HH<img src="'  + theContacts[0].imageUrl + '" style="height:40px; width:40px;  object-fit: cover; float:left" class="magicSquare"/><h4>&nbsp;&nbsp;&nbsp;' + theContacts[0].name + '<br>&nbsp;&nbsp;&nbsp;' + phoneDisplayFormat(theContacts[0].phoneNumber) + '</h4>',
 									isChecked:false,
 									formStyle:'border:0;width:400px;',
 									data:theContacts[0]
 								}
 							);
 
-							//$('#contactsMenu_sms').ContactListView('addTempContacts',
-
-							//- contact = contactsObject.createUnknownContact(
-							//- 	{
-							//- 		phoneNumber:inTransportLayer_Json.dataLayer.phoneNumber
-							//- 	}
-							//- );
 							if(theContacts){
-								_this.addContactToHotLinks(theContacts[0]);
+								//_this.addContactToHotLinks(theContacts[0]);
+								console.dir(theContacts);
+								$.debug('addtempContact II', theContacts[0]);
+								ContactDataCache.addtempContact(theContacts[0]);
 								contact = theContacts[0];
 							}
 
@@ -662,16 +582,10 @@ script.
 
 						}
 
-						//>--- only when contact selected inject new sms into view(outgoing too!!)
-						//selected == phoneNumber == phoneNumber
 						var selectedContactData = $('#contactsMenu_sms').ContactListView('getLastSelected');
-						console.log('selectedContactData');
-						console.dir(selectedContactData);
-						console.dir(contact);
 						//TODO: add date to receivimg bundle, so reflect same across..will be differnet after refresh...
 						if(selectedContactData){
 							if(selectedContactData.phoneNumber == contact.phoneNumber){
-								//alert('inject heer');
 								$('#dynamicTableDiv').DynamicTable('addRowTop', 
 									{
 										rowArray:createRowArrayHtml(
@@ -697,38 +611,21 @@ script.
 		});
 
 		eventObject.setOn('outgoingSms', function(inTransportLayer_Json){
-			console.log('-----------------------------------------------------------');
-			console.log('eventObject in widget_sms.. callback outgoingSms:');
-			console.dir(inTransportLayer_Json);
 			if(inTransportLayer_Json){
 				if(inTransportLayer_Json.dataLayer){
 					if(inTransportLayer_Json.dataLayer.phoneNumber){
-						var contact = contactsObject.getContactByPhone(inTransportLayer_Json.dataLayer.phoneNumber);
+						var contact = $('#contactsMenu_sms').ContactListView('findFirstByPhoneNumber',inTransportLayer_Json.dataLayer.phoneNumber);
 						if(contact){
-							_this.addContactToHotLinks(contact);
+							//_this.addContactToHotLinks(contact);
+							$.debug('addtempContact outgoingSms', contact);
+							ContactDataCache.addtempContact(contact);
 						}else{
-							//alert('unknown number!! OutGoingSms');
-							contact = contactsObject.createUnknownContact(
-								{
-									phoneNumber:inTransportLayer_Json.dataLayer.phoneNumber
-								}
-							);
-							_this.addContactToHotLinks(contact);
-							//- if(!(_this.comboExistByPhone(contact.phoneNumber))){
-							//- 	_this.addContactToContactCombo(contact);
-							//- }
 						}
 
 						var selectedContactData = $('#contactsMenu_sms').ContactListView('getLastSelected');
-						console.log('selectedContactData2');
-						console.dir(selectedContactData);
-						console.log('contact');
-
-						console.dir(contact);
 						//TODO: add date to receivimg bundle, so reflect same across..will be differnet after refresh...
 						if(selectedContactData){
 							if(selectedContactData.phoneNumber == contact.phoneNumber){
-								//alert('inject heer2');
 								$('#dynamicTableDiv').DynamicTable('addRowTop', 
 									{
 										rowArray:createRowArrayHtml(
@@ -753,24 +650,3 @@ script.
 
 
 	}();
-	//$("#dynamicTable_content_sms_div").iscrollview();
-	//setHeight();
-
-	$('#bt_test').click(function(){
-		//- $postAjax(
-		//- 	{
-		//- 		url:'/jqm/message',
-		//- 		send:
-		//- 			{
-		//- 				messageId:'sms_nolog',
-		//- 				imageUrl:options.imageUrl,
-		//- 				name:options.name,
-		//- 			},
-		//- 		onAjaxSuccess:function(inResult){
-		//- 			$('#noSmsLogInfo').html(inResult);
-		//- 			//noMessageHtml = inResult; TODO: add script to edit html in dom
-		//- 			return;
-		//- 		}
-		//- 	}
-		//- );
-	});

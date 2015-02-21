@@ -2,3 +2,4 @@ exlclude node_modules...
 -/home/ben/git_project/trans/express/node_modules/*.*,-/home/ben/git_project/trans/websocket/node_modules/*.*,-/home/ben/git_project/trans/express/backup/*.*
 
 
+/home/ben/git_project/trans/express/controllers,/home/ben/git_project/trans/express/library,/home/ben/git_project/trans/express/models,/home/ben/git_project/trans/express/views,/home/ben/git_project/trans/express/public/js/clientutil,/home/ben/git_project/trans/express/public/js/commmanager,/home/ben/git_project/trans/express/public/js/hashofarray,/home/ben/git_project/trans/express/public/js/jquery/hopper

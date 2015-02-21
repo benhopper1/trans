@@ -13,7 +13,7 @@ html
 		script(src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js")
 		script(src="/public/js/jquery/hopper/jquery.hopper.extention.js")
 
-		script(type='text/javascript', src='/js/clientutil/clientutil.js')
+
 
 
 		script(type='text/javascript', src='/public/js/easyui/jquery.easyui.min.js')
@@ -21,132 +21,41 @@ html
 		link(rel='stylesheet', href='/public/js/easyui/themes/default/icon.css')
 
 		script(type='text/javascript', src='/public/js/phoneformat/phoneformat.js')
+		script(type='text/javascript', src='/js/clientutil/clientutil.js')
 
+		//arfsync.jqm   CSS ---------
+		link(rel="stylesheet" href="/public/css/arfsync.jqm/arfsync.jqm.css")
 
 		body(style="")
 
-			style.
-				.imgAndData{
-					font-size: 13px;
-					font-style: normal;
-					font-weight: normal;
-					padding-left: 5px;
-					LINE-HEIGHT:15px;
-					background-color: #eee;
-
-				}
-
-				.magicCirc{
-					padding:4px;
-					display:inline-block;
-					font:12px/14px Arial, Helvetica, sans-serif;
-					color:#666;
-					border:1px solid #999;
-					background-color:#eee;
-					-moz-border-radius:10px;
-					-webkit-border-radius: 150px;
-					-moz-box-shadow:#999 2px 0px 3px;
-					-webkit-box-shadow:#999 2px 0px 3px;
-					margin-bottom:4px;
-				}
-
-				.magicCircPnt{
-					padding:4px;
-					display:inline-block;
-					cursor:pointer;
-					font:12px/14px Arial, Helvetica, sans-serif;
-					color:#666;
-					border:1px solid #999;
-					background-color:#eee;
-					-moz-border-radius:10px;
-					-webkit-border-radius: 150px;
-					-moz-box-shadow:#999 2px 0px 3px;
-					-webkit-box-shadow:#999 2px 0px 3px;
-					margin-bottom:4px;
-				}
-
-				.center{
-					margin-left: auto;
-					margin-right: auto;
-					width: 70%;
-					background-color: #b0e0e6;
-				}
-
-				.magicSquarePnt{
-					cursor:pointer;
-					padding:4px;
-					display:inline-block;
-					font:12px/14px Arial, Helvetica, sans-serif;
-					color:#666;
-					border:1px solid #999;
-					background-color:#eee;
-					-moz-border-radius:00px;
-					-webkit-border-radius: 15px;
-					-moz-box-shadow:#999 2px 0px 3px;
-					-webkit-box-shadow:#999 2px 0px 3px;
-					margin-bottom:4px;
-				}
 
 
-				@-webkit-keyframes spaceboots {
-					0% { -webkit-transform: translate(2px, 1px) rotate(0deg); }
-					10% { -webkit-transform: translate(-1px, -2px) rotate(-40deg); }
-					20% { -webkit-transform: translate(-3px, 0px) rotate(40deg); }
-					30% { -webkit-transform: translate(0px, 2px) rotate(0deg); }
-					40% { -webkit-transform: translate(1px, -1px) rotate(1deg); }
-					50% { -webkit-transform: translate(-1px, 2px) rotate(-1deg); }
-					60% { -webkit-transform: translate(-3px, 1px) rotate(0deg); }
-					70% { -webkit-transform: translate(2px, 1px) rotate(-1deg); }
-					80% { -webkit-transform: translate(-1px, -1px) rotate(1deg); }
-					90% { -webkit-transform: translate(2px, 2px) rotate(0deg); }
-					100% { -webkit-transform: translate(1px, -2px) rotate(-1deg); }
-				}
-				.shake {
-					-webkit-animation-name: spaceboots;
-					-webkit-animation-duration: 0.8s;
-					-webkit-transform-origin:50% 50%;
-					-webkit-animation-iteration-count: 15;
-					-webkit-animation-timing-function: linear;
-				}
 
-				img{
-					max-width: 100%;
-				}
-
-				.ui-page {
-					background: transparent;
-					//max-width: 400px;
-				}
-				.ui-content{
-					background: transparent;
-				}
-				.center-me {
-					//margin: 0 auto !important;
-				}
-
-				body {
-					background: url(/public/images/ui/accountbkg.png);
-					background-repeat:repeat-y;
-					background-position:center center;
-					background-attachment:scroll;
-					background-size:100% 100%;
-				}
-
+			#testDiv
+			#smsPopupIncoming(data-dialog="false" style="position:relative;" class="")
 			//   /upload
 			form(action="/upload/contact/image", method="post", enctype="multipart/form-data")
 				input(id="upload" type="file" name="uploadedFile" style="display: none;" onchange="console.log('changed!!!')")
 
-			div(id="page_userForm" data-role="page" data-dialog="true" data-theme="b" style="" class=".center-me")
+			div(id="page_userForm" data-role="page" data-dialog="false" data-theme="b" style="" class=".center-me")
+
 
 				div(id="contactsWindow" data-role="main"  class="ui-content" style="")
+
 					form(method="post" id="userForm")
 						div(class="ui-field-contain")
-							input(tabindex="1" type="text" id="widget_userForm_firstName" 	name="fname" 		placeholder="First Name...")
-							input(tabindex="2" type="text" id="widget_userForm_lastName" 	name="lName" 		placeholder="Last Name...")
+							//input(tabindex="1" type="text" id="widget_userForm_firstName" 	name="fname" 		placeholder="First Name...")
+							//input(tabindex="2" type="text" id="widget_userForm_lastName" 	name="lName" 		placeholder="Last Name...")
 
 
 
 
+							br
+							br
+							br
+							br
+							br
+							br
 							br
 							br
 							br
@@ -159,6 +68,15 @@ html
 				//input(data-icon="action" id="bt_login_postMail" 	type="button" value="Login" style="")
 
 			script.
+				//@@--> JQUERY . CENTER @@@@@@@@@@@@@@@@@@@@@@@@@@@@
+				jQuery.fn.center = function () {
+					this.css("position","absolute");
+					this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + 
+					$(window).scrollTop()) + "px");
+					this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + 
+					$(window).scrollLeft()) + "px");
+					return this;
+				}
 				var renderData = !{JSON.stringify(body)}
 
 				console.log('renderData');
@@ -179,32 +97,44 @@ html
 							// EVENT SETUP
 							//==============================================
 							$('#addEditUser_save').click(function(){
-								//_this.addToStore();
-								
+
+								var ttt = [1,2,3,4,3,2,2];
+
+								//$.debug('getUnique', $.getDuplicates(ttt));
+								$.debug('object.keys', Object.keys(ttt));
+								$.debug('myVer', $.getKeys(ttt));
+
+
+								var t = 
+									{
+										544:'Billy'
+									}
+								console.dir(t);
+
+								var y ={}
+								y[888] = 'ssss'
+								console.dir(y);
+								console.dir(Object.keys(y));
+
+
+
+
+
 							});
 
 
 							$('#addEditUser_clear').click(function(){
-
-
-
-								$postAjax(
+								doIncomingSms(
 									{
-										url:'/user/userStartUp',
-										send:
-											{
-											},
-										onAjaxSuccess:function(inHtml){
-											inResponseText = JSON.parse(inHtml).result;
-											console.log('SAVE');
-											console.dir(inResponseText);
-										}
+										name:'ddddd name 1',
+										phoneNumber:'12563538951',
+										message:'my new message',
+										imageUrl:'/public/images/contacts/c97ce050-b399-11e4-a92e-138f9d3e8597.jpg',
 									}
 								);
-
-
-
 							});
+
+
 						}//end of load
 
 
@@ -214,5 +144,70 @@ html
 					}();
 
 				});
+
+
+				var doIncomingSms = function(inJstruct){
+					if( typeof IncomingSmsObject === "undefined" ){
+						$postAjax(
+							{
+								url:'/jqm/message',
+								send:
+									{
+										messageId:'incoming_sms',
+									},
+								onAjaxSuccess:function(inResult){
+									$('#smsPopupIncoming').html(inResult);
+									IncomingSmsObject.load();
+									IncomingSmsObject.show(
+										{
+											speed:500,
+											duration:10000,
+											name:inJstruct.name,
+											phoneNumber:inJstruct.phoneNumber,
+											message:inJstruct.message,
+											imageUrl:inJstruct.imageUrl,
+											messageMaxCharLength:20,
+											onTimeout:function(){
+												IncomingSmsObject.hide(
+													{
+														speed:'slow',
+														onFinished:function(){
+														}
+													}
+												);
+
+											}
+										}
+									);
+								}
+							}
+						);
+
+						return;
+					}else{
+						IncomingSmsObject.show(
+							{
+								speed:500,
+								duration:10000,
+								name:inJstruct.name,
+								phoneNumber:inJstruct.phoneNumber,
+								message:inJstruct.message,
+								imageUrl:inJstruct.imageUrl,
+								messageMaxCharLength:20,
+								onTimeout:function(){
+									IncomingSmsObject.hide(
+										{
+											speed:'slow',
+											onFinished:function(){
+											}
+										}
+									);
+
+								}
+							}
+						);
+					}
+				}
+
 
 

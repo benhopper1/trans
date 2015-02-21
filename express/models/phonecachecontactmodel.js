@@ -226,16 +226,35 @@ var Model = function(){
 			if(inPostFunction){
 				var err = 'No User Id, records will not be added(contactModel.addContact)';
 				inPostFunction(err, false, false);
+				return;
 			}
 		}
 
 		if(fieldData.filePathToCopy){
 			var secureSourceFilePath = basePath + configData.phoneCacheStorageFolder + '/' + path.basename(fieldData.filePathToCopy);
 			var targetFilePath = basePath + configData.contactImageFolder + '/' + path.basename(fieldData.filePathToCopy);
+		
+			if(path.basename(targetFilePath).indexOf(path.basename(configData.defaultMemberImageUrl)) != -1){
+				targetFilePath = basePath + configData.contactImageFolder + '/' + path.basename(uuid.v1() + path.extname(targetFilePath));
+			}
 		}
+
+
+
 
 		var source = fs.createReadStream(secureSourceFilePath);
 		var dest = fs.createWriteStream(targetFilePath);
+
+
+
+		//configData.defaultMemberImageUrl
+
+		//uuid.v1()
+
+		console.log('COPY-------------------------');
+		console.log('SOURCE:' + secureSourceFilePath);
+		console.log('TARGET:' + targetFilePath);
+		console.dir('-----------------------------');
 
 		source.pipe(dest);
 		source.on('end', function() {
@@ -245,7 +264,8 @@ var Model = function(){
 					{	
 						message:'file copied',
 						refId:fieldData.refId,
-						newFilePath:configData.contactImageFolder + '/' + path.basename(fieldData.filePathToCopy),
+						newFilePath:configData.contactImageFolder + '/' + path.basename(targetFilePath),
+						//newFilePath:targetFilePath,
 					}
 				);
 			}
@@ -415,6 +435,106 @@ var Model = function(){
 				"AND"															+ " " + 
 				"type = " + connection.escape(fieldData.type)
 		;*/
+		connection.query(sqlString, function(err, result){
+			console.log('error' + err);
+			if(inPostFunction){inPostFunction(err, result);}
+		});
+	}
+
+	this.getCacheFilePaths = function(inParams, inPostFunction){
+		var fieldData = 
+			{
+
+			}
+		fieldData = extend(fieldData, inParams);
+
+		var sqlString = 
+			"SELECT * FROM tb_fileCache"
+		;
+		console.log('SQL:' + sqlString);
+		connection.query(sqlString, function(err, result){
+			console.log('error' + err);
+			if(inPostFunction){inPostFunction(err, result);}
+		});
+	}
+
+	this.addPhysicalPathsToWorkerTableArray = function(inOptions, inPostFunction){
+		var options = 
+			{
+				code:'',
+				dataArray:[],
+			}
+		options = extend(options, inOptions);
+
+		finish.map(options.dataArray, function(value, done){
+			_this.addPhysicalPathsToWorkerTable(
+				{
+					code:options.code,
+					f0:value.f0,
+					f1:value.f1,
+				}, function(err, result){
+					done();
+				}
+			);
+		},
+		//completed Function--------------------------------
+		function(err, results){
+			if(inPostFunction){
+				inPostFunction(err, results);
+			}
+		});
+	}
+
+	this.addPhysicalPathsToWorkerTable = function(inParams, inPostFunction){
+		var fieldData = 
+			{
+				code:'',
+				f0:'',
+				f1:'',
+				f2:'',
+				f3:'',
+				f4:'',
+			}
+		fieldData = extend(fieldData, inParams);
+		var sqlString = 
+			"INSERT INTO tb_worker ( code, f0, f1, f2, f3, f4)" 		+ " " +
+				"VALUES (" 												+ " " +
+					connection.escape(fieldData.code) + "," 			+ " " +
+					connection.escape(fieldData.f0) + 	"," 			+ " " +
+					connection.escape(fieldData.f1) + 	"," 			+ " " +
+					connection.escape(fieldData.f2) + 	"," 			+ " " +
+					connection.escape(fieldData.f3) + 	"," 			+ " " +
+					connection.escape(fieldData.f4) + 	");"
+		;
+		console.log('SQL:' + sqlString);
+		connection.query(sqlString, function(err, result){
+			console.log('error' + err);
+			if(inPostFunction){inPostFunction(err, result);}
+		});
+
+	}
+
+	this.getDeletablePhoneCacheFiles = function(inCode, inPostFunction){
+		var sqlString = 
+			"SELECT t1.code, t1.f0 AS domainPath, t1.f1 AS fullPath, t2.route  FROM tb_worker AS t1"+ " " +
+				"LEFT JOIN tb_fileCache AS t2 ON t1.f0 = t2.path"									+ " " +
+				"WHERE t2.route IS NULL"															+ " " +
+					"AND"																			+ " " +
+					"CODE = " + connection.escape(inCode)
+		;
+		console.log('SQL:' + sqlString);
+		connection.query(sqlString, function(err, result){
+			console.log('error' + err);
+			if(inPostFunction){inPostFunction(err, result);}
+		});
+	}
+
+	this.deleteFromWorkerTable = function(inCode, inPostFunction){
+		var sqlString = 
+			"DELETE FROM tb_worker"+ " " +
+				"WHERE CODE = " + connection.escape(inCode)
+		;
+		console.log('SQL:' + sqlString);
 		connection.query(sqlString, function(err, result){
 			console.log('error' + err);
 			if(inPostFunction){inPostFunction(err, result);}

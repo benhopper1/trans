@@ -82,7 +82,7 @@ script.
 	});
 
 
-	var ContactManagerObject = function(){event
+	var ContactManagerObject = function(){
 		var _this = this;
 		//===========================================================
 		//>> BUTTON EVENTS
@@ -138,9 +138,18 @@ script.
 					}
 				}
 			);
-			$('#contactsMenu').ContactListView('loadData', function(){
-				$('#contactsMenu').ContactListView('setSelectedByIndex', 0);
-			});
+			$('#contactsMenu').ContactListView('loadData',
+				{
+					onFinish:function(){
+						$('#contactsMenu').ContactListView('setSelectedByIndex', 0);
+						ContactDataCache.getEventObject().setOn('onChange', function(inData){
+							console.log('contactsMenu.loadData.onFinish');
+							console.dir(inData);
+							$('#contactsMenu').ContactListView('refresh');
+						});
+					}
+				}
+			);
 			//$('#contactsWindow2').trigger('refresh');
 			$('[data-role="content]').trigger('create');
 

@@ -14,6 +14,7 @@ var DatabaseObject = function( inOptions ){
 			deleteProcess:false,
 			selectProcess:false,
 			deleteProcess:false,
+			onChange:false,
 		}
 	options = $.extend(options, inOptions);
 
@@ -23,7 +24,9 @@ var DatabaseObject = function( inOptions ){
 			if(inPostFunction){
 				inPostFunction(inData);
 			}
+			if(options.onChange){options.onChange();}
 			eventObject.reportOn('onAfterInsert', inData);
+			eventObject.reportOn('onAfterChange', inData);
 		}
 		if(options.insertProcess){
 			options.insertProcess(inData, next);
@@ -35,22 +38,24 @@ var DatabaseObject = function( inOptions ){
 			if(inPostFunction){
 				inPostFunction(inNextData);
 			}
+			if(options.onChange){options.onChange();}
 			eventObject.reportOn('onAfterEdit', inNextData);
+			eventObject.reportOn('onAfterChange', inNextData);
 		}
 		if(options.editProcess){
 			options.editProcess(inData, next);
 		}
 	}
 	this.select = function(inData, inPostFunction){
-		eventObject.reportOn('onBeforeSelect', inData);
+		eventObject.reportOn('onBeforeSelect', $.extend(true, {}, inData));
 		var next = function(inNextData){
 			if(inPostFunction){
-				inPostFunction(inNextData);
+				inPostFunction($.extend(true, {}, inNextData));
 			}
-			eventObject.reportOn('onAfterSelect', inNextData);
+			eventObject.reportOn('onAfterSelect', $.extend(true, {}, inNextData));
 		}
 		if(options.selectProcess){
-			options.selectProcess(inData, next);
+			options.selectProcess($.extend(true, {},inData), next);
 		}
 	}
 	this.delete = function(inData, inPostFunction){
@@ -59,14 +64,16 @@ var DatabaseObject = function( inOptions ){
 			if(inPostFunction){
 				inPostFunction(inNextData);
 			}
+			if(options.onChange){options.onChange();}
 			eventObject.reportOn('onAfterDelete', inNextData);
+			eventObject.reportOn('onAfterChange', inNextData);
 		}
 		if(options.deleteProcess){
 			options.deleteProcess(inData, next);
 		}
 	}
 
-
+	//select data is copied not referenced to subscribers!!!!!!!!
 
 	//this.edit = function(inData, inPostFunction){}
 	//this.delete = function(inData, inPostFunction){}

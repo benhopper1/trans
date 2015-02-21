@@ -68,7 +68,7 @@ $.fn.listViewAppend = function(inData){
 	var html = '' + 
 		'<li id="' + options.id + '" class="menu_li ' + options.class + '"  data-inset="true">' + ' ' +
 			'<a "/hjhjhjh"> ' + options.name 													+ ' ' +
-				'<img src="' + options.imageUrl + '" class="magicCirc" height="50px"/>'			+ ' ' +
+				'<img src="' + options.imageUrl + '" class="magicCirc" style"height:50px; width:50px; object-fit: cover;" />'			+ ' ' +
 				'<p>' + options.number + '</p>'													+ ' ' +
 				'<p>' + options.type + '</p>'													+ ' ' +
 			'</a>'																				+ ' ' +
@@ -98,522 +98,7 @@ $.fn.listViewRemove = function(inId){
 	}
 }
 
-//=======================================================================================================================================================
-// Contact List View ------------------------------------------------------------------------------------------------------------------------------------
-//=======================================================================================================================================================
-var ContactListView = function(inJsonStruct){
-	var _this = this;
-	var theDivRef;
-	var contactListViewHash = {};
 
-	var options = 
-		{
-			test:'testVal',
-			onLoadComplete:false,
-			useCheckbox:false,
-			autoScrollOnSelect:false,
-			onLongClick:false,
-			onClick:false,
-			onAfterDataLoad:false,
-			onAddTempContacts:false,
-			onChange:false,
-
-		}
-	options = $.extend(options, inJsonStruct);
-	theDivRef = options.divRef;
-	var uid = $(theDivRef).attr('id');
-	this.getTest = function(){
-		return options.test;
-	}
-
-	this.remove = function(inId){
-		if(!(contactListViewHash[inId])){return false;}
-		$(contactListViewHash[inId].jRef).remove();
-		delete contactListViewHash[inId];
-		$(theDivRef).listview().listview('refresh');
-		if(options.onChange){options.onChange('delete', {id:inId});}
-		_this.setSelectedByIndex(0);
-	}
-
-	this.toggleState = function(inJref){
-		contactListViewHash[$(inJref).attr('contactid')].state =! (contactListViewHash[$(inJref).attr('contactid')].state);
-		if(contactListViewHash[$(inJref).attr('contactid')].state){
-			$(inJref).buttonMarkup({ icon: "check",iconpos:'right' });
-		}else{
-			$(inJref).buttonMarkup({ icon: "",iconpos:'right' });
-		}
-	}
-
-	//returns array of records
-	this.getSelectedData = function(){
-		var resultArray = [];
-		for(var contactListViewHashIndex in contactListViewHash){
-			if(contactListViewHash[contactListViewHashIndex].state){
-				resultArray.push(contactListViewHash[contactListViewHashIndex]);
-			}
-		}
-		return resultArray;
-	}
-
-	//returns array of contactIds 
-	this.getSelected = function(){
-		var resultArray = [];
-		for(var contactListViewHashIndex in contactListViewHash){
-			if(contactListViewHash[contactListViewHashIndex].state){
-				resultArray.push(contactListViewHash[contactListViewHashIndex].id);
-			}
-		}
-		return resultArray;
-	}
-
-	this.getLastSelected = function(){
-		var theId = $('.trans-bkg-a-hv.lastSelected').parent().attr('contactid');
-		if(theId){
-			return contactListViewHash[theId];
-		}else{
-			return false;
-		}
-	}
-
-	this.refresh = function(){
-		contactDataObject.select({}, function(inRecords){
-			for(contactIndex in inRecords){
-				var theRecord = contactListViewHash[inRecords[contactIndex].id];
-				if(!(theRecord)){
-					//need to add, it does not exist.....
-					//alert('please add:');
-					//console.dir(theRecord);
-					inRecords[contactIndex].md5Hash = $.getHash.md5(JSON.stringify(inRecords[contactIndex]));
-					var html = createHtml(
-						{
-							id:inRecords[contactIndex].id,
-							class:'listViewClass',
-							imageUrl:inRecords[contactIndex].imageUrl,
-							name:inRecords[contactIndex].name,
-							number:phoneDisplayFormat(inRecords[contactIndex].phoneNumber),
-							type:inRecords[contactIndex].type,
-						}
-					);
-					$(theDivRef).append(html);
-					inRecords[contactIndex].jRef = $('#' + uid + '_' + inRecords[contactIndex].id);
-					contactListViewHash[inRecords[contactIndex].id] = inRecords[contactIndex];
-					$('#' + uid + '_' + inRecords[contactIndex].id).click(function(e){
-						var id = 
-						console.log('clcik list view AA3 :' + $(e.currentTarget).attr('contactid'));
-						console.dir(e);
-						if(options.onClick){
-							if(options.useCheckbox){
-								_this.toggleState($(e.currentTarget));
-							}
-							options.onClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
-						}
-					});
-					$('#' + uid + '_' + inRecords[contactIndex].id).bind( "taphold", function(e){
-						if(options.onLongClick){
-							options.onLongClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
-						}
-					});
-					_this.setSelectedByIndex(0);
-
-					var passingRecord = $.extend({}, inRecords[contactIndex]);
-					passingRecord.jRef = false;
-					if(options.onChange){options.onChange('add', passingRecord);}
-
-
-				}else{
-					var inComingHashCode = $.getHash.md5(JSON.stringify(inRecords[contactIndex]));
-					if(inComingHashCode != theRecord.md5Hash){
-						//need to edit this record
-						//alert('please edit:' );
-						console.dir(theRecord);
-						editHtml(inRecords[contactIndex].id, inRecords[contactIndex]);
-						contactListViewHash[inRecords[contactIndex].id] = inRecords[contactIndex];
-						contactListViewHash[inRecords[contactIndex].id].md5Hash = inComingHashCode;
-						$(theDivRef).listview().listview('refresh');
-						//was edit
-						if(options.onChange){options.onChange('edit', inRecords[contactIndex]);}
-					}
-				}
-			}
-
-
-			/*var _contactListArray = [];
-			for(var contactListViewHashIndex in _contactListArray){
-				contactListArray.push(_contactListArray[contactListViewHashIndex].id);
-			}
-			var theDiff = arrayDiff(_contactListArray, inRecords);
-			alert(JSON.stringify(theDiff));*/
-
-
-
-			var dbArray = [];
-			for(var inRecordsIndex in inRecords){
-				dbArray.push(inRecords[inRecordsIndex].id);
-			}
-			console.log('dbArray');
-			console.dir(dbArray);
-
-
-			var contactListArray = [];
-			for(var contactListViewHashIndex in contactListViewHash){
-				contactListArray.push(contactListViewHash[contactListViewHashIndex].id);
-			}
-			console.log('contactListArray');
-			console.dir(contactListArray);
-
-
-			//var removeArray = diff(contactListArray, dbArray);
-			//var removeArray = $(contactListArray).not(dbArray).get();
-			var removeArray = arrayDiff(contactListArray, dbArray);
-			console.log('removeArray');
-			console.dir(removeArray);
-
-			//var willDelete = removeArray.length > 0;
-			for(var removeArrayIndex in removeArray){
-				$(contactListViewHash[removeArray[removeArrayIndex]].jRef).remove();
-
-				//$('#' + $(theDivRef).attr('id') + contactListViewHash[removeArray[removeArrayIndex]].id).remove();
-
-				var deletionId = contactListViewHash[removeArray[removeArrayIndex]].id;
-				var deletionName = contactListViewHash[removeArray[removeArrayIndex]].name;
-				var deletionType = contactListViewHash[removeArray[removeArrayIndex]].type;
-				var deletionPhoneNumber = contactListViewHash[removeArray[removeArrayIndex]].phoneNumber;
-				delete contactListViewHash[removeArray[removeArrayIndex]];
-				if(options.onChange){
-					options.onChange('delete', 
-						{
-							id:deletionId,
-							name:deletionName,
-							type:deletionType,
-							phoneNumber:deletionPhoneNumber,
-						}
-					);
-				}
-			}
-			if(removeArray.length ){
-				_this.setSelectedByIndex(0);
-			}
-			$(theDivRef).listview().listview('refresh');
-			//if(willDelete){
-				
-			//}
-			//$('table tbody').trigger('footable_redraw');
-			if(options.onAfterDataLoad){options.onAfterDataLoad(contactListViewHash);}
-		});
-
-	}//end refresh
-
-	this.scrollToSelected = function(){
-		console.log('scrollToSelected');
-		var lastSelected = _this.getLastSelected();
-		var theSelectedId;
-		if(lastSelected){
-			theSelectedId = lastSelected.id;
-			console.log('lastSelected');
-			console.dir(lastSelected);
-			console.dir($(theDivRef).parent());
-			/*$(theDivRef).parent().animate(
-				{
-					scrollTop: $('#' + uid + '_' + theSelectedId).offset().top
-				},
-				100
-			);*/
-			$('#' + uid + '_' + theSelectedId).ScrollTo({
-				onlyIfOutside: true
-			});
-		}
-
-	}
-
-	this.addTempContacts = function(inRecords){
-		var resultContacts = [];
-		for(contactIndex in inRecords){
-			//md5 hashing!!!!
-			inRecords[contactIndex].md5Hash = $.getHash.md5(JSON.stringify(inRecords[contactIndex]));
-			inRecords[contactIndex].id = inRecords[contactIndex].id ? inRecords[contactIndex].id : new Date().getTime();
-			var html = createHtml(
-				{
-					id:inRecords[contactIndex].id ? inRecords[contactIndex].id : new Date().getTime(),
-					class:'listViewClass',
-					imageUrl:inRecords[contactIndex].imageUrl,
-					name:inRecords[contactIndex].name,
-					number:inRecords[contactIndex].phoneNumber,
-					type:inRecords[contactIndex].type,
-				}
-			);
-			$(theDivRef).append(html);
-			inRecords[contactIndex].jRef = $('#' + uid + '_' + inRecords[contactIndex].id);
-			contactListViewHash[inRecords[contactIndex].id] = inRecords[contactIndex];
-			resultContacts.push(inRecords[contactIndex]);
-			$('#' + uid + '_' + inRecords[contactIndex].id).click(function(e){
-				var id = 
-				console.log('clcik list view AA3 :' + $(e.currentTarget).attr('contactid'));
-				console.dir(e);
-				if(options.onClick){
-					if(options.useCheckbox){
-						_this.toggleState($(e.currentTarget));
-					}
-					options.onClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
-				}
-			});
-			$('#' + uid + '_' + inRecords[contactIndex].id).bind( "taphold", function(e){
-				if(options.onLongClick){
-						options.onLongClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
-					}
-			});
-			if(options.onChange){options.onChange('add', inRecords[contactIndex]);}
-		}
-		$(theDivRef).listview().listview('refresh');
-		if(options.onAddTempContacts){options.onAddTempContacts(resultContacts);}
-		return resultContacts;
-	}
-
-	this.loadData = function(inPostFunction){
-		contactDataObject.select({}, function(inRecords){
-			for(contactIndex in inRecords){
-				//md5 hashing!!!!
-				inRecords[contactIndex].md5Hash = $.getHash.md5(JSON.stringify(inRecords[contactIndex]));
-				var html = createHtml(
-					{
-						id:inRecords[contactIndex].id,
-						class:'listViewClass',
-						imageUrl:inRecords[contactIndex].imageUrl,
-						name:inRecords[contactIndex].name,
-						number:inRecords[contactIndex].phoneNumber,
-						type:inRecords[contactIndex].type,
-					}
-				);
-				$(theDivRef).append(html);
-				inRecords[contactIndex].jRef = $('#' + uid + '_' + inRecords[contactIndex].id);
-				contactListViewHash[inRecords[contactIndex].id] = inRecords[contactIndex];
-				$('#' + uid + '_' + inRecords[contactIndex].id).click(function(e){
-					var id = 
-					console.log('clcik list view AA3 :' + $(e.currentTarget).attr('contactid'));
-					console.dir(e);
-					if(options.onClick){
-						if(options.useCheckbox){
-							_this.toggleState($(e.currentTarget));
-						}
-						options.onClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
-					}
-				});
-				$('#' + uid + '_' + inRecords[contactIndex].id).bind( "taphold", function(e){
-					if(options.onLongClick){
-							options.onLongClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
-						}
-				});
-			}
-			$(theDivRef).listview().listview('refresh');
-			if(inPostFunction){inPostFunction();}
-			//$('table tbody').trigger('footable_redraw');
-			if(options.onAfterDataLoad){options.onAfterDataLoad(contactListViewHash);}
-		});
-	}
-
-	this.getIdByNameAndType = function(inName, inType){
-		for(var contactListViewHashIndex in contactListViewHash){
-			if((inName == contactListViewHash[contactListViewHashIndex].name) && (inType == contactListViewHash[contactListViewHashIndex].type)){
-				return contactListViewHash[contactListViewHashIndex].id;
-			}
-		}
-		return false;
-	}
-
-	var editHtml = function(inId, inData){
-		var html = createHtml(
-			{
-				id:inId,
-				class:'listViewClass',
-				imageUrl:inData.imageUrl,
-				name:inData.name,
-				number:phoneDisplayFormat(inData.phoneNumber),
-				type:inData.type,
-			}
-		);
-		$('#' + uid + '_' + inData.id).replaceWith(html);
-		$('#' + uid + '_' + inData.id).click(function(e){
-			if(options.onClick){
-				if(options.useCheckbox){
-					_this.toggleState($(e.currentTarget));
-				}
-				options.onClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
-			}
-		});
-		$('#' + uid + '_' + inData.id).bind( "taphold", function(e){
-			if(options.onLongClick){
-				options.onLongClick($(e.currentTarget).attr('contactid'), contactListViewHash[$(e.currentTarget).attr('contactid')], uid + '_' + $(e.currentTarget).attr('contactid'));
-			}
-		});
-	}
-
-	var createHtml = function(inData){
-		var options = 
-			{
-				id:new Date().getTime(),
-				class:'listViewClass',
-				imageUrl:'BAD URL',
-				name:'NO NAME',
-				number:'NO NUMBER',
-				type:'NO TYPE',
-			}
-		options = $.extend(options, inData);
-		//var style = ':hover {background-color:#feeebd ;}:active { background-color:#817865 ;}';
-		//var style = 'background-color: transparent !important;';
-		var style = '';
-		var html = '' + 
-			'<li id="' + uid + '_' + options.id + '" contactId="' + options.id + '" class="menu_li checkbox_click_' + uid + '_' + options.class + '"  data-icon="false" data-inset="true">' + ' ' +
-				'<a "/hjhjhjh" class="trans-bkg-a-hv" style="' + style + '" > ' + options.name 													+ ' ' +
-					'<img src="' + options.imageUrl + '" style="margin: 15px 15px;" class="magicSquare" height="50px"/>'			+ ' ' +
-					'<p>' + phoneDisplayFormat(options.number) + '</p>'													+ ' ' +
-					'<p>' + options.type + '</p>'													+ ' ' +
-				'</a>'																				+ ' ' +
-			'</li>'
-		;
-		//options['html'] = html;
-		return html;
-	}
-
-	/*var formatPhoneNumber = function(inNumber){
-		if(inNumber.length == 10){
-			return '1' + inNumber.substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)$2-$3');
-		}
-		if(inNumber.length == 11){
-			return '1' + inNumber.substring(1).replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)$2-$3');
-		}
-		return inNumber;
-	}*/
-
-	//============================
-	//---EVENT
-	//============================
-	this.initEvent = function(){
-	}
-
-	this.setState = function(inBool){
-		options.state = inBool;
-	}
-
-	this.setSelectedByNameAndType = function(inJstruct){
-		var options2 = 
-			{
-				name:'',
-				type:''
-			}
-		options2 = $.extend(options2, inJstruct);
-		var inName = options2.name;
-		var inType = options2.type;
-
-		for(var contactListViewHashIndex in contactListViewHash){
-			if((inName == contactListViewHash[contactListViewHashIndex].name) && (inType == contactListViewHash[contactListViewHashIndex].type)){
-				$('#' + $(options.divRef).attr('id') + '_' + contactListViewHash[contactListViewHashIndex].id).find('.trans-bkg-a-hv').trigger('click');
-				if(options.autoScrollOnSelect){ _this.scrollToSelected(); }
-				return ;
-			}
-		}
-
-	}
-	//				$('#' + $(options.divRef).attr('id') + '_' + contactListViewHash[contactListViewHashIndex].id).find('.trans-bkg-a-hv').trigger('click');
-	this.setSelectedById = function(inId){
-		if(!(inId in contactListViewHash)){return false;}
-		var contactId = contactListViewHash[inId].id;
-		if(contactId){
-			$('#' + $(options.divRef).attr('id') + '_' + contactId).find('.trans-bkg-a-hv').trigger('click');
-			if(options.autoScrollOnSelect){ _this.scrollToSelected(); }
-		}
-	}
-
-	this.setSelectedByIndex = function(inIndex){
-		if(Object.keys(contactListViewHash).length){return false;}
-
-		if(inIndex > Object.keys(contactListViewHash).length-1){return false;}
-		$('#' + $(options.divRef).attr('id') + '_' + contactListViewHash[Object.keys(contactListViewHash)[0]].id  ).find('.trans-bkg-a-hv').trigger('click');
-		if(options.autoScrollOnSelect){ _this.scrollToSelected(); }
-		return ;
-	}
-
-	this.findFirstByPhoneNumber = function(inPhoneNumber){
-		for(var contactListViewHashIndex in contactListViewHash){
-			if(phoneNumberCompare(contactListViewHash[contactListViewHashIndex].phoneNumber, inPhoneNumber)){
-				return contactListViewHash[contactListViewHashIndex];
-			}
-		}
-		return false;
-	}
-
-
-
-
-}
-
-
-$.fn.ContactListView = function(inAction, inJsonStruct){
-	var contactListView = $(this).data("contactListViewInstance");
-	if(!(contactListView) || inAction == 'create'){
-		inJsonStruct['divRef'] = $(this);
-		console.log('ContactListView CREATED');
-		var contactListView = new ContactListView(inJsonStruct);
-		$(this).data("contactListViewInstance", contactListView);
-		return ;
-	}
-	if(inAction == 'test'){
-		contactListView = $(this).data("contactListViewInstance");
-		//alert('test:' + contactListView.getTest());
-	}
-
-	if(inAction == 'refresh'){
-		contactListView = $(this).data("contactListViewInstance");
-		contactListView.refresh();
-	}
-
-	if(inAction == 'loadData'){
-		contactListView = $(this).data("contactListViewInstance");
-		contactListView.loadData(inJsonStruct);
-		contactListView.initEvent();
-	}
-
-	if(inAction == 'getSelectedData'){
-		contactListView = $(this).data("contactListViewInstance");
-		return contactListView.getSelectedData();
-	}
-
-	if(inAction == 'getSelected'){
-		contactListView = $(this).data("contactListViewInstance");
-		return contactListView.getSelected();
-	}
-
-	if(inAction == 'remove'){
-		contactListView = $(this).data("contactListViewInstance");
-		return contactListView.remove(inJsonStruct);
-	}
-
-	if(inAction == 'setSelectedByNameAndType'){
-		return contactListView.setSelectedByNameAndType(inJsonStruct);
-	}
-	if(inAction == 'getIdByNameAndType'){
-		return contactListView.getIdByNameAndType(inJsonStruct.name, inJsonStruct.type);
-	}
-	if(inAction == 'getLastSelected'){
-		return contactListView.getLastSelected();
-	}
-	if(inAction == 'setSelectedByIndex'){
-		return contactListView.setSelectedByIndex(inJsonStruct);
-	}
-	if(inAction == 'scrollToSelected'){
-		return contactListView.scrollToSelected(inJsonStruct);
-	}
-	if(inAction == 'findFirstByPhoneNumber'){
-		return contactListView.findFirstByPhoneNumber(inJsonStruct);
-	}
-	if(inAction == 'addTempContacts'){
-		return contactListView.addTempContacts(inJsonStruct);
-	}
-
-	if(inAction == 'setSelectedById'){
-		return contactListView.setSelectedById(inJsonStruct);
-	}
-
-
-}
 
 
 //=======================================================================================================================================================
@@ -1330,3 +815,250 @@ $.fn.ComboBox = function(inAction, inJsonStruct){
 	}
 }
 
+//=======================================================================================================================================================
+// COMPARE -------------------------------------------------------------------------------------------------------------------
+//=======================================================================================================================================================
+
+
+jQuery.extend({
+	compare : function (a,b) {
+		var obj_str = '[object Object]',
+			arr_str = '[object Array]',
+			a_type  = Object.prototype.toString.apply(a),
+			b_type  = Object.prototype.toString.apply(b);
+
+			if ( a_type !== b_type) { return false; }
+			else if (a_type === obj_str) {
+				return $.compareObject(a,b);
+			}
+			else if (a_type === arr_str) {
+				return $.compareArray(a,b);
+			}
+			return (a === b);
+		}
+});
+
+jQuery.extend({
+	compareArray: function (arrayA, arrayB) {
+		var a,b,i,a_type,b_type;
+		// References to each other?
+		if (arrayA === arrayB) { return true;}
+
+		if (arrayA.length != arrayB.length) { return false; }
+		// sort modifies original array
+		// (which are passed by reference to our method!)
+		// so clone the arrays before sorting
+		a = jQuery.extend(true, [], arrayA);
+		b = jQuery.extend(true, [], arrayB);
+		a.sort(); 
+		b.sort();
+		for (i = 0, l = a.length; i < l; i+=1) {
+			a_type = Object.prototype.toString.apply(a[i]);
+			b_type = Object.prototype.toString.apply(b[i]);
+
+			if (a_type !== b_type) {
+				return false;
+			}
+
+			if ($.compare(a[i],b[i]) === false) {
+				return false;
+			}
+		}
+		return true;
+	}
+});
+
+jQuery.extend({
+	compareObject : function(objA, objB) {
+		if(typeof objA !== 'object' || typeof objB !== 'object'){ return false;}
+		console.log('compareObject ENTERED');
+		//if (objA == {} || objB == {}) { return false;}
+		var i,a_type,b_type;
+
+		// Compare if they are references to each other 
+		if (objA === objB) { return true;}
+
+		if (Object.keys(objA).length !== Object.keys(objB).length) { return false;}
+		for (i in objA) {
+			if (objA.hasOwnProperty(i)) {
+				if (typeof objB[i] === 'undefined') {
+					return false;
+				}
+				else {
+					a_type = Object.prototype.toString.apply(objA[i]);
+					b_type = Object.prototype.toString.apply(objB[i]);
+
+					if (a_type !== b_type) {
+						return false; 
+					}
+				}
+			}
+			if ($.compare(objA[i],objB[i]) === false){
+				return false;
+			}
+		}
+		return true;
+	}
+});
+
+jQuery.extend({
+	hashToArray : function(inHash){
+		var resultArray = [];
+		for(var hashKey in inHash){
+			resultArray.push(inHash[hashKey]);
+		}
+
+		return resultArray;
+	}
+
+});
+
+jQuery.extend({
+	isCircular : function(node, parents){
+		parents = parents || [];
+
+		if(!node || typeof node != "object"){
+			return false;
+		}
+
+		var keys = Object.keys(node), i, value;
+
+		parents.push(node); // add self to current path      
+		for(i = keys.length-1; i>=0; i--){
+			value = node[keys[i]];
+			if(value && typeof value == "object"){
+				if(parents.indexOf(value)>=0){
+					// circularity detected!
+					//node[keys[i]] = false;
+					return true;
+				}
+				// check child nodes
+				if(arguments.callee(value, parents)){
+					return true;
+				}
+
+			}
+		}
+		parents.pop(node);
+		return false;
+	}
+});
+
+jQuery.extend({
+	removeCircular : function(obj){
+		obj = $.extend({}, obj);
+		if(obj.jRef){
+			obj.jRef = false;
+		}
+		var seenObjects = [];
+
+		function detect (obj) {
+			if (obj && typeof obj === 'object'){
+				if (seenObjects.indexOf(obj) !== -1){
+					return obj;
+				}
+				seenObjects.push(obj);
+				for (var key in obj) {
+					if(obj.hasOwnProperty(key) && detect(obj[key])){
+						obj[key] = false;
+						console.log(obj, 'cycle at ' + key);
+						return obj;
+					}
+				}
+			}
+			return obj;
+		}
+		return detect(obj);
+	}
+
+
+});
+
+jQuery.extend({
+	copyObject:function(inObject){
+		return $.extend(true, {}, inObject);
+	}
+});
+
+/*
+console.log('ddddlog', myvar);
+console.info('===================================================================================');
+console.info( myvar, "Logged! info");
+console.warn( myvar, "Logged! warn");
+console.debug(myvar, "Logged! debug");
+console.error(myvar, "Logged! error");
+*/
+
+jQuery.extend({
+	debug:function(inHeading, myvar){
+		console.info('====================================== %s ============================================', inHeading);
+		console.info( myvar);
+	}
+});
+
+jQuery.extend({
+	createContactHashCode:function(inObject){
+		var nObject = 
+			{
+				companyName:inObject.companyName,
+				department:inObject.department,
+				emailAddress:inObject.emailAddress,
+				id:inObject.id,
+				imageUrl:inObject.imageUrl,
+				name:inObject.name,
+				phoneNumber:inObject.phoneNumber,
+				refNumber:inObject.refNumber,
+				title:inObject.title,
+				type:inObject.type,
+				userId:inObject.userId,
+			}
+		return $.getHash.md5(JSON.stringify(nObject));
+		//return $.extend(true, {}, inObject);
+	}
+});
+
+jQuery.extend({
+	copyAsOne:function(inObjectA, inObjectB){
+		return $.extend(true, {}, inObjectA, inObjectB);
+	}
+});
+
+
+jQuery.extend({
+	getDuplicates:function(arr){
+		var i, out=[], obj={};
+		for (i=0; i < arr.length; i++)
+		obj[arr[i]] == undefined ? obj[arr[i]] ++ : out.push(arr[i]);
+		return $.getUnique(out);
+	}
+
+});
+
+jQuery.extend({
+	getUnique:function(arr){
+		return $.grep(arr, function(elem, index) {
+			return index == $.inArray(elem, arr);
+		});
+	}
+});
+
+//always returns string ,, not working right
+jQuery.extend({
+	getKeys:function(inObj){
+		var resultArray = [];
+		for(var theKey in inObj){
+			resultArray.push(theKey);
+		}
+		return resultArray;
+	}
+});
+
+jQuery.extend({
+	getCurrentPageId:function(inObj){
+		if($(':mobile-pagecontainer').pagecontainer('getActivePage')[0].id ){
+			return $(':mobile-pagecontainer').pagecontainer('getActivePage')[0].id;
+		}else{
+			return false;
+		}
+	}
+});

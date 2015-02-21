@@ -1468,14 +1468,14 @@ var MasterMenu = function(inJsonStruct){
 				{
 					imageSource:'',
 					imageClass:'',
-					imageWidth:'50px',
+					imageWidth:'30px',
 					imageStyle:'vertical-align:middle;',
 					caption:'????'
 				}
 			options = $.extend(options, inJsonStruct.options);
 			var html = '' +
 			'<a href="#" class="imageAndText">'																																	+ '' +
-				'<img style="'+ options.imageStyle +'" src="' + options.imageSource + '" width="' + options.imageWidth + '" class="' + options.imageClass + '" >'	+ '' +
+				'<img src="' + options.imageSource + '" style="'+ options.imageStyle +' overflow: hidden; height:' + options.imageWidth + '; width:' + options.imageWidth + '; object-fit: cover;" class="magicSquare ' + options.imageClass + '" >'	+ '' +
 				'</img>' + '&nbsp;&nbsp;&nbsp;&nbsp;' + options.caption 																							+ '' +
 			'</a>'
 			;
