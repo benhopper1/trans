@@ -53,6 +53,30 @@ module.exports.controller = function(app) {
 						userImageFolder:configData.userImageFolder,
 						phoneCacheRoute:configData.phoneCacheRoute,
 
+						//app products---------------------------------------
+						inAppProductIds:
+							[
+								{
+									productId:'arfsync.testapp.test_subscribe_product_500',
+									productType:'subs',
+									productCaption:'capMissing0',
+
+								},
+								{
+									productId:'arfsync.testapp.testproduct_000',
+									productType:'inapp',
+									productCaption:'capMissing1',
+
+								},
+								{
+									productId:'arfsync.testapp.testproduct_001',
+									productType:'inapp',
+									productCaption:'capMissing2',
+
+								},
+								
+							],
+
 					}
 			}
 		));
