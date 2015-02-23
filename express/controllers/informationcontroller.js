@@ -74,7 +74,19 @@ module.exports.controller = function(app) {
 									productCaption:'capMissing2',
 
 								},
-								
+								{
+									productId:'test0',
+									productType:'inapp',
+									productCaption:'captest0',
+
+								},
+								{
+									productId:'arfsync.test1',
+									productType:'inapp',
+									productCaption:'caparfsync.test1',
+
+								},
+
 							],
 
 					}
