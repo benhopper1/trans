@@ -4,24 +4,14 @@ var path = require('path');
 var basePath = path.dirname(require.main.filename);
 var TransportLayer = require(basePath + '/libs/transportlayer.js');
 var uuid = require(basePath + '/node_modules/node-uuid');
-
+var DebugObject = require(basePath + '/libs/debug/debugobject.js');
 
 var hashOfWaitingWs = {};
-/*
-
-connectByQr
-waitingForScan
-
-
-*/
-
-
-
 
 
 //------------------>--COMMUNICATION--<-------------
 var Controller = function(router){
-
+	DebugObject.debugify('qrController.hashOfWaitingWs', hashOfWaitingWs);
 	// handled as transaction....   return...routingLayer.type == 'transactionToClient'
 	router.type('transactionToServer', function(inWss, inWs, inTransportLayer){
 		console.log('qr in router routs!!!!!');
@@ -41,6 +31,11 @@ var Controller = function(router){
 				};
 
 			inWss.waitDeviceTokenIdHash[waitingId] = inWs;
+
+			//cleanup entry
+			inWs.cleanupFunctionHash['removeFromWaitingQ'] = function(){
+				delete inWss.waitDeviceTokenIdHash[inWs.waitingId];
+			}
 
 			var transactionTransportLayer = inTransportLayer.getTransportLayerOnly();
 			transactionTransportLayer.addRoutingLayer(
@@ -62,24 +57,24 @@ var Controller = function(router){
 		//device scanned code, asking server to login the waiting client by scan code-----
 
 		if(inTransportLayer.toJson().routingLayer.command == 'connectWaitingQr'){
+
 			console.log('connectWaitingQr');
 			console.log('cmd' + inTransportLayer.toJson().dataLayer.cmd);
 			console.log('cd' + inTransportLayer.toJson().dataLayer.cd);
 			console.log('dump hashOfWaitingWs--------------------');
-			//console.dir(hashOfWaitingWs);
 			console.log('geting from hash:' + inTransportLayer.toJson().dataLayer.cd);
+
 			var waitingData = hashOfWaitingWs[inTransportLayer.toJson().dataLayer.cd];
 			if(waitingData){
 				var waitingTransportLayer = waitingData.transportLayer;
 				waitingTransportLayer.toJson().dataLayer.userName = inWs.userName;
 				waitingTransportLayer.toJson().dataLayer.password = inWs.password;
 				waitingTransportLayer.toJson().routingLayer.type = "setupToServer";
-				console.log('userName:' + inWs.userName);
-				console.log('password:' + inWs.password);
 				router.reportOnRoute(waitingData.wss, waitingData.ws, waitingTransportLayer);
+				delete  hashOfWaitingWs[inTransportLayer.toJson().dataLayer.cd];
 			}
 
-			var transactionTransportLayer = inTransportLayer.getTransportLayerOnly(); //waitingTransportLayer; //
+			var transactionTransportLayer = inTransportLayer.getTransportLayerOnly();
 			transactionTransportLayer.addRoutingLayer(
 				{
 					type:'transactionToClient'
@@ -93,9 +88,6 @@ var Controller = function(router){
 			);
 			inWs.send(transactionTransportLayer.toString());
 		}
-
-
-
 
 	});
 

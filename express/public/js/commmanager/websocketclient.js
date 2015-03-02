@@ -1,5 +1,14 @@
-var WebSocketClient = function(inHost, inPort, inProtocal){
-	var connectionString = "ws://" + inHost + ":" + inPort	
+var WebSocketClient = function(inHost, inPort, inProtocal, isSecure){
+	var connectionString;
+	if(isSecure){
+		//connectionString = "wss://192.168.0.16:30300"
+		connectionString = "wss://" + inHost + ":" + inPort;
+	}else{
+		connectionString = "ws://" + inHost + ":" + inPort;
+	}
+	console.log('WEBSOCKET:' + connectionString);
+	//var connectionString = "ws://" + inHost + ":" + inPort	
+	//var connectionString = "wss://192.168.0.16:30300"
 	var _this = this;
 
 	var webSocket;

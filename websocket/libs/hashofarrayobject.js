@@ -72,7 +72,7 @@ var HashOfArrayObject = function(inAllowDuplicates){
     };
 
     this.removeArrayFromHash = function(inKey){
-        inKey = inKey.toString();
+        var inKey = inKey.toString();
         var attemptValue = hash[inKey];
         if(!(attemptValue)){
             return false;

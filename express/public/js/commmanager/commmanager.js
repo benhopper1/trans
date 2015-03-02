@@ -217,7 +217,8 @@ var CommManagerNameSpace = function(){
 			$.getScript("/js/commmanager/websocketclient.js", function(ignored, inStatusText){
 				console.log('Loading ---------> webSocketClient');
 				console.log('webSocketClient :' + inStatusText);
-				webSocketClient = new WebSocketClient(inData.webSocketClient.address, inData.webSocketClient.port, inData.webSocketClient.connectString);
+				var isSecure = true; // use wss
+				webSocketClient = new WebSocketClient(inData.webSocketClient.address, inData.webSocketClient.port, inData.webSocketClient.connectString, isSecure);
 
 				//#################################################
 				//EVENT -> onError                  WebSocketClient

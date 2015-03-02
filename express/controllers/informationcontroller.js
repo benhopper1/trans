@@ -86,6 +86,18 @@ module.exports.controller = function(app) {
 									productCaption:'caparfsync.test1',
 
 								},
+								{
+									productId:'android.test.purchased',
+									productType:'inapp',
+									productCaption:'caparfsync.test1',
+
+								},
+								{
+									productId:'android.test.canceled',
+									productType:'inapp',
+									productCaption:'caparfsync.test1',
+
+								},
 
 							],
 

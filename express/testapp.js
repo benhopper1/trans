@@ -1,3 +1,4 @@
+
 var fs = require('fs');
 var path = require('path');
 var basePath = path.dirname(require.main.filename);
@@ -6,76 +7,43 @@ configData = JSON.parse(configData);
 var finish = require(basePath + '/node_modules/finish');
 
 var extend = require(basePath + '/node_modules/node.extend');
-
+var Underscore = require(basePath + '/node_modules/underscore');
 
 var Connection = require(basePath + '/models/connection.js');
 //var nodemailer = require(basePath + '/node_modules/nodemailer');
-var uuid = require(basePath + '/node_modules/node-uuid');
-var connection = Connection.getMaybeCreate(
-	{
-		instanceName:'arf',
-		host:configData.mysqlServerConnection.host,
-		user:configData.mysqlServerConnection.user,
-		password:configData.mysqlServerConnection.password,
-		database:configData.mysqlServerConnection.database
 
-	}
-);
+var configData = fs.readFileSync('main.conf', 'utf8');
+configData = JSON.parse(configData);
+
+var basePath = path.dirname(require.main.filename);
 
 
 
-connection = Connection.getInstance('arf').getConnection();
-var MaintenanceModel = require(basePath + '/models/maintenancemodel');
-var maintenanceModel = new MaintenanceModel();
+/*var uuid = require(basePath + '/node_modules/node-uuid');
+var WebSocket = require(basePath + '/node_modules/ws');*/
 
-maintenanceModel.deleteOldPhoneCacheFiles(
-	{
+console.log('test App running');
 
-	}, function(err, inData){
-		console.log('RETRUNED:');
-		console.dir(inData);
-	}
-);
-
-//-=-=-=-=-=-=-==-==-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-==--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	var _this = this;
-
-	/*var getMinuteFromMs = function(inMs){
-		return Math.floor(inMs / (1000 * 60));
-	}
-
-	var getDayFromMs = function(inMs){
-		return Math.floor(inMs / (1000 * 60 * 1440));
-	}
-
-	var getHourFromMs = function(inMs){
-		return Math.floor(inMs / (1000 * 60 * 60));
-	}
-
-	this.deleteOldCacheFiles = function(inOptions){
-		var options = 
-			{
-				minutesOld:5,
-			}
-		options = extend(options, inOptions);
-
-		var PHONE_CACHE_FOLDER = basePath + configData.phoneCacheStorageFolder;
-		var NOW = new Date().getTime();
-		var files = fs.readdirSync(PHONE_CACHE_FOLDER);
-
-
-		// HASH:  key: domainPath, val:physical path
-		var oldFilesHash = {};
-		for(var filesIndex in files){
-			var fileTime =  fs.statSync(path.join(PHONE_CACHE_FOLDER, files[filesIndex])).ctime;
-			var fileTimeMs = new Date(fileTime).getTime();
-
-			if(getMinuteFromMs(NOW - fileTimeMs) > options.minutesOld){
-				oldFilesHash[configData.phoneCacheStorageFolder + '/' + files[filesIndex]] = path.join(PHONE_CACHE_FOLDER, files[filesIndex]);
-			}
-		}
-
-		console.dir(oldFilesHash);
-	}
-
-	_this.deleteOldCacheFiles();*/
+var ws_cfg = {
+	ssl: true,
+	port: 8080,
+	ssl_key: 	fs.readFileSync(	basePath 	+	'/node_modules/key.pem'		),
+	ssl_cert: 	fs.readFileSync(	basePath 	+	'/node_modules/cert.pem'	)
+};
+ 
+var processRequest = function(req, res) {
+	console.log("Request received.")
+};
+ 
+var https = require('https');
+var app = null;
+ 
+app = https.createServer({
+	key: ws_cfg.ssl_key,
+	cert: ws_cfg.ssl_cert
+}, processRequest).listen(ws_cfg.port);
+ 
+//var WebSocketServer = require('ws').Server, ws_server = new WebSocketServer(ws_cfg);
+ 
+var WebSocketServer = require(basePath + '/node_modules/ws').Server;
+var ws_server = new WebSocketServer( {server: app});

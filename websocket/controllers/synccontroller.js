@@ -7,28 +7,17 @@ var HashArrayObject = require(basePath + '/libs/hashofarrayobject.js');
 var SyncModel = require(basePath + '/models/syncmodel.js');
 var syncModel = new SyncModel();
 
+
+//TODO, think this is unused, try removing all relative parts...
+
 //------------------>--COMMUNICATION--<-------------
 var Controller = function(router){
 	var currentArrayIndex = 0;
-//	var tmpFilesHashOfArray = new HashArrayObject();
+
 	router.type('transactionToServer', function(inWss, inWs, inTransportLayer){
 
 		if(inTransportLayer.toJson().routingLayer.command == 'contactDataFromSourceForSync'){
 			console.log('----------contactDataFromSourceForSync--------------------------------');
-			//--clean existing device records before clone added
-			/*if(currentArrayIndex == 0){
-				syncModel.deleteAllDeviceContactsFromDb(
-					{
-						userId:inWs.userId,
-						deviceId:inWs.deviceId
-					},
-					//---when delete finished start---
-					function(){
-						updateModel(0, inWs, inTransportLayer);
-					}
-				);
-			}*/
-
 			updateModel(0, inWs, inTransportLayer);
 		}
 

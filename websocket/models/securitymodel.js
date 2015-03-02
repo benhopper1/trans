@@ -21,12 +21,10 @@ Model.verify = function(inData){
 		console.log('Security token Bad in static SecurityModel.verify!!!!!!!!!!!!!');
 	}
 
-	//this.fuzzyFindMember = function(inNeedle, inStart, inCount, inPostFunction){
 	var sqlString = "SELECT id FROM tb_user WHERE userName = "+ connection.escape(inData.dataLayer.userName) + " AND password =" + connection.escape(inData.dataLayer.password);
 	connection.query(sqlString, function(err, rows, fields){
 		console.log('error:');
 		console.dir(err);
-		//inData.dataLayer.password = false;
 		if(rows.length < 1){
 			// not valid user && pass
 			if(inData.onInvalid){
@@ -52,7 +50,6 @@ Model.verify = function(inData){
 					connection.query(sqlString, function(err, result){
 						console.dir(err);
 						console.log('newDevId:' + result.insertId);
-						//inData.transportLayer.deviceId = result.insertId;
 						if(inData.onDone){
 							var information = "newDeviceIdCreated";
 							inData.onDone(err, inData.transportLayer, information, result.insertId.toString());

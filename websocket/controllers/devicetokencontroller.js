@@ -3,16 +3,16 @@ var path = require('path');
 var basePath = path.dirname(require.main.filename);
 var TransportLayer = require(basePath + '/libs/transportlayer.js');
 var uuid = require(basePath + '/node_modules/node-uuid');
-
+var moment = require(basePath + '/node_modules/moment');
 
 //------------------>--COMMUNICATION--<-------------
 var Controller = function(router){
-
+	var CLIENT_HISTORY_EXPIRE_SECONDS = 60 * 60; // 1 - HOUR
+	//var CLIENT_HISTORY_EXPIRE_SECONDS = 20;//60 * 60; // 1 - HOUR DEBUG SETTING, can REMOVE
 
 
 	router.onSuccessfulLogin(function(inWss, inWs, inData, setupTransportLayer){
 		console.log('router.onSuccessfulLogin (data):');
-		//console.dir(inWs);
 		var deviceTokenId;
 
 		for(key in inWss.connectedClientHistoryData){
@@ -29,14 +29,45 @@ var Controller = function(router){
 		inWss.connectedClientHistoryData[deviceTokenId] = 
 			{
 				deviceId:inData.toJson().routingLayer.usingDeviceId,
-				ws:inWs
+				ws:inWs,
+				expireMoment:false,
+				//entryTimeStamp:moment().format("YYYY-MM-DD HH:mm:ss"),
 			}
 		;
 
-		//console.log('dump of connectedClientHistoryData ---------------------------------');
-		//console.dir(inWss.connectedClientHistoryData);
-		inWs.lastDeviceId;
-		inWs.lastTokenDeviceId;
+		//cleanup ---------------------------------------------------------------------------
+		if(inWs.deviceType == 'desktopBrowser'){
+			//no sense in keeping desktop in history
+			inWs.cleanupFunctionHash['removeFrom_userHashArrayOfDeviceTokenId'] = function(){
+				delete inWss.connectedClientHistoryData[inWs.deviceTokenId];
+			}
+		}
+
+		inWs.cleanupFunctionHash['removeFrom_connectedClientHistoryData'] = function(){
+			var theCountOf = inWss.userHashArrayOfDeviceTokenId.getArrayFromHash(inWs.userId);
+			if(!(theCountOf) || theCountOf.length < 2){
+				inWss.userHashArrayOfDeviceTokenId.removeArrayFromHash(inWs.userId);
+			}
+		}
+
+		inWs.cleanupFunctionHash['setExpireTimeForHistory'] = function(){
+			var connectedHistorDataRef = inWss.connectedClientHistoryData[inWs.deviceTokenId];
+			if(connectedHistorDataRef){
+				connectedHistorDataRef.expireMoment = moment().add(CLIENT_HISTORY_EXPIRE_SECONDS, 's');
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+		//inWs.lastDeviceId;
+		//inWs.lastTokenDeviceId;
 
 		//add device to user   ,,, one to many---
 		inWss.userHashArrayOfDeviceTokenId.add(inWs.userId, inWs.deviceTokenId);
@@ -63,8 +94,7 @@ var Controller = function(router){
 				action:'login'
 			}
 		);
-		console.log('before familyBroadcast');
-		//console.dir(transportLayer.toJson());
+
 		router.familyBroadcast(inWss, inWs, inWs.userId, transportLayer);
 
 

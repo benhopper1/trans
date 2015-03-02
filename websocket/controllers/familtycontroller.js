@@ -9,28 +9,22 @@ var Controller = function(router){
 	router.familyBroadcast = function(inWss, inWs, inUserId, inTransportLayer){
 		console.log('familyBroadcast executing');
 
-		//inTransportLayer.toJson().type = inTransportLayer.toJson().routingLayer.fromDeviceTokenId = inWs.deviceTokenId;
 		var familyTokenArray = inWss.userHashArrayOfDeviceTokenId.getArrayFromHash(inTransportLayer.toJson().userId);
 		for(index in familyTokenArray){
-			//familyTokenArray[index].send(inTransportLayer.toString());
 			console.log('--------->-- Broadcasting ------to :');
-			console.log((inWss.connectedClientHistoryData[familyTokenArray[index]]).deviceId);
-			//console.dir(inTransportLayer.toString());
 			(inWss.connectedClientHistoryData[familyTokenArray[index]]).ws.send(inTransportLayer.toString());
 		}
-		console.log('--------------------------------------------------------');
 	}
 
 
 	router.type('transactionToServer', function(inWss, inWs, inTransportLayer){
 		console.log('+_+_+_+_transactionToServer' + inTransportLayer.toJson().userId);
-//		console.dir(inWs);
+
 		if(inTransportLayer.toJson().routingLayer.command == 'returnAllCredentialsForUser'){
 			console.log('commandForServer in router routs{{command == returnAllCredentialsForUser}}');
 			var familyTokenArray = inWss.userHashArrayOfDeviceTokenId.getArrayFromHash(inWs.userId);
 			var credentialsPackage = [];
 			for(index in familyTokenArray){
-				console.log('credentialAdd:' + index);;
 				var currentDeviceWs = (inWss.connectedClientHistoryData[familyTokenArray[index]]).ws
 				var credentialPackage = 
 					{
