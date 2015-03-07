@@ -146,7 +146,7 @@ var requestModel = new RequestModel();
 var userData = {};
 app.all('*', function(req, res, next){
 	userData.requestUrl = req.url;
-	userData.agent = req.headers['user-agent'];
+	userData.agent = (req.headers['user-agent']) ? req.headers['user-agent'] : 'NO AGENT';
 	userData.referrer = req.headers['referrer'];
 	userData.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 	console.log('userData:');

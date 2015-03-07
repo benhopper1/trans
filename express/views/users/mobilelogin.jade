@@ -7,13 +7,10 @@ html
 		meta(name="keywords", content="")
 		meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
 
-		//script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
-		//script(type='text/javascript', src='public/js/easyui/jquery.easyui.min.js')
-		//link(rel='stylesheet', href='public/js/easyui/themes/default/easyui.css')
-		//link(rel='stylesheet', href='public/js/easyui/themes/default/icon.css')
-		link(rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css")
-		script(src="http://code.jquery.com/jquery-1.11.1.min.js")
-		script(src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js")
+
+		link(rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css")
+		script(src="https://code.jquery.com/jquery-1.11.1.min.js")
+		script(src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js")
 		script(type='text/javascript', src='/js/clientutil/clientutil.js')
 
 
@@ -68,7 +65,37 @@ html
 			window.location = "/user/widget_userForm";
 		});
 		var login = function(){
-			$postAjax(
+			Android.secureLogin(JSON.stringify(
+				{
+					userName:$('#widget_userForm_userName').val(),
+					password:$('#widget_userForm_password').val(),
+					deviceId:0,
+					agent:navigator.userAgent,
+					deviceNumber:'na',
+					deviceType:'androidApp',//move to serverside....based on useragent...
+					androidSuccessCallback:'loginSuccess',
+					androidFailCallback:'loginFail',
+				}
+			));
+		}
+
+		var loginSuccess = function(inData){
+			console.log('z2 loginSuccess' + inData);
+			//Android.reportOnCompleted(JSON.stringify(inData));
+			Android.reportOnCompleted(inData);
+		}
+
+		var loginFail = function(inData){
+			console.log('z3 loginFail' + inData);
+		}
+
+
+
+
+
+
+
+			/*$postAjax(
 				{
 					url:'/user/mobileLogin',
 					send:
@@ -85,8 +112,7 @@ html
 						if(inResponseText){
 							if(inResponseText.result){
 								inResponseText.result.password = $('#widget_userForm_password').val();
-								//alert(JSON.stringify(inResponseText));
-								Android.reportOnComplete(JSON.stringify(inResponseText));
+								Android.reportOnCompleted(JSON.stringify(inResponseText));
 							}else{
 								//problem--
 								//inResponseText.hadError = true;
@@ -98,4 +124,4 @@ html
 					}
 				}
 			);
-		}
+		*/
